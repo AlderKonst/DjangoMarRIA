@@ -14,5 +14,5 @@
 Собственные команды следующие:
 <Ul>
     <LI>python manage.py article</LI>
-    <LI>python manage.py progress/LI>
+    <LI>python manage.py progress</LI>
 </Ul>
