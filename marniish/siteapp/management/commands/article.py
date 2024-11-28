@@ -1,3 +1,4 @@
+import os
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 from siteapp.models import Article, Trend
