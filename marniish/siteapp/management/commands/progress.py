@@ -1,3 +1,4 @@
+import os
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 from siteapp.models import Progress, Trend
@@ -7,7 +8,7 @@ from siteapp.models import Progress, Trend
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        with open('templates\MarRIA\Progress.html',
+        with open(os.path.join('templates', 'MarRIA', 'Progress.html'),
                   'r', encoding='utf-8') as f:  # Открываем для чтения нужный файл
             content = f.read()  # Читаем содержимое файла c кодом
             soup = BeautifulSoup(content, 'html.parser')  # Парсим исходный HTML-код
