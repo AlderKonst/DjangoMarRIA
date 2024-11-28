@@ -1,7 +1,7 @@
-import os
-from bs4 import BeautifulSoup
-from django.core.management.base import BaseCommand
-from siteapp.models import Progress, Trend
+import os # Импорт модуля для работы с ОС
+from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
+from django.core.management.base import BaseCommand # Импорт базового класса команды Django
+from siteapp.models import Progress, Trend # Импорт моделей из siteapp
 
 # Здесь будет код для получения данных со страницы Progress.html
 

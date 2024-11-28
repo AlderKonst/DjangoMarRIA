@@ -1,7 +1,7 @@
-import os
-from bs4 import BeautifulSoup
-from django.core.management.base import BaseCommand
-from siteapp.models import Article, Trend
+import os # Для работы с ОС
+from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
+from django.core.management.base import BaseCommand # Импорт базового класса команды Django
+from siteapp.models import Article, Trend # Импорт моделей Article и Trend из siteapp
 import re # Пришлось для работы с регулярными выражениями
 
 # Здесь будет код для получения данных со страницы Article.html
