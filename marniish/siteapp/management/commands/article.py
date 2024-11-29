@@ -8,7 +8,7 @@ import re # Пришлось для работы с регулярными вы�
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        with open(os.path.join('templates', 'MarRIA', 'Article.html'),
+        with open(os.path.join('F:\\ДОКИ\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\Article.html'),
                   'r', encoding='utf-8') as f:  # Открываем для чтения нужный файл
             content = f.read()  # Читаем содержимое файла c кодом
             soup = BeautifulSoup(content, 'html.parser')  # Парсим исходный HTML-код
