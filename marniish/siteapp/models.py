@@ -23,7 +23,7 @@ class Progress(models.Model): # Наиболее значимые достиже
 
 class Page(models.Model): # Cтраница сайта
     url = models.URLField(max_length=30, unique=True)  # URL страницы (без .html)
-    title = models.CharField(max_length=150)  # Название страницы
+    title = models.CharField(max_length=100)  # Название страницы
     description = models.CharField()  # Метаописание страницы
-    parent = models.ForeignKey('self',  # Самоссылка для указания родительской страницы
-                               null=True, blank=True, on_delete=models.CASCADE
+    parent_url = models.URLField(max_length=30)  # URL родительской страницы (без .html)
+    parent_title = models.CharField(max_length=100)  # Название родительской страницы
