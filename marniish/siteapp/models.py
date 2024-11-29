@@ -21,12 +21,9 @@ class Progress(models.Model): # Наиболее значимые достиже
     def __str__(self):
         return self.name # Возвращает наименование достижения
 
-class PageWay(models.Model): # Путь и имя страницы
+class Page(models.Model): # Cтраница сайта
     url = models.URLField(max_length=30, unique=True)  # URL страницы (без .html)
     title = models.CharField(max_length=150)  # Название страницы
+    description = models.CharField()  # Метаописание страницы
     parent = models.ForeignKey('self',  # Самоссылка для указания родительской страницы
-                               null=True, blank=True, on_delete=models.CASCADE)
-
-class Page(models.Model): # Содержимое сайта
-    page = models.ForeignKey(PageWay, on_delete=models.CASCADE) # ID пути страницы
-    description = models.CharField() # Метаописание страницы
+                               null=True, blank=True, on_delete=models.CASCADE
