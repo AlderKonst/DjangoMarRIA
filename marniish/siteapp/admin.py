@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import * # Все модели загружаем (Trend, Article, Progress)
+from .models import * # Все модели загружаем (Trend, Article, Progress, Page)
 
-admin.site.register(Trend)
-admin.site.register(Article)
-admin.site.register(Progress)
-admin.site.register(Page)
+admin.site.register(Trend) # Регистрируем модель Trend
+admin.site.register(Article) # Регистрируем модель Article
+admin.site.register(Progress) # Регистрируем модель Progress
+admin.site.register(Page) # Регистрируем модель Page
