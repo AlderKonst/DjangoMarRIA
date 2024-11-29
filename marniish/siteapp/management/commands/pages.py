@@ -24,9 +24,9 @@ class Command(BaseCommand):
                     parent_title = parent_block.find('a').get_text() # Получаем имя родительской страницы
                 Page.objects.create( # Создаем объект таблицы БД Page
                     title=title,  # Создаем поле именем страницы
-                    url = page[:-4], # Создаем поле url с адресом страницы без расширения
+                    url = page[:-5], # Создаем поле адреса страницы без расширения
                     description = description, # Создаем поле описания страницы
-                    parent_url = parent_url, # Создаем поле адреса родительской страницы
+                    parent_url = parent_url[:-5], # Создаем поле адреса родительской страницы без расширения
                     parent_title = parent_title # Создаем поле имени родительской страницы
                 )
                 print(f'Страница {page} была добавлена в БД')
