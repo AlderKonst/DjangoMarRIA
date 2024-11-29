@@ -29,4 +29,3 @@ class Command(BaseCommand):
                     parent_url = parent_url[:-5], # Создаем поле адреса родительской страницы без расширения
                     parent_title = parent_title # Создаем поле имени родительской страницы
                 )
-                print(f'Страница {page} была добавлена в БД')
