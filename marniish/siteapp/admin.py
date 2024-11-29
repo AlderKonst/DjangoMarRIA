@@ -4,3 +4,4 @@ from .models import * # Все модели загружаем (Trend, Article, 
 admin.site.register(Trend)
 admin.site.register(Article)
 admin.site.register(Progress)
+admin.site.register(Page)
