@@ -23,10 +23,10 @@ class Progress(models.Model): # Наиболее значимые достиже
 
 class PageWay(models.Model): # Путь и имя страницы
     url = models.URLField(max_length=30, unique=True)  # URL страницы (без .html)
-    title = models.CharField(max_length=50)  # Название страницы
+    title = models.CharField(max_length=150)  # Название страницы
+    parent = models.ForeignKey('self',  # Самоссылка для указания родительской страницы
+                               null=True, blank=True, on_delete=models.CASCADE)
 
 class Page(models.Model): # Содержимое сайта
     page = models.ForeignKey(PageWay, on_delete=models.CASCADE) # ID пути страницы
-    description = models.CharField(max_length=100) # Метаописание страницы
-    parent = models.ForeignKey('self', # Самоссылка для указания родительской страницы
-                               null=True, blank=True, on_delete=models.CASCADE)
+    description = models.CharField() # Метаописание страницы
