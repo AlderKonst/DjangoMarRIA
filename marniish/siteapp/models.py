@@ -35,3 +35,12 @@ class TrendItem(models.Model): # Пункты направления
     trend = models.ForeignKey(Trend, on_delete=models.CASCADE) # К какому основному направлению относится
     def __str__(self):
         return self.name # Возвращает название направления
+
+class References(models.Model): # Полезные ссылки
+    name = models.CharField(max_length=100, unique=True)  # Наименование ссылки
+    id_name = models.CharField(max_length=10, unique=True)  # ID ссылки
+    url = models.URLField(max_length=100, unique=True) # URL ссылки
+    top = models.CharField(max_length=10, blank=True, null=True) # Расстояние до верхнего уровня в CSS
+    left = models.CharField(max_length=10, blank=True, null=True) # Расстояние до левого края в CSS
+    def __str__(self):
+        return self.name # Возвращает наименование ссылки
