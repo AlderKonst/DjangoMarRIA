@@ -8,30 +8,6 @@
 	{{page.description}}
 {% endblock %}
 
-{% block way %}
-	{% if page.parent_url %}
-		<li><a href="{% url 'siteapp:parent_page' page.parent_url %}">{{page.parent_title}}</a>
-			<ul>
-				<li><a href="{% url 'siteapp:this_page' page.url %}">{{page.title}}</a></li>
-			</ul>
-		</li>
-	{% else %}
-		<li><a href="{% url 'siteapp:this_page' page.url %}">{{page.title}}</a></li>
-	{% endif %}
-{% endblock %}
-
-{% block way_again %}
-	{% if page.parent_url %}
-		<li><a href="{% url 'siteapp:parent_page' page.parent_url %}">{{page.parent_title}}</a>
-			<ul>
-				<li><a href="{% url 'siteapp:this_page' page.url %}">{{page.title}}</a></li>
-			</ul>
-		</li>
-	{% else %}
-		<li><a href="{% url 'siteapp:this_page' page.url %}">{{page.title}}</a></li>
-	{% endif %}
-{% endblock %}
-
 {% block content %}
 <article style="color:green;background-color:white">
 	<p>ВАЖНОЕ ОБЪЯВЛЕНИЕ!</p>
