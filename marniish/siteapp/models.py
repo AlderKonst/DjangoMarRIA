@@ -29,3 +29,7 @@ class Page(models.Model): # Страница сайта
     parent_title = models.CharField(max_length=100)  # Название родительской страницы
     def __str__(self):
         return self.title # Возвращает название страницы
+
+class TrendItem(models.Model): # Пункты направления
+    name = models.CharField(max_length=250, unique=True)  # Название пункта направления
+    trend = models.ForeignKey(Trend, on_delete=models.CASCADE) # К какому основному направлению относится
