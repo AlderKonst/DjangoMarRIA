@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup # Импорт библиотеки для пар�
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from siteapp.models import TrendItem, Trend # Импорт моделей из siteapp
 
-# Здесь будет код для получения данных со страницы Progress.html
+# Здесь будет код для получения направлений деятельности со страницы index.html
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
