@@ -18,34 +18,12 @@
 <section class="areas">
 	<h2>Основные направления деятельности</h2>
 	<div>
-		<a href="{% url 'siteapp:Trend' %}" id="plant">
+		{% for trend in trends %}
+		<a href="{% url 'siteapp:Trend' %}" id="{{trend.trend}}">
 			<div><img src="img/sprite_trend.png"></div>
-			<strong>Разработка ресурсосберегающих технологий производства сельскохозяйственных культур</strong>
-		</a
-		><a href="{% url 'siteapp:Trend' %}" id="plant">
-			<div><img src="img/sprite_trend.png"></div>
-			<strong>Cоздание смешанных озимых агроценозов с участием тритикале</strong>
-		</a
-		><a href="{% url 'siteapp:Trend' %}" id="plant">
-			<div><img src="img/sprite_trend.png"></div>
-			<strong>Разработка технологии возделывания перспективных сортов жимолости синей в условиях Республики Марий Эл</strong>
-		</a
-		><a href="{% url 'siteapp:Trend' %}" id="land">
-			<div><img src="img/sprite_trend.png"></div>
-			<strong>Разработка адаптивно-ландшафтных систем земледелия, научно-обоснованных севооборотов</strong>
-		</a
-		><a href="{% url 'siteapp:Trend' %}" id="land">
-			<div><img src="img/sprite_trend.png"></div>
-			<strong>Повышение плодородия почв и разработка систем удобрений полевых и кормовых севооборотов, и биологизация почв</strong>
-		</a
-		><a href="{% url 'siteapp:Trend' %}" id="zoo">
-			<div><img src="img/sprite_trend.png"></div>
-			<strong>Разработка методических рекомендаций по увеличению продуктивного долголетия и повышению молочной продуктивности скота черно-пестрой породы</strong>
-		</a
-		><a href="{% url 'siteapp:Trend' %}" id="bird">
-			<div><img src="img/sprite_trend.png"></div>
-			<strong>Методы сохранения и размножения волжских белых цесарок генофондного стада в малочисленной группе</strong>
+			<strong>{{trend.name}}</strong>
 		</a>
+		{% endfor %}
 	</div>
 </section>
 <div class="references">
