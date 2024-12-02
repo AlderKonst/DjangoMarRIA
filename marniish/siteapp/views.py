@@ -3,8 +3,8 @@ from django.shortcuts import (render, # Импортируем функцию д
                               HttpResponseRedirect) # и перенаправления
 from django.urls import reverse # Импортируем функцию для получения URL по имени
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
-
-from .models import Page, TrendItem, Reference, Article # Импортируем модель таблицы Page, TrendItem, Reference и Article
+# Импортируем модели соответствующих таблиц
+from .models import Page, TrendItem, Reference, Article, Progress # Импортируем модели соответствующих таблиц
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -95,7 +95,8 @@ def trend(request): # Для рендеринга страницы направ�
 
 def progress(request): # Для рендеринга страницы достижений
     page = Page.objects.get(url='Progress') # Получаем запись в таблице Page с именем Progress в поле url
-    context = {'page': page} # Передаем шаблон
+    progresses = Progress.objects.all()  # Получаем все записи в таблице Progress
+    context = {'page': page, 'progresses': progresses} # Передаем в шаблон
     return render(request, 'siteapp/Progress.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def article(request): # Для рендеринга страницы статей
