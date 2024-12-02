@@ -4,7 +4,7 @@ from django.shortcuts import (render, # Импортируем функцию д
 from django.urls import reverse # Импортируем функцию для получения URL по имени
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
 
-from .models import Page, TrendItem, Reference # Импортируем модель таблицы Page, TrendItem, Reference
+from .models import Page, TrendItem, Reference, Article # Импортируем модель таблицы Page, TrendItem, Reference и Article
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -100,7 +100,8 @@ def progress(request): # Для рендеринга страницы дости
 
 def article(request): # Для рендеринга страницы статей
     page = Page.objects.get(url='Article') # Получаем запись в таблице Page с именем Article в поле url
-    context = {'page': page} # Передаем шаблон
+    articles = Article.objects.all()  # Получаем все записи в таблице Article
+    context = {'page': page, 'articles': articles} # Передаем шаблон
     return render(request, 'siteapp/Article.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def contact(request): # Для рендеринга страницы контактов
