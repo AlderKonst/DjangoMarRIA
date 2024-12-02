@@ -9,12 +9,11 @@
 {% endblock %}
 
 {% block content %}
-<nav class="nav_sub">
-	<span>Ещё ↑</span>
-	<a href="Potato.html">Картофель</a>
-	<a href="Grass.html">Многолетние травы</a>
-	<a href="Jim.html">Жимолость</a>
-</nav>
+
+{% block nav_sub_prod %}
+	{% include "nav_sub_prod.html" %}
+{% endblock %}
+
 <h2>Зерновая продукция</h2>
 <div class="pages">
 	<div id="news_institute">
