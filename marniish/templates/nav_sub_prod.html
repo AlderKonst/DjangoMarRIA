@@ -1,8 +1,8 @@
 {% block nav_sub_about %}
 <nav class="nav_sub">
 	<span>Ещё ↑</span>
-	<a href="Potato.html">Картофель</a>
-	<a href="Grass.html">Многолетние травы</a>
-	<a href="Jim.html">Жимолость</a>
+	<a href="{% url 'siteapp:Potato' %}">Картофель</a>
+	<a href="{% url 'siteapp:Grass' %}">Многолетние травы</a>
+	<a href="{% url 'siteapp:Jim' %}">Жимолость</a>
 </nav>
 {% endblock %}
