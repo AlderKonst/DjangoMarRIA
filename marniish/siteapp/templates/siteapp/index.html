@@ -28,12 +28,9 @@
 </section>
 <div class="references">
 	<h2>Полезные ссылки</h2>
-	<a id="fano" href="http://minobrnauki.gov.ru" title="Минобрнауки России" target="_blank"><img src="img/sprite_link.png" alt="Минобрнауки России"></a
-	><a id="ras" href="http://www.ras.ru" title="Российская академия наук" target="_blank"><img src="img/sprite_link.png" alt="РАН"></a
-	><a id="mcx" href="http://www.mcx.ru" title="Минсельхоз РФ" target="_blank"><img src="img/sprite_link.png" alt="Минсельхоз РФ"></a
-	><a id="m_gov" href="http://mari-el.gov.ru" title="Правительство Марий Эл" target="_blank"><img src="img/sprite_link.png" alt="Правительств Марий Эл"></a
-	><a id="elibrary" href="http://elibrary.ru" title="Elibrary.ru" target="_blank"><img src="img/sprite_link.png" alt="Elibrary.ru"></a
-	><a id="cyberleninka" href="http://cyberleninka.ru" title="КиберЛенинка" target="_blank"><img src="img/sprite_link.png" alt="КиберЛенинка"></a
-	><a id="maripogoda" href="http://maripogoda.ru/agro-obzor" title="Метеорологический агрообзор Марийского ЦГМС" target="_blank"><img src="img/sprite_link.png" alt="Метеорологический агрообзор Марийского ЦГМС"></a>
+	{% for ref in references %}
+	<a id="{{ref.id_name}}" href="{{ref.url}}" title="{{ref.name}}" target="_blank">
+		<img src="img/sprite_link.png" alt="{{ref.name}}"></a>
+	{% endfor %}
 </div>
 {% endblock %}

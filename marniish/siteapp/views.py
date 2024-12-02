@@ -4,12 +4,13 @@ from django.shortcuts import (render, # Импортируем функцию д
 from django.urls import reverse # Импортируем функцию для получения URL по имени
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
 
-from .models import Page, TrendItem # Импортируем модель таблицы Page и TrendItem
+from .models import Page, TrendItem, Reference # Импортируем модель таблицы Page, TrendItem, Reference
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
     trends = TrendItem.objects.all() # Получаем все записи в таблице TrendItem
-    context = {'page': page, 'trends': trends} # Передаем шаблон
+    references = Reference.objects.all() # Получаем все записи в таблице Reference
+    context = {'page': page, 'trends': trends, 'references': references} # Передаем поля в шаблон
     return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def news2024(request): # Для рендеринга страницы новостей за 2024 год
