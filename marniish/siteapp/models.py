@@ -36,7 +36,7 @@ class TrendItem(models.Model): # Пункты направления
     def __str__(self):
         return self.name # Возвращает название направления
 
-class References(models.Model): # Полезные ссылки
+class Reference(models.Model): # Полезные ссылки
     name = models.CharField(max_length=100, unique=True)  # Наименование ссылки
     id_name = models.CharField(max_length=10, unique=True)  # ID ссылки
     url = models.URLField(max_length=100, unique=True) # URL ссылки
