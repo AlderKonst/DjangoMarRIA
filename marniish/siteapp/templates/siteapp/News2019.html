@@ -14,18 +14,6 @@
 	{% include "nav_sub_news.html" %}
 {% endblock %}
 
-<nav class="nav_sub">
-	<span>Ещё ↑</span>
-	<a href="{% url 'siteapp:News2016' %}">За 2016 год</a>
-	<a href="{% url 'siteapp:News2017' %}">За 2017 год</a>
-	<a href="{% url 'siteapp:News2018' %}">За 2018 год</a>
-	<a href="{% url 'siteapp:News2019' %}">За 2019 год</a>
-	<a href="{% url 'siteapp:News2020' %}">За 2020 год</a>
-	<a href="{% url 'siteapp:News2021' %}">За 2021 год</a>
-	<a href="{% url 'siteapp:News2022' %}">За 2022 год</a>
-	<a href="{% url 'siteapp:News2023' %}">За 2023 год</a>
-	<a href="{% url 'siteapp:News2024' %}">За 2024 год</a>
-</nav>
 <h2>Новости института</h2>
 <div class="pages">
 	<div id="news_institute">
@@ -55,7 +43,7 @@
 	</article>
 	</div>
 {% block news_archive %}
-	{% include "news_archive" %}
+	{% include "news_archive.html" %}
 {% endblock %}
 </div>
 {% endblock %}
