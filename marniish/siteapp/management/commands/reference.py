@@ -2,14 +2,14 @@ import os # Импорт модуля для работы с ОС
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
 import cssutils # Импорт библиотеки для парсинга CSS
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
-from siteapp.models import References # Импорт модели таблицы БД References из siteapp
+from siteapp.models import Reference # Импорт модели таблицы БД References из siteapp
 
 # Здесь будет код для получения свойств полезных ссылок из index.html и style.css
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        dir_html = f'F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\index.html' # Директория c index.html
-        dir_css = f'F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\css\\style.css' # Директория c style.css
+        dir_html = f'F:\\ДОКИ\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\index.html' # Директория c index.html
+        dir_css = f'F:\\ДОКИ\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\css\\style.css' # Директория c style.css
 
         with open(os.path.join(dir_html), 'r', encoding='utf-8') as f:  # Прочитываем html-файл
             content = f.read()  # Читаем содержимое файла c кодом
@@ -34,8 +34,8 @@ class Command(BaseCommand):
                     if f'#{id_name} img' in selector: # Если есть ссылка на изображение
                         top = rule.style.getPropertyValue('top') # Получаем значение top
                         left = rule.style.getPropertyValue('left') # Получаем значение left
-                        References.objects.create(name=title, # Заголовок ссылки
-                                                  id_name=id_name, # id ссылки
-                                                  url=url, # адрес ссылки
-                                                  top=top, # Значение top спрайта в CSS
-                                                  left=left) # Значение left спрайта в CSS
+                        Reference.objects.create(name=title, # Заголовок ссылки
+                                                 id_name=id_name, # id ссылки
+                                                 url=url, # адрес ссылки
+                                                 top=top, # Значение top спрайта в CSS
+                                                 left=left) # Значение left спрайта в CSS

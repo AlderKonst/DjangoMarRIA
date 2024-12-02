@@ -8,7 +8,7 @@ from siteapp.models import Progress, Trend # Импорт моделей из si
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        with open(os.path.join('F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\Progress.html'),
+        with open(os.path.join('F:\\ДОКИ\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\Progress.html'),
                   'r', encoding='utf-8') as f:  # Открываем для чтения нужный файл
             content = f.read()  # Читаем содержимое файла c кодом
             soup = BeautifulSoup(content, 'html.parser')  # Парсим исходный HTML-код
