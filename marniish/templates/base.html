@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width">
 	<meta name="description" content="{% block description %}{% endblock %}">
 	<link rel="icon" type="image/png" href="favicon.png"/>
-	<link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+	<link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
 	<link href="{% static 'css/style.css' %}" rel="stylesheet">
 	<link href="{% static 'css/news.css' %}" rel="stylesheet">
 	<link href="{% static 'css/slide.css' %}" rel="stylesheet">
@@ -34,9 +34,9 @@
 		</li>
 	</ul>
 	<ul class="side">
-		<li class="index"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:index' %}">Главная</a></li
-		><li class="news"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:News2024' %}">Новости</a></li
-		><li class="prod"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:Prod' %}">Продукция</a>
+		<li class="index"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:index' %}">Главная</a></li
+		><li class="news"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:News2024' %}">Новости</a></li
+		><li class="prod"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Prod' %}">Продукция</a>
 			<ul>
 				<li><a href="{% url 'siteapp:Grain' %}">Зерновые</a></li
 				><li><a href="{% url 'siteapp:Potato' %}">Картофель</a></li
@@ -52,10 +52,10 @@
 				><li><a href="{% url 'siteapp:Article' %}">Статьи</a></li>
 			</ul>
 		</li
-		><li class="contact"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:Contact' %}">Контакты</a></li
-		><li class="price"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:Price' %}">Прайс</a></li
-		><li class="docs"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:Docs' %}">Документы</a></li
-		><li class="map"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:Map' %}">Карта сайта</a></li>
+		><li class="contact"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Contact' %}">Контакты</a></li
+		><li class="price"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Price' %}">Прайс</a></li
+		><li class="docs"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Docs' %}">Документы</a></li
+		><li class="map"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Map' %}">Карта сайта</a></li>
 	</ul>
 </nav>
 <div class="mask">
@@ -75,16 +75,16 @@
 			<span>филиал ФГБНУ&nbspФАНЦ Северо-Востока</span>
 		</span
 		><a class="logo" href="{% url 'siteapp:index' %}">
-			<img src="img/Logo.png" alt="Логотип Марийский НИИСХ">
+			<img src="{% static 'img/Logo.png' %}" alt="Логотип Марийский НИИСХ">
 		</a>
 	</h1>
 	<nav class="nav_main">
 		<ul>
-			<li class="index"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:index' %}">Главная</a></li
-			><li class="news"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:News2024' %}">Новости</a></li
-			><li class="prod"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:Prod' %}">Продукция</a></li
-			><li class="about"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:About' %}">О нас</a></li
-			><li class="contact"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:Contact' %}">Контакты</a></li>
+			<li class="index"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:index' %}">Главная</a></li
+			><li class="news"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:News2024' %}">Новости</a></li
+			><li class="prod"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Prod' %}">Продукция</a></li
+			><li class="about"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:About' %}">О нас</a></li
+			><li class="contact"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Contact' %}">Контакты</a></li>
 		</ul>
 	</nav>
 	<a class="tel" href="tel:+78362538039"><span><b class="phone"><i></i></b></span> <strong>+7 (8362) 53-80-39</strong></a>

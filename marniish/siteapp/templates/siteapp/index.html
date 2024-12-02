@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     {{page.title}}
@@ -14,13 +15,13 @@
 	<p>У Марийского НИИСХ – филиала ФГБНУ ФАНЦ Северо-Востока теперь новый официальный почтовый ящик: <strong><a href="mailto:marniish@yandex.ru" style="color:green;">marniish@yandex.ru</a></strong></p>
 	<p>В связи с техническими неполадками преждний почтовый ящик via@mari-el.ru не работает </p>
 </article>
-<img id="expo" src="img/Expo.jpg" alt="Выставочная продукция МарНИИСХ" title="Выставочная продукция МарНИИСХ">
+<img id="expo" src="{% static 'img/Expo.jpg' %}" alt="Выставочная продукция МарНИИСХ" title="Выставочная продукция МарНИИСХ">
 <section class="areas">
 	<h2>Основные направления деятельности</h2>
 	<div>
 		{% for trend in trends %}
 		<a href="{% url 'siteapp:Trend' %}" id="{{trend.trend}}">
-			<div><img src="img/sprite_trend.png"></div>
+			<div><img src="{% static 'img/sprite_trend.png' %}"></div>
 			<strong>{{trend.name}}</strong>
 		</a>
 		{% endfor %}
@@ -30,7 +31,7 @@
 	<h2>Полезные ссылки</h2>
 	{% for ref in references %}
 	<a id="{{ref.id_name}}" href="{{ref.url}}" title="{{ref.name}}" target="_blank">
-		<img src="img/sprite_link.png" alt="{{ref.name}}"></a>
+		<img src="{% static 'img/sprite_link.png' %}" alt="{{ref.name}}"></a>
 	{% endfor %}
 </div>
 {% endblock %}
