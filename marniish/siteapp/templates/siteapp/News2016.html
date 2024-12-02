@@ -9,18 +9,11 @@
 {% endblock %}
 
 {% block content %}
-<nav class="nav_sub">
-	<span>Ещё ↑</span>
-	<a href="{% url 'siteapp:News2016' %}">За 2016 год</a>
-	<a href="{% url 'siteapp:News2017' %}">За 2017 год</a>
-	<a href="{% url 'siteapp:News2018' %}">За 2018 год</a>
-	<a href="{% url 'siteapp:News2019' %}">За 2019 год</a>
-	<a href="{% url 'siteapp:News2020' %}">За 2020 год</a>
-	<a href="{% url 'siteapp:News2021' %}">За 2021 год</a>
-	<a href="{% url 'siteapp:News2022' %}">За 2022 год</a>
-	<a href="{% url 'siteapp:News2023' %}">За 2023 год</a>
-	<a href="{% url 'siteapp:News2024' %}">За 2024 год</a>
-</nav>
+
+{% block nav_sub_about %}
+	{% include "nav_sub_news.html" %}
+{% endblock %}
+
 <h2>Новости института за 2016 год</h2>
 <div class="pages">
 	<div id="news_institute">
@@ -110,17 +103,8 @@
 		</section>
 	</article>
 	</div>
-	<aside id="news_archive">
-		<h3>Архив новостей</h3>
-		<a href="{% url 'siteapp:News2016' %}">2016</a>
-		<a href="{% url 'siteapp:News2017' %}">2017</a>
-		<a href="{% url 'siteapp:News2018' %}">2018</a>
-		<a href="{% url 'siteapp:News2019' %}">2019</a>
-		<a href="{% url 'siteapp:News2020' %}">2020</a>
-		<a href="{% url 'siteapp:News2021' %}">2021</a>
-		<a href="{% url 'siteapp:News2022' %}">2022</a>
-		<a href="{% url 'siteapp:News2023' %}">2023</a>
-		<a href="{% url 'siteapp:News2024' %}">2024</a>
-	</aside>
+{% block news_archive %}
+	{% include "news_archive" %}
+{% endblock %}
 </div>
 {% endblock %}
