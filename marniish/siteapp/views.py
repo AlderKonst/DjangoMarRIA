@@ -4,7 +4,7 @@ from django.shortcuts import (render, # Импортируем функцию д
 from django.urls import reverse # Импортируем функцию для получения URL по имени
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
 # Импортируем модели соответствующих таблиц
-from .models import Page, TrendItem, Reference, Article, Progress, History # Импортируем модели соответствующих таблиц
+from .models import Page, TrendItem, Reference, Article, Progress, History, HistoryData # Импортируем модели соответствующих таблиц
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -85,8 +85,9 @@ def jim(request): # Для рендеринга страницы жимолос�
 
 def about(request): # Для рендеринга страницы истории института
     page = Page.objects.get(url='About') # Получаем запись в таблице Page с именем About в поле url
-    histories = History.objects.all()  # Получаем все записи в таблице Progress
-    context = {'page': page, 'histories': histories} # Передаем шаблон
+    data = HistoryData.objects.all()  # Получаем все записи в таблице HistoryData
+    histories = History.objects.all()  # Получаем все записи в таблице History
+    context = {'page': page, 'histories': histories, 'data': data} # Передаем шаблон
     return render(request, 'siteapp/About.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def trend(request): # Для рендеринга страницы направлений деятельности
