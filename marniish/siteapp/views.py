@@ -69,7 +69,7 @@ def grain(request): # Для рендеринга страницы зернов�
     groups = CultureGroup.objects.get(name='Зерновые культуры') # Получаем запись в таблице Culture с нужным именем
     cultures = Culture.objects.filter(group=groups) # Получаем запись в таблице Culture с культурами этой группы
     taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page,'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
+    context = {'page': page, 'groups': groups, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Grain.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def potato(request): # Для рендеринга страницы картофеля
@@ -77,7 +77,7 @@ def potato(request): # Для рендеринга страницы картоф
     groups = CultureGroup.objects.get(name='Клубнеплоды') # Получаем запись в таблице Culture с нужным именем
     cultures = Culture.objects.filter(group=groups) # Получаем запись в таблице Culture с культурами этой группы
     taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
+    context = {'page': page, 'groups': groups, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Potato.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def grass(request): # Для рендеринга страницы многолетних трав
@@ -85,7 +85,7 @@ def grass(request): # Для рендеринга страницы многол�
     groups = CultureGroup.objects.get(name='Многолетние травы') # Получаем запись в таблице Culture с нужным именем
     cultures = Culture.objects.filter(group=groups) # Получаем запись в таблице Culture с культурами этой группы
     taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
+    context = {'page': page, 'groups': groups, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Grass.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def jim(request): # Для рендеринга страницы жимолости
@@ -93,7 +93,7 @@ def jim(request): # Для рендеринга страницы жимолос�
     groups = CultureGroup.objects.get(name='Плодово-ягодные культуры') # Получаем запись в таблице Culture с нужным именем
     cultures = Culture.objects.filter(group=groups) # Получаем запись в таблице Culture с культурами этой группы
     taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
+    context = {'page': page, 'groups': groups, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Jim.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def about(request): # Для рендеринга страницы истории института
