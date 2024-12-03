@@ -59,8 +59,14 @@ class History(models.Model): # Исторические события НИИ
     def __str__(self):
         return self.text # Для отображения наименования ссылки
 
-class Culture(models.Model): # Види агрокультур, выращиваемых в НИИ
+class CultureGroup(models.Model): # Группа агрокультур, выращиваемых в НИИ
+    name = models.CharField(max_length=100, unique=True) # Группа культуры
+    def __str__(self):
+        return self.name # Для отображения наименования группы культур
+
+class Culture(models.Model): # Виды агрокультур, выращиваемых в НИИ
     name = models.CharField(max_length=100, unique=True) # Вид с/х культуры
+    group = models.ForeignKey(CultureGroup, on_delete=models.CASCADE) # Группа культуры (связь один-ко-многим)
     def __str__(self):
         return self.name # Для отображения вида культуры
 
