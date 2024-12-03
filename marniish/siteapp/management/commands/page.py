@@ -7,7 +7,7 @@ from siteapp.models import Page # Импорт модели таблицы БД 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        dir = f'F:\\ДОКИ\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\' # Директория поиска html-файлов
+        dir = f'F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\' # Директория поиска html-файлов
         pages = [page for page in os.listdir(dir)
                  if page.endswith('.html')] # Перебираем страницы и сохраняем в генереторе имена файлов с .html в конце
         for page in pages:

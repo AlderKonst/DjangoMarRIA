@@ -1,4 +1,3 @@
-import os # Импорт модуля для работы с ОС
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
 import cssutils # Импорт библиотеки для парсинга CSS
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
@@ -8,16 +7,16 @@ from siteapp.models import Reference # Импорт модели таблицы 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        dir_html = f'F:\\ДОКИ\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\index.html' # Директория c index.html
-        dir_css = f'F:\\ДОКИ\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\css\\style.css' # Директория c style.css
+        dir_html = 'F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\index.html' # Директория c index.html
+        dir_css = 'F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\css\\style.css' # Директория c style.css
 
-        with open(os.path.join(dir_html), 'r', encoding='utf-8') as f:  # Прочитываем html-файл
+        with open(dir_html, 'r', encoding='utf-8') as f:  # Прочитываем html-файл
             content = f.read()  # Читаем содержимое файла c кодом
         soup = BeautifulSoup(content, 'html.parser')  # Парсим исходный HTML-код
         div_refs = soup.find('div', class_='references')  # Получаем блок со ссылками
         refs = div_refs.find_all('a')  # Получаем все тэги со ссылками
 
-        with open(os.path.join(dir_css), 'r', encoding='utf-8') as f:  # Прочитываем css-файл
+        with open(dir_css, 'r', encoding='utf-8') as f:  # Прочитываем css-файл
             content = f.read()  # Читаем содержимое файла c кодом
         css_parser = cssutils.CSSParser()  # Инициализируем парсер
         css_styles = css_parser.parseString(content)  # Парсим исходный CSS-код
