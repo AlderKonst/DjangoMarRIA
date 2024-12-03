@@ -9,5 +9,6 @@ admin.site.register(TrendItem) # Регистрируем модель с пун
 admin.site.register(Reference) # Регистрируем модель с полезными ссылками
 admin.site.register(HistoryData) # Регистрируем модель с историческими датами
 admin.site.register(History) # Регистрируем модель с историческими событиями к датам
-admin.site.register(Culture) # Регистрируем модель с видами воздеваемых в НИИ культур
-admin.site.register(Taxon) # Регистрируем модель с таксонами воздеваемых в НИИ культур
+admin.site.register(Culture) # Регистрируем модель с видами, воздеваемых в НИИ культур
+admin.site.register(Taxon) # Регистрируем модель с таксонами, воздеваемых в НИИ культур
+admin.site.register(CultureGroup) # Регистрируем модель с группами культур
