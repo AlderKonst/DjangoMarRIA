@@ -33,7 +33,7 @@ class Command(BaseCommand):
                     if f'#{id_name} img' in selector: # Если есть ссылка на изображение
                         top = rule.style.getPropertyValue('top') # Получаем значение top
                         left = rule.style.getPropertyValue('left') # Получаем значение left
-                        Reference.objects.create(name=title, # Заголовок ссылки
+                        Reference.objects.get_or_create(name=title, # Заголовок ссылки
                                                  id_name=id_name, # id ссылки
                                                  url=url, # адрес ссылки
                                                  top=top, # Значение top спрайта в CSS
