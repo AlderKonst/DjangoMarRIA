@@ -22,7 +22,7 @@ class Command(BaseCommand):
                 if parent_block: # Если блок родительской страницы есть
                     parent_url = parent_block.find('a').get('href') # Получаем адрес родительской страницы
                     parent_title = parent_block.find('a').get_text() # Получаем имя родительской страницы
-                Page.objects.create( # Создаем объект таблицы БД Page
+                Page.objects.get_or_create( # Создаем объект таблицы БД Page
                     title=title,  # Создаем поле именем страницы
                     url = page[:-5], # Создаем поле адреса страницы без расширения
                     description = description, # Создаем поле описания страницы
