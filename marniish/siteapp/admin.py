@@ -12,3 +12,4 @@ admin.site.register(History) # Регистрируем модель с исто
 admin.site.register(CultureGroup) # Регистрируем модель с группами культур
 admin.site.register(Culture) # Регистрируем модель с видами, воздеваемых в НИИ культур
 admin.site.register(Taxon) # Регистрируем модель с таксонами, воздеваемых в НИИ культур
+admin.site.register(Document) # Регистрируем модель с публикованными документами НИИ
