@@ -58,3 +58,17 @@ class History(models.Model): # Исторические события НИИ
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
     def __str__(self):
         return self.text # Для отображения наименования ссылки
+
+class Culture(models.Model): # Види агрокультур, выращиваемых в НИИ
+    name = models.CharField(max_length=100) # Вид с/х культуры
+    def __str__(self):
+        return self.name # Для отображения вида культуры
+
+class Taxon(models.Model): # Низшие таксоны агрокультур, выращиваемых в НИИ
+    name = models.CharField(max_length=100) # Таксон с/х культуры
+    culture = models.ForeignKey(Culture, on_delete=models.CASCADE) # Культура (связь один-ко-многим)
+    text = models.CharField(max_length=1500) # Текст описания
+    img = models.URLField(max_length=150, blank=True, null=True) # URL картинки
+    alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
+    def __str__(self):
+        return self.name # Для отображения вида культуры
