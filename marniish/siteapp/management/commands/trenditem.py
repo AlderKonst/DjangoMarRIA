@@ -24,5 +24,5 @@ class Command(BaseCommand):
                 name = a.find('strong').get_text()  # Получаем текст c направлением деятельности в теге <strong>
                 trend = a.get('id')  # Получаем id основного направления деятельности
                 trend_obj = trends_dict[trend]  # Получаем объект Trend из словаря, чтобы потом вставить в Progress
-                TrendItem.objects.create(name=name, # Направление деятельности
+                TrendItem.objects.get_or_create(name=name, # Направление деятельности
                                          trend=trend_obj) # Основное направление деятельности (из Trend, один-ко-многим)
