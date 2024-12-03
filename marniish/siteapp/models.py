@@ -78,3 +78,10 @@ class Taxon(models.Model): # Низшие таксоны агрокультур,
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
     def __str__(self):
         return self.name # Для отображения вида культуры
+
+class Document(models.Model): # Документы НИИ
+    name = models.CharField(max_length=250) # Название документа
+    data = models.CharField(max_length=20) # Дата публикации ксивы (решил многие-ко-многим не делать, тут не особо надо)
+    url = models.URLField(max_length=150, unique=True) # URL документа
+    def __str__(self):
+        return self.name # Для отображения названия документа
