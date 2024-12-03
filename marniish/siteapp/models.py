@@ -52,7 +52,7 @@ class HistoryData(models.Model): # Историческая дата НИИ
         return str(self.year) # Для отображения года в строковом виде
 
 class History(models.Model): # Исторические события НИИ
-    text = models.CharField(max_length=500) # Текст абзаца
+    text = models.CharField(max_length=1500) # Текст абзаца
     data = models.ForeignKey(HistoryData, on_delete=models.CASCADE) # Дата события (один-ко-многим)
     img = models.URLField(max_length=150, blank=True, null=True) # URL картинки
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
