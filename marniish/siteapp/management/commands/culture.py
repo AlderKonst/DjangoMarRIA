@@ -15,7 +15,7 @@ class Command(BaseCommand):
                 articles = soup.find_all('article')[:-1] # Извлекаем все article-теги, кроме последнего
                 for article in articles: # Итерируем по каждому найденному тегу <article>
                     culture = article.find('h3').find('span').get_text() # Извлекаем вид культуры из заголовка
-                    culture = Culture.objects.create(culture=culture) # Создаем объект Culture с видом культуры
+                    culture, _ = Culture.objects.get_or_create(name=culture) # Создаем объект Culture с видом культуры
                     taxon = article.find('h3').find('b').get_text() # Извлекаем название низшего таксона
                     pp = article.find_all('p')  # Извлекаем содержимое из каждого абзаца <p>
                     text = '\n'.join(str(p) for p in pp) # Создаем строку содержимого из всех абзацев <p> блока
