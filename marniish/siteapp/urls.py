@@ -43,7 +43,7 @@ urlpatterns = [
     path('Contact', views.contact, name='Contact'), # Контакты
     path('Price', views.price, name='Price'), # Прайс
     path('Docs', views.docs, name='Docs'), # Документы
-    path('Map', views.map, name='Map'), # Карта сайта
+    path('Map', views.mapping, name='Map'), # Карта сайта
     path('<str:url>/', views.this_page, name='this_page'), # Текущая страница
     path('<str:parent_url>/', views.parent_page, name='parent_page'), # Страница родителя
 ]
