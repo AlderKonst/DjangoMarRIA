@@ -60,7 +60,7 @@ class History(models.Model): # Исторические события НИИ
         return self.text # Для отображения наименования ссылки
 
 class Culture(models.Model): # Види агрокультур, выращиваемых в НИИ
-    name = models.CharField(max_length=100) # Вид с/х культуры
+    name = models.CharField(max_length=100, unique=True) # Вид с/х культуры
     def __str__(self):
         return self.name # Для отображения вида культуры
 
