@@ -4,7 +4,9 @@ from django.shortcuts import (render, # Импортируем функцию д
 from django.urls import reverse # Импортируем функцию для получения URL по имени
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
 # Импортируем модели соответствующих таблиц
-from .models import Page, TrendItem, Reference, Article, Progress, History, HistoryData # Импортируем модели соответствующих таблиц
+from .models import Page, TrendItem, Reference, Article, Progress, History, HistoryData, Culture, Taxon # Импортируем
+# модели
+# соответствующих таблиц
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -65,22 +67,30 @@ def prod(request): # Для рендеринга страницы продукц
 
 def grain(request): # Для рендеринга страницы зерновых
     page = Page.objects.get(url='Grain') # Получаем запись в таблице Page с именем Grain в поле url
-    context = {'page': page} # Передаем шаблон
+    cultures = Culture.objects.filter(group='Зерновые культуры') # Получаем запись в таблице Culture с именем Зерновые культуры в поле group
+    taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с именем Зерновые культуры в поле culture
+    context = {'page': page,'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Grain.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def potato(request): # Для рендеринга страницы картофеля
     page = Page.objects.get(url='Potato') # Получаем запись в таблице Page с именем Potato в поле url
-    context = {'page': page} # Передаем шаблон
+    cultures = Culture.objects.filter(group='Клубнеплоды') # Получаем запись в таблице Culture с именем Клубнеплоды в поле group
+    taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с именем Клубнеплоды в поле culture
+    context = {'page': page, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Potato.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def grass(request): # Для рендеринга страницы многолетних трав
     page = Page.objects.get(url='Grass') # Получаем запись в таблице Page с именем Grass в поле url
-    context = {'page': page} # Передаем шаблон
+    cultures = Culture.objects.filter(group='Многолетние травы') # Получаем запись в таблице Culture с именем Многолетние травы в поле group
+    taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с именем Многолетние травы в поле culture
+    context = {'page': page, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Grass.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def jim(request): # Для рендеринга страницы жимолости
     page = Page.objects.get(url='Jim') # Получаем запись в таблице Page с именем Jim в поле url
-    context = {'page': page} # Передаем шаблон
+    cultures = Culture.objects.filter(group='Жимолость') # Получаем запись в таблице Culture с именем Жимолость в поле group
+    taxons = Taxon.objects.filter(culture=cultures) # Получаем запись в таблице Taxon с именем Жимолость в поле culture
+    context = {'page': page, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
     return render(request, 'siteapp/Jim.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def about(request): # Для рендеринга страницы истории института
