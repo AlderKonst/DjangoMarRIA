@@ -8,7 +8,7 @@ from siteapp.models import Page # Импорт модели таблицы БД 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        pages = [page for page in os.listdir(dir)
+        pages = [page for page in os.listdir(site_dir)
                  if page.endswith('.html')] # Перебираем страницы и сохраняем в генереторе имена файлов с .html в конце
         for page in pages:
             with open(os.path.join(f'{site_dir}{page}'), 'r', encoding='utf-8') as f:  # Прочитываем каждый html-файл
