@@ -1,0 +1,1 @@
+site_dir = 'F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\' # Директория страниц для парсинга
