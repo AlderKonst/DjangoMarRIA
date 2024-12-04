@@ -15,15 +15,15 @@ class Command(BaseCommand):
             time = [tr.find('td', class_='time').get_text(strip=True) if tr.find('td', class_='time') else '' for tr in trs] # Извлекаем даты
             data_before = datetime.strptime(time[0], "%d-%m-%Y").date() # Дата публикации документа берётся первая
             for n, tr in enumerate(trs): # Итерируем по каждому найденному тегу <tr>
-                data = datetime.strptime(time[n], "%d-%m-%Y").date() # Извлекаем дату
+                date = datetime.strptime(time[n], "%d-%m-%Y").date() # Извлекаем дату
                 name = tr.find('td', class_='left').get_text(strip=True)  # Извлекаем название (второй столбец)
                 url = tr.find('a').get('href')  # Извлекаем ссылку (третий столбец)
-                if not data: # Если дата публикации пустая
+                if not date: # Если дата публикации пустая
                     Document.objects.get_or_create(name=name, # Название документа
-                                            data=data_before,  # Дата публикации документа берётся предыдущий
+                                            date=data_before,  # Дата публикации документа берётся предыдущий
                                             url=url) # Ссылка его скачивания
                 else:
                     Document.objects.get_or_create(name=name,  # Название документа
-                                                   data=data,  # Дата публикации документа берётся предыдущий
+                                                   date=date,  # Дата публикации документа берётся предыдущий
                                                    url=url)  # Ссылка его скачивания
-                    data_before = data  # Дата публикации документа берётся следующий
+                    data_before = date  # Дата публикации документа берётся следующий
