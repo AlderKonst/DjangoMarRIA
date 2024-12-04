@@ -84,4 +84,4 @@ class Document(models.Model): # Документы НИИ
     name = models.CharField(max_length=250)  # Название документа
     url = models.URLField(max_length=150, unique=True) # URL документа
     def __str__(self):
-        return self.name # Для отображения названия документа
+        return self.date # Для отображения названия документа
