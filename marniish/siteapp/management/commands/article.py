@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
+from . import site_dir # Импортируем переменную с директорией сайта
 from siteapp.models import Article, Trend # Импорт моделей Article и Trend из siteapp
 import re # Пришлось для работы с регулярными выражениями
 
@@ -7,7 +8,7 @@ import re # Пришлось для работы с регулярными вы�
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        with open('F:\\UII\\Python+\\DjangoMarRIA\\marniish\\templates\\MarRIA\\Article.html',
+        with open(f'{site_dir}Article.html',
                   'r', encoding='utf-8') as f:  # Открываем для чтения нужный файл
             content = f.read()  # Читаем содержимое файла c кодом
             soup = BeautifulSoup(content, 'html.parser')  # Парсим исходный HTML-код
