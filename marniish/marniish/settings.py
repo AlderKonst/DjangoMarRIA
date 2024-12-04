@@ -106,12 +106,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'ru-RU'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
+
+DATE_FORMAT = 'd-m-Y'  # Формат для вывода даты (02.10.2014)
+DATE_INPUT_FORMATS = ['%d-%m-%Y']  # Формат для ввода даты
 
 
 # Статичные файлы (CSS, JavaScript, Images)
