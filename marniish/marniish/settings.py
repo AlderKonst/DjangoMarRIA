@@ -110,8 +110,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-DATE_FORMAT = 'd-m-Y'  # Формат для вывода даты (02.10.2014)
-DATE_INPUT_FORMATS = ['%d-%m-%Y']  # Формат для ввода даты
+DATE_FORMAT = '%Y-%m-%d'  # Формат для вывода даты (2024.10.14)
+DATE_INPUT_FORMATS = ['%Y-%m-%d']  # Формат для ввода даты
 
 
 # Статичные файлы (CSS, JavaScript, Images)
