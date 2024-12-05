@@ -16,7 +16,6 @@ import os # Из-за STATICFILES_DIRS и TEMPLATES
 # Пути сборки внутри проекта, например: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Быстрые настройки для разработки - неприемлемо для производства
 # Смотреть https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -27,7 +26,6 @@ SECRET_KEY = 'django-insecure-45acl!f45^#3s58p%=1*g(wco7_kjqkh67_e!0u#oia_3ov(m0
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -71,7 +69,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'marniish.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
@@ -81,7 +78,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Проверка паролей на соответствие
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -101,7 +97,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Международная локализация
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -113,15 +108,16 @@ USE_TZ = True
 DATE_FORMAT = '%Y-%m-%d'  # Формат для вывода даты (2024.10.14)
 DATE_INPUT_FORMATS = ['%Y-%m-%d']  # Формат для ввода даты
 
-
 # Статичные файлы (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] # Указываем путь к статическим файлам
 
-
 # Тип поля по умолчанию для первичного ключа
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media") # Для медиа файлов, которые часто меняются
