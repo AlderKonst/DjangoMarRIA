@@ -36,13 +36,6 @@ article ol li {
 	color:#fff;
 	overflow: hidden;
 }
-.pages label img {
-	width: 100%;
-	max-width: 16em;
-	padding: .375em;
-	border: 1px solid #cfa; /*тускло-зелёный*/
-	border-radius: .5em;
-}
 .pages p {
 	font-size: .875em;
 	text-indent: 2em;
@@ -68,6 +61,13 @@ article ol li {
 	overflow: hidden;
 	cursor: zoom-in;
 }
+.pages label img {
+	width: 100%;
+	max-width: 16em;
+	padding: .375em;
+	border: 1px solid #cfa; /*тускло-зелёный*/
+	border-radius: .5em;
+}
 .pages input + img {
 	display: block;
 	position: absolute;
@@ -83,6 +83,18 @@ article ol li {
 	margin: auto;
 	z-index: 9;
 }
+.overlay {
+    display: none; /* Скрыт по умолчанию */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 8; /* Под изображением */
+  }
+.pages input:checked ~ .overlay {
+    display: block; /* Показываем при активном чекбоксе */
 .pages label:hover:after {
 	display: block;
 	position: absolute;
@@ -121,6 +133,7 @@ article ol li {
 #news_archive a:focus {
 	transform: translateY(.125em);
 }
+
 @media (min-width: 38em){
 	.pages label {
 		float: left;
