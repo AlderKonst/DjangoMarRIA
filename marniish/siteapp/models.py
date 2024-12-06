@@ -74,7 +74,7 @@ class Taxon(models.Model): # Низшие таксоны агрокультур,
     name = models.CharField(max_length=100) # Таксон с/х культуры
     culture = models.ForeignKey(Culture, on_delete=models.CASCADE) # Культура (связь один-ко-многим)
     text = models.CharField(max_length=1500) # Текст описания
-    img = models.URLField(max_length=150, blank=True, null=True) # URL картинки
+    img = models.ImageField(upload_to='Taxon', blank=True, null=True) # URL картинки
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
     def __str__(self):
         return self.name # Для отображения вида культуры
@@ -82,6 +82,6 @@ class Taxon(models.Model): # Низшие таксоны агрокультур,
 class Document(models.Model): # Документы НИИ
     date = models.DateField() # Дата публикации ксивы (решил многие-ко-многим не делать, тут не особо надо)
     name = models.CharField(max_length=250)  # Название документа
-    url = models.URLField(max_length=150, unique=True) # URL документа
+    url = models.FileField(upload_to='Docs/', unique=True) # URL документа
     def __str__(self):
         return self.date.strftime('%d.%m.%Y') # Для отображения даты
