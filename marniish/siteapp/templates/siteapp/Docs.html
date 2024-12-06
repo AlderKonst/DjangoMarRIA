@@ -21,7 +21,7 @@
 	<tr>
 		<td class="time">{{doc.date|date:"j M Y"}}</td>
 	    <td class="left">{{doc.name}}</td>
-	    <td><a href="{% static doc.url %}" target="_blank" title="Скачать" download></a></td>
+	    <td><a href="{% static doc.url.url %}" target="_blank" title="Скачать" download></a></td>
 	</tr>
 	{% endfor %}
 </table>
