@@ -1,4 +1,6 @@
+import os
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
+from django.core.files import File # Для работы с файлами в Django
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from . import site_dir, date_transform # Импортируем переменную с директорией сайта и функцию преобразования даты
 from siteapp.models import Document  # Импорт моделей таблицы БД из siteapp
@@ -19,12 +21,17 @@ class Command(BaseCommand):
                     date = date_transform(time, n) # Преобразуем дату
                 name = tr.find('td', class_='left').get_text(strip=True)  # Извлекаем название (второй столбец)
                 url = tr.find('a').get('href')  # Извлекаем ссылку (третий столбец)
-                if not date: # Если дата публикации пустая
-                    Document.objects.get_or_create(name=name, # Название документа
-                                            date=data_before,  # Дата публикации документа берётся предыдущий
-                                            url=url) # Ссылка его скачивания
-                else:
-                    Document.objects.get_or_create(name=name,  # Название документа
-                                                   date=date,  # Дата публикации документа берётся предыдущий
-                                                   url=url)  # Ссылка его скачивания
-                    data_before = date  # Дата публикации документа берётся следующий
+                file_path = f'{site_dir}{url}'
+                if not os.path.exists(file_path):
+                    self.stdout.write(self.style.WARNING(f'Файл {file_path} не найден!'))
+                    continue
+                with open(file_path, 'rb') as doc:
+                    if not date: # Если дата публикации пустая
+                        Document.objects.get_or_create(name=name, # Название документа
+                                                date=data_before,  # Дата публикации документа берётся предыдущий
+                                                url=File(doc, name=url)) # Ссылка его скачивания с сохранением в /media/
+                    else:
+                        Document.objects.get_or_create(name=name,  # Название документа
+                                                       date=date,  # Дата публикации документа берётся предыдущий
+                                                       url=File(doc, name=url)) # Ссылка его скачивания с сохранением в /media/
+                        data_before = date  # Дата публикации документа берётся следующий
