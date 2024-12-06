@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
+from django.core.files import File # Для работы с файлами в Django
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from . import site_dir # Импортируем переменную с директорией сайта
 from siteapp.models import CultureGroup, Culture, Taxon  # Импорт моделей таблиц БД из siteapp
@@ -25,8 +26,20 @@ class Command(BaseCommand):
                     img = article.find('img') if article.find('img') else '' # Извлекаем изображение, если есть
                     src = img.get('src') if img else '' # Извлекаем путь к изображению, если есть
                     alt = img.get('alt') if img else '' # Извлекаем альт-текст изображения, если есть
-                    Taxon.objects.create(name=taxon, # Создаем объект с таблицей History с текстом
-                                         culture=culture, # Добавляем объект по виду культуры
-                                         text=text, # Добавляем содержимое
-                                         img=src, # Добавляем путь к изображению
-                                         alt=alt) # Добавляем альт-текст изображения
+                    if img:
+                        try:
+                            with open(f'{site_dir}{src}', 'rb') as img_file:
+                                Taxon.objects.create(name=taxon, # Создаем объект с таблицей History с текстом
+                                                     culture=culture, # Добавляем объект по виду культуры
+                                                     text=text, # Добавляем содержимое
+                                                     img=File(img_file, name=src), # Передаем файл изображения
+                                                     alt=alt) # Добавляем альт-текст изображения
+                        except FileNotFoundError:
+                            self.stdout.write(self.style.WARNING(f'Файл {src} в {site_dir} не найден!'))
+                        else:
+                            Taxon.objects.create(
+                                name=taxon, # Создаем объект с таблицей History с текстом
+                                culture=culture, # Добавляем объект по виду культуры
+                                text=text, # Добавляем содержимое
+                                img='', # Передаем пустое значение
+                                alt=alt) # Добавляем альт-текст изображения
