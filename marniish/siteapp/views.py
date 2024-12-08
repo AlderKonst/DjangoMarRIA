@@ -5,7 +5,7 @@ from django.urls import reverse # Импортируем функцию для �
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
 # Импортируем модели соответствующих таблиц
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
-                     HistoryData, Culture, Taxon, CultureGroup, Document)  # Импортируем модели соответствующих таблиц
+                     HistoryData, Culture, Taxon, CultureGroup, Document, Price)  # Импортируем модели соответствующих таблиц
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -127,7 +127,8 @@ def contact(request): # Для рендеринга страницы конта�
 
 def price(request): # Для рендеринга страницы прайса
     page = Page.objects.get(url='Price') # Получаем запись в таблице Page с именем Price в поле url
-    context = {'page': page} # Передаем шаблон
+    prices = Price.objects.all()  # Получаем все записи в таблице Price
+    context = {'page': page, 'prices': prices} # Передаем шаблон
     return render(request, 'siteapp/Price.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def docs(request): # Для рендеринга страницы документов
