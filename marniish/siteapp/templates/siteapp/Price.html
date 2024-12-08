@@ -10,35 +10,21 @@
 
 {% block content %}
 <h2>Прайс-лист</h2>
-<p>Дата обновления: 28.11.2023</p>
+<p>Дата обновления: 08.07.2024</p>
 <table class="pages">
-	<caption>Планируемая реализация зерновых в 2023 году</caption>
+	<caption>Планируемая реализация зерновых в 2024 году</caption>
 	<tr>
 		<th>Культура</th>
 		<th>Сорт</th>
 		<th>Категория</th>
-		<th>Наличие,&nbsp;т</th>
+		<th>Количество</th>,&nbsp;т</th>
 	</tr>
+	{% for price in prices %}
 	<tr>
-		<td>Пшеница яровая</td>
-		<td>Баженка</td>
-        <td rowspan="2">I репродукция</td>
-		<td>20</td>
-	</tr>
-    <tr>
-		<td rowspan="2">Ячмень яровой</td>
-		<td rowspan="2">Родник Прикамья</td>
-		<td>25</td>
-	</tr>
-	<tr>
-		<td>Суперэлита</td>
-		<td>20</td>
-	</tr>
-    <tr>
-		<td>Рожь озимая</td>
-		<td>Графиня</td>
-		<td>Элита</td>
-		<td>20</td>
+		<td>{{price.taxon.culture.name}}</td>
+		<td>{{price.taxon.name}}</td>
+        <td>{{price.category.name}}</td>
+		<td>{{price.mass}}</td>
 	</tr>
 </table>
 <table class="pages">
