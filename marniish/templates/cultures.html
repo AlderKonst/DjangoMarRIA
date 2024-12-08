@@ -12,7 +12,7 @@
 			<label>
 				<input type="checkbox" hidden>
 				<img src="{{taxon.img.url}}" alt="{{taxon.alt}}">
-				<img src="{% static 'img/'|add:taxon.img %}" alt="{{taxon.alt}}" title="{{taxon.alt}}">
+				<img src="{{taxon.img.url}}" alt="{{taxon.alt}}" title="{{taxon.alt}}">
 				<div class="overlay"></div>
 			</label>
 			{% endif %}
