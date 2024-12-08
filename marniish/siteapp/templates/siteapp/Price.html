@@ -24,7 +24,7 @@
 		<td>{{price.taxon.culture.name}}</td>
 		<td>{{price.taxon.name}}</td>
         <td>{{price.category.name}}</td>
-		<td>{{price.mass}}</td>
+		<td>{{price.mass | number:'1.0-2'}}</td>
 	</tr>
 	{% endfor %}
 	<tr>
