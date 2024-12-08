@@ -85,3 +85,15 @@ class Document(models.Model): # Документы НИИ
     url = models.FileField(upload_to='', unique=True) # URL документа, с загрузкой в /media/
     def __str__(self):
         return self.date.strftime('%d.%m.%Y') # Для отображения даты
+
+class ProdCategory(models.Model): # Категории качества продукции
+    name = models.CharField(max_length=25) # Название категории
+    def __str__(self):
+        return self.name # Для отображения названия категории
+
+class Price(models.Model): # Цены продукции
+    taxon = models.ForeignKey(Taxon, on_delete=models.CASCADE) # Таксон (связь один-ко-многим)
+    category = models.ForeignKey(ProdCategory, on_delete=models.CASCADE) # Категория качества (связь один-ко-многим)
+    price = models.IntegerField() # Цена
+    def __str__(self):
+        return self.taxon.name # Для отображения названия таксона
