@@ -95,6 +95,6 @@ class Price(models.Model): # Цены продукции
     taxon = models.ForeignKey(Taxon, on_delete=models.CASCADE) # Таксон (связь один-ко-многим)
     category = models.ForeignKey(ProdCategory, on_delete=models.CASCADE) # Категория качества (связь один-ко-многим)
     mass = models.IntegerField() # Масса, т
-    price = models.IntegerField() # Цена
+    price = models.IntegerField(blank=True, null=True) # Цена
     def __str__(self):
         return self.taxon.name # Для отображения названия таксона
