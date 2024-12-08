@@ -36,6 +36,13 @@ article ol li {
 	color:#fff;
 	overflow: hidden;
 }
+.pages label img {
+	width: 100%;
+	max-width: 16em;
+	padding: .375em;
+	border: 1px solid #cfa; /*тускло-зелёный*/
+	border-radius: .5em;
+}
 .pages p {
 	font-size: .875em;
 	text-indent: 2em;
@@ -60,13 +67,6 @@ article ol li {
 	position: relative;
 	overflow: hidden;
 	cursor: zoom-in;
-}
-.pages label img {
-	width: 100%;
-	max-width: 16em;
-	padding: .375em;
-	border: 1px solid #cfa; /*тускло-зелёный*/
-	border-radius: .5em;
 }
 .pages input + img {
 	display: block;
