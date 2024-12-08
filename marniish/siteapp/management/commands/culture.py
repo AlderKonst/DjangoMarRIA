@@ -33,3 +33,9 @@ class Command(BaseCommand):
                                                  text=text, # Добавляем содержимое
                                                  img=File(img_file, name=src), # Передаем файл изображения
                                                  alt=alt) # Добавляем альт-текст изображения
+                    else:
+                        Taxon.objects.create(name=taxon, # Создаем объект с таблицей History с текстом
+                                           culture=culture, # Добавляем объект по виду культуры
+                                           text=text, # Добавляем содержимое
+                                           img ='',  # Передаем пустой URL
+                                           alt = alt)  # Добавляем альт-текст изображения
