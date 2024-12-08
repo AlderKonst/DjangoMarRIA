@@ -27,19 +27,9 @@ class Command(BaseCommand):
                     src = img.get('src') if img else '' # Извлекаем путь к изображению, если есть
                     alt = img.get('alt') if img else '' # Извлекаем альт-текст изображения, если есть
                     if img:
-                        try:
-                            with open(f'{site_dir}{src}', 'rb') as img_file:
-                                Taxon.objects.create(name=taxon, # Создаем объект с таблицей History с текстом
-                                                     culture=culture, # Добавляем объект по виду культуры
-                                                     text=text, # Добавляем содержимое
-                                                     img=File(img_file, name=src), # Передаем файл изображения
-                                                     alt=alt) # Добавляем альт-текст изображения
-                        except FileNotFoundError:
-                            self.stdout.write(self.style.WARNING(f'Файл {src} в {site_dir} не найден!'))
-                        else:
-                            Taxon.objects.create(
-                                name=taxon, # Создаем объект с таблицей History с текстом
-                                culture=culture, # Добавляем объект по виду культуры
-                                text=text, # Добавляем содержимое
-                                img='', # Передаем пустое значение
-                                alt=alt) # Добавляем альт-текст изображения
+                        with open(f'{site_dir}{src}', 'rb') as img_file:
+                            Taxon.objects.create(name=taxon, # Создаем объект с таблицей History с текстом
+                                                 culture=culture, # Добавляем объект по виду культуры
+                                                 text=text, # Добавляем содержимое
+                                                 img=File(img_file, name=src), # Передаем файл изображения
+                                                 alt=alt) # Добавляем альт-текст изображения
