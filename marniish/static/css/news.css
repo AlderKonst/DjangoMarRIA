@@ -67,6 +67,7 @@ article ol li {
 	position: relative;
 	overflow: hidden;
 	cursor: zoom-in;
+	float: left;
 }
 .pages input + img {
 	display: block;
