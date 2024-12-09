@@ -112,7 +112,7 @@ class NewsBlock(models.Model): # 1 блок события
         return self.text # Отображаем текст блока
 
 class News(models.Model): # Новости сайта
-    date = models.DateField() # Дата события
+    date = models.DateField(unique=True) # Дата события
     title = models.CharField(max_length=150) # Название события
     block = models.ManyToManyField(NewsBlock) # Блоки
     def __str__(self):
