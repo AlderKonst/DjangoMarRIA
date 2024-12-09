@@ -15,4 +15,7 @@ admin.site.register(Taxon) # Регистрируем модель с таксо
 admin.site.register(Document) # Регистрируем модель с публикованными документами НИИ
 admin.site.register(ProdCategory) # Регистрируем модель с названиями категорий продукции
 admin.site.register(Price) # Регистрируем модель с ценами
+admin.site.register(NewsPicture) # Регистрируем модель с картинками для новостей
+admin.site.register(NewsBlock) # Регистрируем модель с блоками события
+admin.site.register(News) # Регистрируем модель с событием НИИ
 
