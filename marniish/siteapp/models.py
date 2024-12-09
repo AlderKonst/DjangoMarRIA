@@ -74,7 +74,7 @@ class Taxon(models.Model): # Низшие таксоны агрокультур,
     name = models.CharField(max_length=100) # Таксон с/х культуры
     culture = models.ForeignKey(Culture, on_delete=models.CASCADE) # Культура (связь один-ко-многим)
     text = models.CharField(max_length=1500) # Текст описания
-    img = models.ImageField(upload_to='', blank=True, null=True) # URL картинки, с загрузкой в /media/
+    img = models.ImageField(upload_to='Taxons', blank=True, null=True) # URL картинки, с загрузкой в /media/Taxons
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
     def __str__(self):
         return self.name # Для отображения вида культуры
@@ -98,3 +98,22 @@ class Price(models.Model): # Цены продукции
     price = models.IntegerField(blank=True, null=True) # Цена
     def __str__(self):
         return self.taxon.name # Для отображения названия таксона
+
+class NewsPicture(models.Model): # Адрес картинки
+    src = models.ImageField(upload_to='News', unique=True) # URL картинки, с загрузкой в /media/News
+    def __str__(self):
+        return self.src.url # Отображаем адрес
+
+class NewsBlock(models.Model): # 1 блок события
+    text = models.CharField(max_length=1500) # Текст блока
+    img = models.ManyToManyField(NewsPicture, blank=True) # Картинки блока
+    doc = models.ManyToManyField(Document, blank=True) # Документы блока
+    def __str__(self):
+        return self.text # Отображаем текст блока
+
+class News(models.Model): # Новости сайта
+    date = models.DateField() # Дата события
+    title = models.CharField(max_length=150) # Название события
+    block = models.ManyToManyField(NewsBlock) # Блоки
+    def __str__(self):
+        return self.date # Отображаем дату события
