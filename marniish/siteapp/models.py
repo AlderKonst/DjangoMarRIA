@@ -105,15 +105,20 @@ class NewsPicture(models.Model): # Адрес картинки
         return self.src.url # Отображаем адрес
 
 class NewsBlock(models.Model): # 1 блок события
-    text = models.CharField(max_length=1500) # Текст блока
-    img = models.ManyToManyField(NewsPicture, blank=True) # Картинки блока
-    doc = models.ManyToManyField(Document, blank=True) # Документы блока
+    content_type = models.CharField(max_length=10, # Тип контента
+                                    choices=(('text', 'Текст'), # Текст
+                                             ('image', 'Картинка'), # Картинка
+                                             ('document', 'Документ'))) # Документ
+    text = models.CharField(blank=True, null=True) # Текст блока
+    img = models.ForeignKey(NewsPicture, blank=True, on_delete=models.CASCADE) # Картинка блока
+    doc = models.ForeignKey(Document, blank=True, on_delete=models.CASCADE) # Документ блока
+    order = models.PositiveIntegerField(default=0)  # Порядоковый номер отображения блока
     def __str__(self):
-        return self.text # Отображаем текст блока
+        return self.text or str(self.img) or str(self.doc) # Отображаем или текст, или картинку, или документ блока
 
 class News(models.Model): # Новости сайта
     date = models.DateField(unique=True) # Дата события
     title = models.CharField(max_length=150) # Название события
-    block = models.ManyToManyField(NewsBlock) # Блоки
+    blocks = models.ManyToManyField(NewsBlock, related_name='news') # Блоки
     def __str__(self):
         return self.date # Отображаем дату события
