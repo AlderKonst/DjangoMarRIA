@@ -38,6 +38,7 @@ class Command(BaseCommand):
                                 order=order, # Устанавливаем порядок блока
                                 news=news) # Привязываем блок к новости
                             order += 1 # Увеличиваем порядок для следующего блока
+                            news.blocks.add(block)  # Связываем блоки с новостью
                         elif element.name == 'p':
                             text = element.text
                             block = NewsBlock.objects.create( # Создание объекта NewsBlock для текста
@@ -46,4 +47,4 @@ class Command(BaseCommand):
                                 order=order, # Устанавливаем порядок блока
                                 news=news) # Привязываем блок к новости
                             order += 1 # Увеличиваем порядок для следующего блока
-                        news.blocks.add(block) # Связываем блоки с новостью
+                            news.blocks.add(block) # Связываем блоки с новостью
