@@ -104,21 +104,23 @@ class NewsPicture(models.Model): # Адрес картинки
     def __str__(self):
         return self.src.url # Отображаем адрес
 
+class News(models.Model): # Новости сайта
+    date = models.DateField(unique=True) # Дата события
+    title = models.CharField(max_length=150) # Название события
+    def __str__(self):
+        return str(self.date) # Отображаем дату события
+    class Meta:
+        ordering = ['date'] # Упорядочивание новостей по дате также подсказал нейросеть
+
 class NewsBlock(models.Model): # 1 блок события
     content_type = models.CharField(max_length=10, # Тип контента
                                     choices=(('text', 'Текст'), # Текст
                                              ('image', 'Картинка'))) # Картинка
     text = models.CharField(max_length=3000, blank=True, null=True) # Текст блока
+    news = models.ForeignKey(News, null=True, on_delete=models.CASCADE)  # Событие (связь один-ко-многим)
     img = models.ForeignKey(NewsPicture, blank=True, null=True, on_delete=models.CASCADE) # Картинка блока
-    order = models.PositiveIntegerField(default=0)  # Порядоковый номер отображения блока
+    order = models.PositiveIntegerField(default=0) # Порядоковый номер отображения блока
     def __str__(self):
         return self.text or str(self.img) # Отображаем или текст, или картинку
-
-class News(models.Model): # Новости сайта
-    date = models.DateField(unique=True) # Дата события
-    title = models.CharField(max_length=150) # Название события
-    blocks = models.ManyToManyField(NewsBlock, related_name='news') # Блоки
-    def __str__(self):
-        return str(self.date) # Отображаем дату события
     class Meta:
-        ordering = ['date'] # Упорядочивание новостей по дате также подсказал нейросеть
+        ordering = ['news'] # Упорядочивание новостей по новости также подсказал нейросеть
