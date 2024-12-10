@@ -4,7 +4,6 @@ from django.core.files import File # Для работы с файлами в Dj
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from . import site_dir # Импортируем переменную с директорией сайта
 from siteapp.models import NewsPicture, NewsBlock, News  # Импорт моделей таблиц БД из siteapp
-from django.utils import timezone # Для работы со временем
 
 # Здесь будет код для получения данных со страниц News____.html
 
