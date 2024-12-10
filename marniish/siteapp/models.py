@@ -111,10 +111,9 @@ class NewsBlock(models.Model): # 1 блок события
                                              ('document', 'Документ'))) # Документ
     text = models.CharField(blank=True, null=True) # Текст блока
     img = models.ForeignKey(NewsPicture, blank=True, on_delete=models.CASCADE) # Картинка блока
-    doc = models.ForeignKey(Document, blank=True, on_delete=models.CASCADE) # Документ блока
     order = models.PositiveIntegerField(default=0)  # Порядоковый номер отображения блока
     def __str__(self):
-        return self.text or str(self.img) or str(self.doc) # Отображаем или текст, или картинку, или документ блока
+        return self.text or str(self.img) # Отображаем или текст, или картинку
     class Meta:
         ordering = ['order'] # Упорядочивание блоков новостей по порядку подсказал нейросеть
 
