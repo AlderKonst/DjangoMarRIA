@@ -107,8 +107,7 @@ class NewsPicture(models.Model): # Адрес картинки
 class NewsBlock(models.Model): # 1 блок события
     content_type = models.CharField(max_length=10, # Тип контента
                                     choices=(('text', 'Текст'), # Текст
-                                             ('image', 'Картинка'), # Картинка
-                                             ('document', 'Документ'))) # Документ
+                                             ('image', 'Картинка'))) # Картинка
     text = models.CharField(blank=True, null=True) # Текст блока
     img = models.ForeignKey(NewsPicture, blank=True, on_delete=models.CASCADE) # Картинка блока
     order = models.PositiveIntegerField(default=0)  # Порядоковый номер отображения блока
