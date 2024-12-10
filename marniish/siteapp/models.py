@@ -113,14 +113,12 @@ class NewsBlock(models.Model): # 1 блок события
     order = models.PositiveIntegerField(default=0)  # Порядоковый номер отображения блока
     def __str__(self):
         return self.text or str(self.img) # Отображаем или текст, или картинку
-    class Meta:
-        ordering = ['order'] # Упорядочивание блоков новостей по порядку подсказал нейросеть
 
 class News(models.Model): # Новости сайта
     date = models.DateField(unique=True) # Дата события
     title = models.CharField(max_length=150) # Название события
     blocks = models.ManyToManyField(NewsBlock, related_name='news') # Блоки
     def __str__(self):
-        return self.date # Отображаем дату события
+        return str(self.date) # Отображаем дату события
     class Meta:
         ordering = ['date'] # Упорядочивание новостей по дате также подсказал нейросеть
