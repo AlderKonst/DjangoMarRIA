@@ -22,28 +22,27 @@ class Command(BaseCommand):
                 for article in articles: # Итерируем по каждому найденному тегу <article>
                     date = article.time['datetime']  # Преобразуем строку в дату
                     title = article.h3.text # Получаем название события
-                    news, created = News.objects.get_or_create( # Создаём объект News
+                    news_obj, _ = News.objects.get_or_create(  # Создаём объект News
                         title=title, # То, что в h3 (титульник)
                         date=date) # Дата события
-                    if not created: # Если новость уже существует,
-                        continue # то пропускаем ее
                     order = 0 # Порядок для блоков, пока нуль
                     for element in article.section.children: # Перебираем все дочерние элементы в <section>
                         if element.name == 'label': # Если встретился тэг <label>
                             src = element.img['src'] # то извлекаем ссылку к изображению в src
-                            with open(f'{site_dir}{src}', 'rb') as img_file:
-                                picture = NewsPicture.objects.create(src=File(img_file, name=src[2:])) # Создаём объект NewsPicture с сохранением ссылки в поле src
-                                block = NewsBlock.objects.create( # Создаём объект NewsBlock для изображения
+                            with open(f'{site_dir}{src}', 'rb') as img_file: # Открываем для чтения изображения
+                                picture_obj, _ = NewsPicture.objects.get_or_create( # Создаём объект NewsPicture
+                                    src=File(img_file, name=src[2:])) # с сохранением ссылки в поле src
+                                NewsBlock.objects.create( # Создаём объект NewsBlock для изображения
                                     content_type='image', # Устанавливаем тип контента как изображение
-                                    img=picture, # Привязываем созданное изображение
+                                    news=news_obj, # Привязываем новость к блоку
+                                    img=picture_obj, # Привязываем созданное изображение
                                     order=order) # Устанавливаем порядок блока
-                                news.blocks.add(block)  # Добавляем блок с новостью
-                                order += 1  # Увеличиваем порядок для следующего блока
-                        elif element.name == 'p':
-                            text = element.text
-                            block = NewsBlock.objects.create( # Создание объекта NewsBlock для текста
+                                order += 1 # Увеличиваем порядок для следующего блока
+                        elif element.name == 'p': # Если встретился тэг <p>
+                            text = element.text # извлекаем текст
+                            NewsBlock.objects.create( # Создание объекта NewsBlock для текста
                                 content_type='text', # Устанавливаем тип контента как текст
+                                news=news_obj, # Привязываем новость к блоку
                                 text=text, # Привязываем текст к блоку
                                 order=order) # Устанавливаем порядок блока
-                            news.blocks.add(block)  # Добавляем блок с новостью
                             order += 1 # Увеличиваем порядок для следующего блока
