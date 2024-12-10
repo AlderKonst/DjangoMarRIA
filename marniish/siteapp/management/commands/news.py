@@ -4,7 +4,7 @@ from django.core.files import File # Для работы с файлами в Dj
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from . import site_dir # Импортируем переменную с директорией сайта
 from siteapp.models import NewsPicture, NewsBlock, News  # Импорт моделей таблиц БД из siteapp
-from datetime import datetime # Для работы со временем
+from django.utils import timezone # Для работы со временем
 
 # Здесь будет код для получения данных со страниц News____.html
 
@@ -20,24 +20,30 @@ class Command(BaseCommand):
                 soup = BeautifulSoup(content, 'html.parser') # Парсим исходный HTML-код
                 articles = soup.find_all('article') # Извлекаем все article-теги
                 for article in articles: # Итерируем по каждому найденному тегу <article>
-                    date_str = article.find('time').get('datetime') # Извлекаем дату события
-                    date = datetime.strptime(date_str, '%Y-%m-%d').date()  # Преобразуем строку в дату
-                    title = article.find('h3').get_text() # Получаем название события
-                    pp = article.find_all('p')  # Извлекаем содержимое из каждого абзаца <p>
-                    text = '\n'.join(str(p) for p in pp) # Создаем строку содержимого из всех абзацев <p> блока
-                    img = article.find('img') if article.find('img') else '' # Извлекаем изображение, если есть
-                    src = img.get('src') if img else '' # Извлекаем путь к изображению, если есть
-                    alt = img.get('alt') if img else '' # Извлекаем альт-текст изображения, если есть
-                    if img:
-                        with open(f'{site_dir}{src}', 'rb') as img_file:
-                            Taxon.objects.create(name=taxon, # Создаем объект с таблицей History с текстом
-                                                 culture=culture, # Добавляем объект по виду культуры
-                                                 text=text, # Добавляем содержимое
-                                                 img=File(img_file, name=src), # Передаем файл изображения
-                                                 alt=alt) # Добавляем альт-текст изображения
-                    else:
-                        Taxon.objects.create(name=taxon, # Создаем объект с таблицей History с текстом
-                                           culture=culture, # Добавляем объект по виду культуры
-                                           text=text, # Добавляем содержимое
-                                           img ='',  # Передаем пустой URL
-                                           alt = alt)  # Добавляем альт-текст изображения
+                    date = article.time['datetime']  # Преобразуем строку в дату
+                    title = article.h3.text # Получаем название события
+                    news, created = News.objects.get_or_create( # Создаём объект News
+                        title=title, # То, что в h3 (титульник)
+                        date=date) # Дата события
+                    if not created: # Если новость уже существует,
+                        continue # то пропускаем ее
+                    order = 0 # Порядок для блоков, пока нуль
+                    for element in article.section.children: # Перебираем все дочерние элементы в <section>
+                        if element.name == 'label': # Если встретился тэг <label>
+                            src = element.img['src'] # то извлекаем ссылку к изображению в src
+                            picture = NewsPicture.objects.create(src=src) # Создаём объект NewsPicture с сохранением ссылки в поле src
+                            block = NewsBlock.objects.create( # Создаём объект NewsBlock для изображения
+                                content_type='image', # Устанавливаем тип контента как изображение
+                                img=picture, # Привязываем созданное изображение
+                                order=order, # Устанавливаем порядок блока
+                                news=news) # Привязываем блок к новости
+                            order += 1 # Увеличиваем порядок для следующего блока
+                        elif element.name == 'p':
+                            text = element.text
+                            block = NewsBlock.objects.create( # Создание объекта NewsBlock для текста
+                                content_type='text', # Устанавливаем тип контента как текст
+                                text=text, # Привязываем текст к блоку
+                                order=order, # Устанавливаем порядок блока
+                                news=news) # Привязываем блок к новости
+                            order += 1 # Увеличиваем порядок для следующего блока
+                        news.blocks.add(block) # Связываем блоки с новостью
