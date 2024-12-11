@@ -14,7 +14,7 @@ class Command(BaseCommand):
                  and f.lower().startswith('news') # начинается ли имя файла с "news" (независимо от регистра)
                  and f.lower().endswith('.html')] # заканчивается ли имя файла на ".html"
         for file in files: # Перебираем все файлы с новостями
-            with open(f'{site_dir}{file}', 'r', encoding='utf-8') as f: # Открываем для чтения каждый html-файл
+            with open(os.path.join(site_dir, file), 'r', encoding='utf-8') as f: # Открываем для чтения каждый html-файл
                 content = f.read() # Читаем содержимое файла с кодом
                 soup = BeautifulSoup(content, 'html.parser') # Парсим исходный HTML-код
                 articles = soup.find_all('article') # Извлекаем все article-теги
@@ -27,10 +27,10 @@ class Command(BaseCommand):
                     order = 0 # Порядок для блоков, пока нуль
                     for element in article.section.children: # Перебираем все дочерние элементы в <section>
                         if element.name == 'label': # Если встретился тэг <label>
-                            src = element.img['src'] # то извлекаем ссылку к изображению в src
-                            with open(f'{site_dir}{src}', 'rb') as img_file: # Открываем для чтения изображения
+                            src = element.img['src'].src.split('/') # то извлекаем ссылку к изображению в src (имя файла)
+                            with open(os.path.join(site_dir, *src), 'rb') as img_file: # Открываем для чтения изображения
                                 picture_obj, _ = NewsPicture.objects.get_or_create( # Создаём объект NewsPicture
-                                    src=File(img_file, name=src[2:])) # с сохранением ссылки в поле src
+                                    src=File(img_file, name=src[-1])) # с сохранением ссылки в поле src
                                 NewsBlock.objects.create( # Создаём объект NewsBlock для изображения
                                     content_type='image', # Устанавливаем тип контента как изображение
                                     news=news_obj, # Привязываем новость к блоку
