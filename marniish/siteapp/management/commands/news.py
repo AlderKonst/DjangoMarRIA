@@ -27,7 +27,7 @@ class Command(BaseCommand):
                     order = 0 # Порядок для блоков, пока нуль
                     for element in article.section.children: # Перебираем все дочерние элементы в <section>
                         if element.name == 'label': # Если встретился тэг <label>
-                            src = element.img['src'].src.split('/') # то извлекаем ссылку к изображению в src (имя файла)
+                            src = element.img['src'].split('/') # то извлекаем ссылку к изображению в src (имя файла)
                             with open(os.path.join(site_dir, *src), 'rb') as img_file: # Открываем для чтения изображения
                                 picture_obj, _ = NewsPicture.objects.get_or_create( # Создаём объект NewsPicture
                                     src=File(img_file, name=src[-1])) # с сохранением ссылки в поле src
