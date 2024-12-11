@@ -13,7 +13,7 @@ class Command(BaseCommand):
                  'Jim': 'Плодово-ягодные культуры', 'Potato': 'Клубнеплоды'} # Словарь имён html-файлов и группы культур
         for file, group in files.items(): # Итерируем по имени файла сайта и группы агрокультур из списка
             group, _ = CultureGroup.objects.get_or_create(name=group)  # Создаем объект CultureGroup с его названием
-            with open(os.path.join(site_dir, file, '.html'), 'r', encoding='utf-8') as f: # Открываем для чтения каждый html-файл
+            with open(os.path.join(site_dir, f'{file}.html'), 'r', encoding='utf-8') as f: # Открываем для чтения каждый html-файл
                 content = f.read() # Читаем содержимое файла с кодом
                 soup = BeautifulSoup(content, 'html.parser') # Парсим исходный HTML-код
                 articles = soup.find_all('article')[:-1] # Извлекаем все article-теги, кроме последнего
