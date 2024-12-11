@@ -1,3 +1,4 @@
+import os # Для работы с OC
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from . import site_dir # Импортируем переменную с директорией сайта
@@ -8,7 +9,7 @@ from siteapp.models import TrendItem, Trend # Импорт моделей из s
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        with open(f'{site_dir}index.html',
+        with open(os.path.join(site_dir, 'index.html'),
                   'r', encoding='utf-8') as f:  # Открываем для чтения нужный файл
             content = f.read()  # Читаем содержимое файла c кодом
             soup = BeautifulSoup(content, 'html.parser')  # Парсим исходный HTML-код

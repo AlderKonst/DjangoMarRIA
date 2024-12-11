@@ -11,7 +11,7 @@ class Command(BaseCommand):
         pages = [page for page in os.listdir(site_dir)
                  if page.endswith('.html')] # Перебираем страницы и сохраняем в генереторе имена файлов с .html в конце
         for page in pages:
-            with open(os.path.join(f'{site_dir}{page}'), 'r', encoding='utf-8') as f:  # Прочитываем каждый html-файл
+            with open(os.path.join(site_dir, page), 'r', encoding='utf-8') as f:  # Прочитываем каждый html-файл
                 content = f.read()  # Читаем содержимое файла c кодом
                 soup = BeautifulSoup(content, 'html.parser')  # Парсим исходный HTML-код
                 title = soup.find('title').get_text()[:-72] # Получаем уникальную часть текста титульника
