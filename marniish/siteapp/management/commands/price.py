@@ -16,4 +16,4 @@ class Command(BaseCommand):
                 taxon=Taxon.objects.get(name=taxon), # Таксон низший
                 category=ProdCategory.objects.get(name=categories[2]), # Элита
                 mass=mass, # Масса зерна, т
-                price=price) # Да, пусто, на потом
+                price=None) # Да, пусто, на потом
