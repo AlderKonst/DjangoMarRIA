@@ -82,7 +82,7 @@ class Taxon(models.Model): # Низшие таксоны агрокультур,
 class Document(models.Model): # Документы НИИ
     date = models.DateField() # Дата публикации ксивы (решил многие-ко-многим не делать, тут не особо надо)
     name = models.CharField(max_length=250)  # Название документа
-    url = models.FileField(upload_to='', unique=True) # URL документа, с загрузкой в /media/
+    url = models.FileField(upload_to='Docs', unique=True) # URL документа, с загрузкой в /media/
     def __str__(self):
         return self.date.strftime('%d.%m.%Y') # Для отображения даты
 
