@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         with open(dir_css, 'r', encoding='utf-8') as f:  # Прочитываем css-файл
             content = f.read()  # Читаем содержимое файла c кодом
-        css_parser = cssutils.CSSParser()  # Инициализируем парсер
+        css_parser = cssutils.CSSParser(raiseExceptions=False)  # Инициализируем парсер
         css_styles = css_parser.parseString(content)  # Парсим исходный CSS-код
 
         for rule in css_styles: # Перебираем все правила
