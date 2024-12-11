@@ -25,7 +25,7 @@ class Command(BaseCommand):
                     pp = article.find_all('p')  # Извлекаем содержимое из каждого абзаца <p>
                     text = '\n'.join(str(p) for p in pp) # Создаем строку содержимого из всех абзацев <p> блока
                     img = article.find('img') if article.find('img') else '' # Извлекаем изображение, если есть
-                    src = img.get('src').src.split('/') if img else '' # Извлекаем путь к изображению, если есть
+                    src = img.get('src').split('/') if img else '' # Извлекаем путь к изображению, если есть
                     alt = img.get('alt') if img else '' # Извлекаем альт-текст изображения, если есть
                     if img:
                         with open(os.path.join(site_dir, *src), 'rb') as img_file:
