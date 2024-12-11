@@ -39,6 +39,7 @@ class Command(BaseCommand):
                                 order += 1 # Увеличиваем порядок для следующего блока
                         elif element.name == 'p': # Если встретился тэг <p>
                             text = element.text # извлекаем текст
+                            text = text.replace("Docs.html", "{% url 'siteapp:Docs' %}") # Заменяем "Docs.html" на "siteapp:Docs"
                             NewsBlock.objects.create( # Создание объекта NewsBlock для текста
                                 content_type='text', # Устанавливаем тип контента как текст
                                 news=news_obj, # Привязываем новость к блоку
