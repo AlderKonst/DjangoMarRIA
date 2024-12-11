@@ -1,5 +1,5 @@
 import os # Для работы с OC
-pc_dir = os.path.join('F:\\', 'ДОКИ', 'Python+') # Директория в моём ПК
+pc_dir = os.path.join('F:\\', 'UII', 'Python+') # Директория в моём ПК
 site_dir = os.path.join(pc_dir, 'DjangoMarRIA', 'marniish', 'templates', 'MarRIA') # Директория страниц для парсинга
 
 # Проверяем существование директорий
