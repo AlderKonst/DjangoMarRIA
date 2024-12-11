@@ -1,6 +1,7 @@
 import os # Для работы с OC
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
 import cssutils # Импорт библиотеки для парсинга CSS
+import logging # Импорт библиотеки для логирования
 from . import site_dir # Импортируем переменную с директорией сайта
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from siteapp.models import Reference # Импорт модели таблицы БД References из siteapp
@@ -18,6 +19,7 @@ class Command(BaseCommand):
         div_refs = soup.find('div', class_='references')  # Получаем блок со ссылками
         refs = div_refs.find_all('a')  # Получаем все тэги со ссылками
 
+        cssutils.log.setLevel(logging.ERROR) # Устанавливаем уровень логирования
         with open(dir_css, 'r', encoding='utf-8') as f:  # Прочитываем css-файл
             content = f.read()  # Читаем содержимое файла c кодом
         css_parser = cssutils.CSSParser(raiseExceptions=False)  # Инициализируем парсер
