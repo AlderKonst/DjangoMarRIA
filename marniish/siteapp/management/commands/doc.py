@@ -21,7 +21,7 @@ class Command(BaseCommand):
                     date = date_transform(time, n) # Преобразуем дату
                 name = tr.find('td', class_='left').get_text(strip=True)  # Извлекаем название (второй столбец)
                 url = tr.find('a').get('href')  # Извлекаем ссылку (третий столбец)
-                file_path = f'{site_dir}{url}'
+                file_path = os.path.join(site_dir, url)
                 if not os.path.exists(file_path):
                     self.stdout.write(self.style.WARNING(f'Файл {file_path} не найден!'))
                     continue
