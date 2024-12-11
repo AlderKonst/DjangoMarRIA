@@ -21,17 +21,17 @@ class Command(BaseCommand):
                     date = date_transform(time, n) # Преобразуем дату
                 name = tr.find('td', class_='left').get_text(strip=True)  # Извлекаем название (второй столбец)
                 url = tr.find('a').get('href').split('/') # Извлекаем ссылку (третий столбец)
-                file_path = os.path.join(site_dir, url)
+                file_path = os.path.join(site_dir, *url)
                 if not os.path.exists(file_path):
                     self.stdout.write(self.style.WARNING(f'Файл {file_path} не найден!'))
                     continue
                 with open(file_path, 'rb') as doc:
-                    if not date: # Если дата публикации пустая
+                    if not date: # Если дата публикации ксивы пустая
                         Document.objects.get_or_create(name=name, # Название документа
                                                 date=data_before,  # Дата публикации документа берётся предыдущий
-                                                url=File(doc, name=url)) # Ссылка его скачивания с сохранением в /media/
+                                                url=File(doc, name=url[-1])) # Ссылка его скачивания с сохранением в /media/
                     else:
                         Document.objects.get_or_create(name=name,  # Название документа
                                                        date=date,  # Дата публикации документа берётся предыдущий
-                                                       url=File(doc, name=url)) # Ссылка его скачивания с сохранением в /media/
+                                                       url=File(doc, name=url[-1])) # Ссылка его скачивания с сохранением в /media/
                         data_before = date  # Дата публикации документа берётся следующий
