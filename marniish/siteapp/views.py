@@ -14,6 +14,11 @@ def index(request): # Для рендеринга главной страниц�
     context = {'page': page, 'trends': trends, 'references': references} # Передаем поля в шаблон
     return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
 
+def news(request, id):
+    page = get_object_or_404(Page, id=id) # Получаем запись в таблице Page с id = id
+    context = {'page': page} # Передаем шаблон
+    return render(request, 'siteapp/News.html', context) # Рендерим шаблон с передачей в него переменной page
+
 def news2024(request): # Для рендеринга страницы новостей за 2024 год
     page = Page.objects.get(url='News2024') # Получаем запись в таблице Page с именем News2024 в поле url
     context = {'page': page} # Передаем шаблон
