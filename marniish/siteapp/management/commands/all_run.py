@@ -17,7 +17,7 @@ class Command(BaseCommand):
             'page',     # Страницы
             'progress',  # Достижения
             'reference',  # Полезные ссылки
-            'trenditem'  # Направления деятельности
+            'trenditem',  # Направления деятельности
             'price',  # Прайс-лист
         ]
         for command in commands:  # Перебираем все команды
