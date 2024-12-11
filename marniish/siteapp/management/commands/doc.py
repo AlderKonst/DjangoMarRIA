@@ -1,4 +1,4 @@
-import os
+import os # Для работы с OC
 from bs4 import BeautifulSoup # Импорт библиотеки для парсинга HTML
 from django.core.files import File # Для работы с файлами в Django
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
@@ -9,7 +9,7 @@ from siteapp.models import Document  # Импорт моделей таблиц�
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        with open(f'{site_dir}Docs.html', 'r', encoding='utf-8') as f: # Открываем для чтения html-файл
+        with open(os.path.join(site_dir, 'Docs.html'), 'r', encoding='utf-8') as f: # Открываем для чтения html-файл
             content = f.read() # Читаем содержимое файла с кодом
             soup = BeautifulSoup(content, 'html.parser') # Парсим исходный HTML-код
             trs = soup.find_all('tr')[1:] # Извлекаем все tr-теги, кроме первого
