@@ -19,7 +19,7 @@ class Command(BaseCommand):
         div_refs = soup.find('div', class_='references')  # Получаем блок со ссылками
         refs = div_refs.find_all('a')  # Получаем все тэги со ссылками
 
-        cssutils.log.setLevel(logging.ERROR) # Устанавливаем уровень логирования
+        cssutils.log.setLevel(logging.CRITICAL) # Устанавливаем максимальный уровень логирования на критический
         with open(dir_css, 'r', encoding='utf-8') as f:  # Прочитываем css-файл
             content = f.read()  # Читаем содержимое файла c кодом
         css_parser = cssutils.CSSParser(raiseExceptions=False)  # Инициализируем парсер
