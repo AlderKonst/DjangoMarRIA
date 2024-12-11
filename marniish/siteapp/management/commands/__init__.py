@@ -1,5 +1,12 @@
-pc_dir = 'F:\\UII\\Python+\\' # Директория в моём ПК
-site_dir = f'{pc_dir}DjangoMarRIA\\marniish\\templates\\MarRIA\\' # Директория страниц для парсинга
+import os # Для работы с OC
+pc_dir = os.path.join('F:', 'ДОКИ', 'Python+') # Директория в моём ПК
+site_dir = os.path.join(pc_dir, 'DjangoMarRIA', 'marniish', 'templates', 'MarRIA') # Директория страниц для парсинга
+
+# Проверяем существование директорий
+if not os.path.exists(site_dir):
+    print(f"Директория {site_dir} не найдена!\nНеобходимо в ..DjangoMarRIA\marniish\siteapp\management\commands\__init__.py сменить значение pc_dir")
+else:
+    print(f"Директория найдена: {site_dir}")
 
 from datetime import datetime # Для работы со временем
 def date_transform( # Для прреобразования дат
