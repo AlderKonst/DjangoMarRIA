@@ -38,8 +38,7 @@ class Command(BaseCommand):
                                     order=order) # Устанавливаем порядок блока
                                 order += 1 # Увеличиваем порядок для следующего блока
                         elif element.name == 'p': # Если встретился тэг <p> или <a>
-                            href = element.a['href'][:-5] # Извлекаем имя файла из ссылки без ".html"
-                            text = text.replace(f"{href}.html", f"{{% url 'siteapp:{href}' %}}") # Заменяем "Docs.html" на динамическую ссылку
+                            text = element.decode_contents().replace("Docs.html", f"{{% url 'siteapp:Docs' %}}") # Заменяем "Docs.html" на динамическую ссылку
                             NewsBlock.objects.create( # Создание объекта NewsBlock для текста
                                 content_type='text', # Устанавливаем тип контента как текст
                                 news=news_obj, # Привязываем новость к блоку
