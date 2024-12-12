@@ -124,4 +124,4 @@ class NewsBlock(models.Model): # 1 блок события
     def __str__(self):
         return self.text or str(self.img) # Отображаем или текст, или картинку
     class Meta:
-        ordering = ['news'] # Упорядочивание новостей по новости также подсказал нейросеть
+        ordering = ['order', 'news'] # Упорядочивание новостей по новости и порядку также подсказал нейросеть
