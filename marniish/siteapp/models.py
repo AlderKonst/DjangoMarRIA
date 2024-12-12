@@ -101,6 +101,7 @@ class Price(models.Model): # Цены продукции
 
 class NewsPicture(models.Model): # Адрес картинки
     src = models.ImageField(upload_to='News', unique=True) # URL картинки, с загрузкой в /media/News
+    alt = models.CharField(max_length=150, blank=True, null=True) # Описание картинки
     def __str__(self):
         return self.src.url # Отображаем адрес
 
