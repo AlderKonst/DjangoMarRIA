@@ -20,7 +20,7 @@ def news_year(request, year): # Общая функция для рендери�
     newses = News.objects.filter(date__year=year # Получаем записи этого (year) года в таблице News и
                                  ).prefetch_related('news_bloks') # связанными блоками NewsBlock, через имя 'news_bloks'
     context = {'page': page, 'newses': newses, 'year': year}  # Передаем поля в шаблон
-    return render(request, f'siteapp/News{year}.html', context) # Рендерим шаблон с передачей в него переменных
+    return render(request, f'siteapp/News.html', context) # Рендерим шаблон с передачей в него переменных
 
 def prod(request): # Для рендеринга страницы продукции
     page = Page.objects.get(url='Prod') # Получаем запись в таблице Page с именем Prod в поле url
