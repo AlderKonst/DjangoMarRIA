@@ -1,0 +1,30 @@
+<!--Заполнение новостями НИИ-->
+{% block news %}
+{% load static %}
+
+{% block nav_sub_news %}
+	{% include "nav_sub_news.html" %}
+{% endblock %}
+
+<h2>Новости института за 2016 год</h2>
+<div class="pages">
+	<div id="news_institute">
+	<article>
+		<h3>Экспертная комиссия провела приемку полевых опытов</h3>
+		<time datetime="2016-07-01">1 июля 2016 года</time>
+		<section>
+			<label>
+				<input type="checkbox" hidden>
+				<img src="N/Priomka2016_1.jpg" alt="Экспертная комиссия и сотрудники в приёмке опыта">
+				<img src="N/Priomka2016_1.jpg" alt="Экспертная комиссия и сотрудники в приёмке опыта">
+				<div class="overlay"></div>
+			</label>
+			<p>С документами можно ознакомиться по следующей ссылке</p>
+			<a href="Docs.html" target="_blank">Перейти</a></section>
+	</article>
+	</div>
+{% block news_archive %}
+	{% include "news_archive.html" %}
+{% endblock %}
+</div>
+{% endblock %}
