@@ -22,31 +22,31 @@ from django.conf.urls.static import static # Импортируем функци
 
 urlpatterns = [
     path('', views.index, name='index'), # Главная страница
-    path('News/<int:id>', views.news, name='News'), # Новости
-    path('News2024', views.news2024, name='News2024'), # Новости за 2024 год
-    path('News2023', views.news2023, name='News2023'), # Новости за 2023 год
-    path('News2022', views.news2022, name='News2022'), # Новости за 2022 год
-    path('News2021', views.news2021, name='News2021'), # Новости за 2021 год
-    path('News2020', views.news2020, name='News2020'), # Новости за 2020 год
-    path('News2019', views.news2019, name='News2019'), # Новости за 2019 год
-    path('News2018', views.news2018, name='News2018'), # Новости за 2018 год
-    path('News2017', views.news2017, name='News2017'), # Новости за 2017 год
-    path('News2016', views.news2016, name='News2016'), # Новости за 2016 год
-    path('Prod', views.prod, name='Prod'), # Продукция
-    path('Grain', views.grain, name='Grain'), # Зерновые
-    path('Potato', views.potato, name='Potato'), # Картофель
-    path('Grass', views.grass, name='Grass'), # Многолетние травы
-    path('Jim', views.jim, name='Jim'), # Жимолость
-    path('About', views.about, name='About'), # История института
-    path('Trend', views.trend, name='Trend'), # Направления деятельности
-    path('Progress', views.progress, name='Progress'), # Достижения
-    path('Article', views.article, name='Article'), # Статьи
-    path('Contact', views.contact, name='Contact'), # Контакты
-    path('Price', views.price, name='Price'), # Прайс
-    path('Docs', views.docs, name='Docs'), # Документы
-    path('Map', views.mapping, name='Map'), # Карта сайта
+    path('News2024/', views.news2024, name='News2024'), # Новости за 2024 год
+    path('News2023/', views.news2023, name='News2023'), # Новости за 2023 год
+    path('News2022/', views.news2022, name='News2022'), # Новости за 2022 год
+    path('News2021/', views.news2021, name='News2021'), # Новости за 2021 год
+    path('News2020/', views.news2020, name='News2020'), # Новости за 2020 год
+    path('News2019/', views.news2019, name='News2019'), # Новости за 2019 год
+    path('News2018/', views.news2018, name='News2018'), # Новости за 2018 год
+    path('News2017/', views.news2017, name='News2017'), # Новости за 2017 год
+    path('News2016/', views.news2016, name='News2016'), # Новости за 2016 год
+    path('Prod/', views.prod, name='Prod'), # Продукция
+    path('Grain/', views.grain, name='Grain'), # Зерновые
+    path('Potato/', views.potato, name='Potato'), # Картофель
+    path('Grass/', views.grass, name='Grass'), # Многолетние травы
+    path('Jim/', views.jim, name='Jim'), # Жимолость
+    path('About/', views.about, name='About'), # История института
+    path('Trend/', views.trend, name='Trend'), # Направления деятельности
+    path('Progress/', views.progress, name='Progress'), # Достижения
+    path('Article/', views.article, name='Article'), # Статьи
+    path('Contact/', views.contact, name='Contact'), # Контакты
+    path('Price/', views.price, name='Price'), # Прайс
+    path('Docs/', views.docs, name='Docs'), # Документы
+    path('Map/', views.mapping, name='Map'), # Карта сайта
     path('<str:url>/', views.this_page, name='this_page'), # Текущая страница
     path('<str:parent_url>/', views.parent_page, name='parent_page'), # Страница родителя
+    path('News/<int:id>/', views.news, name='News'), # Новости
 ]
 
 if settings.DEBUG: # Чтобы изображения могли отображаться в браузере
