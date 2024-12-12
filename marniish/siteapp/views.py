@@ -14,11 +14,6 @@ def index(request): # Для рендеринга главной страниц�
     context = {'page': page, 'trends': trends, 'references': references} # Передаем поля в шаблон
     return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
 
-def news(request, id):
-    page = get_object_or_404(Page, id=id) # Получаем запись в таблице Page с id = id
-    context = {'page': page} # Передаем шаблон
-    return render(request, 'siteapp/News.html', context) # Рендерим шаблон с передачей в него переменной page
-
 def news2024(request): # Для рендеринга страницы новостей за 2024 год
     page = Page.objects.get(url='News2024') # Получаем запись в таблице Page с именем News2024 в поле url
     context = {'page': page} # Передаем шаблон
@@ -148,10 +143,15 @@ def mapping(request): # Для рендеринга страницы карты 
     return render(request, 'siteapp/Map.html', context) # Рендерим шаблон с передачей в него переменной page
 
 # Для отображения текущих и родительских страниц
-def this_page(request, url):  # Для отображения текущей страницы
+def this_page(request, url):  # Для отображения пути к текущей странице
     context = {'page': {'url': url}} # Передаем в шаблон page переменную url
-    return render(request, 'siteapp/index.html', context) #
+    return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
 
-def parent_page(request, parent_url): # Для отображения родительской страницы
+def parent_page(request, parent_url): # Для отображения пути к родительской странице
     context = {'page': {'parent_url': parent_url}} # Передаем в шаблон page переменную parent_url
     return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
+
+def news(request, id): # Для отображения новостей
+    page = get_object_or_404(Page, id=id) # Получаем запись в таблице Page с id = id
+    context = {'page': page} # Передаем шаблон
+    return render(request, 'siteapp/News.html', context) # Рендерим шаблон с передачей в него переменной page
