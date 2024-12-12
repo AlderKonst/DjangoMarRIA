@@ -22,6 +22,7 @@ class Command(BaseCommand):
         ]
         for command in commands:  # Перебираем все команды
             os.system(f'python manage.py {command}')  # Запускаем каждую команду
+            print(f'Команда {command} выполнена') # Сообщение о выполнении команды
 
 if __name__ == '__main__':  # Если это файл с именем __main__, то запускаем функцию all_run()
     Command().all_run()  # Запускаем функцию all_run()
