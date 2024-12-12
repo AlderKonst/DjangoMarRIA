@@ -46,7 +46,7 @@ urlpatterns = [
     path('Map/', views.mapping, name='Map'), # Карта сайта
     path('<str:url>/', views.this_page, name='this_page'), # Текущая страница
     path('<str:parent_url>/', views.parent_page, name='parent_page'), # Страница родителя
-    path('News/<int:id>/', views.news, name='News'), # Новости
+    # path('News/<int:id>/', views.news, name='News'), # Новости
 ]
 
 if settings.DEBUG: # Чтобы изображения могли отображаться в браузере
