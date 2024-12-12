@@ -22,6 +22,7 @@ from django.conf.urls.static import static # Импортируем функци
 
 urlpatterns = [
     path('', views.index, name='index'), # Главная страница
+    path('News/<int:id>', views.news, name='News'), # Новости
     path('News2024', views.news2024, name='News2024'), # Новости за 2024 год
     path('News2023', views.news2023, name='News2023'), # Новости за 2023 год
     path('News2022', views.news2022, name='News2022'), # Новости за 2022 год
