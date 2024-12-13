@@ -14,7 +14,7 @@
 		<h3>{{news.title}}</h3>
 		<time datetime="{{news.date}}">{{news.date}}</time>
 		<section>
-		{% for block in news.news_bloks.all %}
+		{% for block in news.news_blocks.all %}
 			{% if block.content_type == 'image' %}
 				<label>
 					<input type="checkbox" hidden>
@@ -23,7 +23,7 @@
 					<div class="overlay"></div>
 				</label>
 			{% elif block.content_type == 'text' %}
-				<p>{{block.text}}</p>
+				<p>{{block.text|safe}}</p>
 			{% endif %}
 		{% endfor %}
 		</section>
