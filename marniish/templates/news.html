@@ -12,7 +12,7 @@
 	{% for news in newses %}
 	<article>
 		<h3>{{news.title}}</h3>
-		<time datetime="{{news.date}}">1 июля 2016 года</time>
+		<time datetime="{{news.date}}">{{news.date}}</time>
 		<section>
 		{% for block in news.news_bloks.all %}
 			{% if block.content_type == 'image' %}
