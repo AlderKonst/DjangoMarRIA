@@ -23,10 +23,10 @@ class Progress(models.Model): # Наиболее значимые достиже
 
 class Page(models.Model): # Страница сайта
     title = models.CharField(max_length=100)  # Название страницы
-    url = models.URLField(max_length=30, unique=True)  # URL страницы (без .html)
+    url = models.CharField(max_length=30, unique=True)  # URL страницы (без .html)
     description = models.CharField(max_length=150) # Метаописание страницы
-    parent_url = models.URLField(max_length=30)  # URL родительской страницы (без .html)
-    parent_title = models.CharField(max_length=100)  # Название родительской страницы
+    parent_url = models.URLField(max_length=30, blank=True, null=True)  # URL родительской страницы (без .html)
+    parent_title = models.CharField(max_length=100, blank=True, null=True)  # Название родительской страницы
     def __str__(self):
         return self.title # Для отображения названия страницы
 
