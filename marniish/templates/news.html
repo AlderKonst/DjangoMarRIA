@@ -18,8 +18,8 @@
 			{% if block.content_type == 'image' %}
 				<label>
 					<input type="checkbox" hidden>
-					<img src="{{block.img.url}}" alt="{{block.alt}}">
-					<img src="{{block.img.url}}" alt="{{block.alt}}">
+					<img src="{{block.img.src.url}}" alt="{{block.img.alt}}">
+					<img src="{{block.img.src.url}}" alt="{{block.img.alt}}">
 					<div class="overlay"></div>
 				</label>
 			{% elif block.content_type == 'text' %}
