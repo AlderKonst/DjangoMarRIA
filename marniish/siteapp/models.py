@@ -118,7 +118,7 @@ class NewsBlock(models.Model): # 1 блок события
                                     choices=(('text', 'Текст'), # Текст
                                              ('image', 'Картинка'))) # Картинка
     text = models.CharField(max_length=3000, blank=True, null=True) # Текст блока
-    news = models.ForeignKey(News, null=True, on_delete=models.CASCADE)  # Событие (связь один-ко-многим)
+    news = models.ForeignKey(News, null=True, on_delete=models.CASCADE, related_name='news_blocks')  # Событие (связь один-ко-многим)
     img = models.ForeignKey(NewsPicture, blank=True, null=True, on_delete=models.CASCADE) # Картинка блока
     order = models.PositiveIntegerField(default=0) # Порядоковый номер отображения блока
     def __str__(self):
