@@ -20,9 +20,19 @@ from siteapp import views # Импортируем представления и
 from django.conf import settings # Импортируем настройки Django
 from django.conf.urls.static import static # Импортируем функцию для работы со статическими файлами
 
+app_name = 'siteapp'  # Задаем имя приложения для использования в пространстве имен
+
 urlpatterns = [
     path('', views.index, name='index'), # Главная страница
-    path('News/<int:year>/', views.news_year, name='News'), # Новости за каждый год
+    path('News2024/', views.news2024, name='News2024'),  # Новости за 2024 год
+    path('News2023/', views.news2023, name='News2023'),  # Новости за 2023 год
+    path('News2022/', views.news2022, name='News2022'),  # Новости за 2022 год
+    path('News2021/', views.news2021, name='News2021'),  # Новости за 2021 год
+    path('News2020/', views.news2020, name='News2020'),  # Новости за 2020 год
+    path('News2019/', views.news2019, name='News2019'),  # Новости за 2019 год
+    path('News2018/', views.news2018, name='News2018'),  # Новости за 2018 год
+    path('News2017/', views.news2017, name='News2017'),  # Новости за 2017 год
+    path('News2016/', views.news2016, name='News2016'),  # Новости за 2016 год
     path('Prod/', views.prod, name='Prod'), # Продукция
     path('Grain/', views.grain, name='Grain'), # Зерновые
     path('Potato/', views.potato, name='Potato'), # Картофель

@@ -19,8 +19,64 @@ def news_year(request, year): # Общая функция для рендери�
     page = get_object_or_404(Page, url=f'News{year}') # Получаем запись в таблице Page с именем News{year} в поле url, если есть
     newses = News.objects.filter(date__year=year # Получаем записи этого (year) года в таблице News и
                                  ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
-    context = {'page': page, 'newses': newses, 'year': year}  # Передаем поля в шаблон
-    return render(request, f'siteapp/News.html', context) # Рендерим шаблон с передачей в него переменных
+    context = {'page': page, 'newses': newses, 'year': year} # Передаем поля в шаблон
+    return render(request, f'siteapp/News{year}.html', context) # Рендерим шаблон с передачей в него переменных
+
+def news2016(request):
+    page = Page.objects.get(url='News2016') # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2016 # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2016} # Передаем поля в шаблон
+    return render(request, 'siteapp/News2016.html', context)  # Рендерим шаблон с передачей в него переменных
+def news2017(request):
+    page = Page.objects.get(url='News2017') # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2017 # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2017} # Передаем поля в шаблон
+    return render(request, 'siteapp/News2017.html', context) # Рендерим шаблон с передачей в него переменных
+def news2018(request):
+    page = Page.objects.get(url='News2018') # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2018 # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks')  # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2018} # Передаем поля в шаблон
+    return render(request, 'siteapp/News2018.html', context) # Рендерим шаблон с передачей в него переменных
+def news2019(request):
+    page = Page.objects.get(url='News2019') # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2019 # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related(
+        'news_blocks')  # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2019} # Передаем поля в шаблон
+    return render(request, 'siteapp/News2019.html', context) # Рендерим шаблон с передачей в него переменных
+def news2020(request):
+    page = Page.objects.get(url='News2020') # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2020 # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks')  # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2020} # Передаем поля в шаблон
+    return render(request, 'siteapp/News2020.html', context) # Рендерим шаблон с передачей в него переменных
+def news2021(request):
+    page = Page.objects.get(url='News2021')  # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2021  # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks')  # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2021}  # Передаем поля в шаблон
+    return render(request, 'siteapp/News2021.html', context)  # Рендерим шаблон с передачей в него переменных
+def news2022(request):
+    page = Page.objects.get(url='News2022')  # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2022  # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks')  # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2022}  # Передаем поля в шаблон
+    return render(request, 'siteapp/News2022.html', context)  # Рендерим шаблон с передачей в него переменных
+def news2023(request):
+    page = Page.objects.get(url='News2023')  # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2023  # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks')  # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2023}  # Передаем поля в шаблон
+    return render(request, 'siteapp/News2023.html', context)  # Рендерим шаблон с передачей в него переменных
+def news2024(request):
+    page = Page.objects.get(url='News2024')  # Получаем запись в таблице Page с именем страницы в поле url, если есть
+    newses = News.objects.filter(date__year=2024  # Получаем записи этого (year) года в таблице News и
+                                 ).prefetch_related('news_blocks')  # связанными блоками NewsBlock, через имя 'news_bloks'
+    context = {'page': page, 'newses': newses, 'year': 2024}  # Передаем поля в шаблон
+    return render(request, 'siteapp/News2024.html', context)  # Рендерим шаблон с передачей в него переменных
 
 def prod(request): # Для рендеринга страницы продукции
     page = Page.objects.get(url='Prod') # Получаем запись в таблице Page с именем Prod в поле url

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    {{page.title}}
+{% endblock %}
+
+{% block description %}
+	{{page.description}}
+{% endblock %}
+
+{% block content %}
+
+{% block news %}
+	{% include "news.html" %}
+{% endblock %}
+
+{% endblock %}
