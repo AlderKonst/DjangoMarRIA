@@ -1,27 +1,5 @@
 <!--Минименю внизу у подвала для блока страниц с новостями по навигации по годам-->
 {% block news_archive.html %}
-<style> <!--Почему-то именно внизу страницы эти стили вообще не видят, пришлось тут ещё поставить их-->
-#news_archive {
-	padding: .5em;
-	color: #fff;
-	background: #0b3; /*зелёно-бирюзовый*/
-	border-radius: .5em .5em 0 0;
-}
-#news_archive > * {
-	padding: 0.25em;
-}
-#news_archive a {
-	display: inline-block;
-	margin-top: .25em;
-	padding: .25em .5em;
-	background: #0c3; /*зелёно-бирюзовый*/
-	border-radius: .25em;
-}
-#news_archive a:hover,
-#news_archive a:focus {
-	transform: translateY(.125em);
-}
-</style>
 <aside id="news_archive">
 	<h3>Архив новостей</h3>
 	<a href="{% url 'siteapp:News2016' %}">2016</a>
