@@ -1071,6 +1071,7 @@ footer h4 {
 	background: #0a0; /*ярко-зелёный*/
 	background: rgba(0,150,0,.8); /*зелёный*/
 }
+/* Закомментировал, поскольку мешает, бесит эта хрень
 .nav_sub + h2:before {
 	display: block;
 	position: absolute;
@@ -1093,6 +1094,7 @@ footer h4 {
 		width: 55%;
 	}
 }
+*/
 /*Подменю H2 заголовка: КОНЕЦ*/
 /*Продукция: НАЧАЛО*/
 #prod {
