@@ -24,7 +24,15 @@ app_name = 'siteapp'  # Задаем имя приложения для испо
 
 urlpatterns = [
     path('', views.index, name='index'), # Главная страница
-    path('News<int:year>/', views.news_year, name='news_year'), # Новости за year год
+    path('News2024/', views.news, name='News2024', kwargs={'year': 2024}), # Новости за 2024 год
+    path('News2023/', views.news, name='News2023', kwargs={'year': 2023}), # Новости за 2023 год
+    path('News2022/', views.news, name='News2022', kwargs={'year': 2022}), # Новости за 2022 год
+    path('News2021/', views.news, name='News2021', kwargs={'year': 2021}), # Новости за 2021 год
+    path('News2020/', views.news, name='News2020', kwargs={'year': 2020}), # Новости за 2020 год
+    path('News2019/', views.news, name='News2019', kwargs={'year': 2019}), # Новости за 2019 год
+    path('News2018/', views.news, name='News2018', kwargs={'year': 2018}), # Новости за 2018 год
+    path('News2017/', views.news, name='News2017', kwargs={'year': 2017}), # Новости за 2017 год
+    path('News2016/', views.news, name='News2016', kwargs={'year': 2016}), # Новости за 2016 год
     path('Prod/', views.prod, name='Prod'), # Продукция
     path('Grain/', views.grain, name='Grain'), # Зерновые
     path('Potato/', views.potato, name='Potato'), # Картофель
