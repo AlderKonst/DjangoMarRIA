@@ -20,19 +20,14 @@ from siteapp import views # Импортируем представления и
 from django.conf import settings # Импортируем настройки Django
 from django.conf.urls.static import static # Импортируем функцию для работы со статическими файлами
 
-app_name = 'siteapp'  # Задаем имя приложения для использования в пространстве имен
+app_name = 'siteapp' # Задаем имя приложения для использования в пространстве имен
 
+news_years = range(2016, 2025) # Список годов для новостей с 2016 по 2024 гг.
 urlpatterns = [
-    path('', views.index, name='index'), # Главная страница
-    path('News2024/', views.news, name='News2024', kwargs={'year': 2024}), # Новости за 2024 год
-    path('News2023/', views.news, name='News2023', kwargs={'year': 2023}), # Новости за 2023 год
-    path('News2022/', views.news, name='News2022', kwargs={'year': 2022}), # Новости за 2022 год
-    path('News2021/', views.news, name='News2021', kwargs={'year': 2021}), # Новости за 2021 год
-    path('News2020/', views.news, name='News2020', kwargs={'year': 2020}), # Новости за 2020 год
-    path('News2019/', views.news, name='News2019', kwargs={'year': 2019}), # Новости за 2019 год
-    path('News2018/', views.news, name='News2018', kwargs={'year': 2018}), # Новости за 2018 год
-    path('News2017/', views.news, name='News2017', kwargs={'year': 2017}), # Новости за 2017 год
-    path('News2016/', views.news, name='News2016', kwargs={'year': 2016}), # Новости за 2016 год
+    path('', views.index, name='index'),  # Главная страница
+]
+urlpatterns += [path(f'News{year}/', views.news, name=f'News{year}', kwargs={'year': year}) for year in news_years] # Добавляем пути для новостей за каждый год
+urlpatterns += [ # Остальные маршруты
     path('Prod/', views.prod, name='Prod'), # Продукция
     path('Grain/', views.grain, name='Grain'), # Зерновые
     path('Potato/', views.potato, name='Potato'), # Картофель
