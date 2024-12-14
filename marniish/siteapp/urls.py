@@ -25,9 +25,7 @@ app_name = 'siteapp' # Задаем имя приложения для испо�
 news_years = range(2016, 2025) # Список годов для новостей с 2016 по 2024 гг.
 urlpatterns = [
     path('', views.index, name='index'),  # Главная страница
-]
-urlpatterns += [path(f'News{year}/', views.news, name=f'News{year}', kwargs={'year': year}) for year in news_years] # Добавляем пути для новостей за каждый год
-urlpatterns += [ # Остальные маршруты
+    *[path(f'News{year}/', views.news, name=f'News{year}', kwargs={'year': year}) for year in news_years], # Добавляем пути для новостей за каждый год
     path('Prod/', views.prod, name='Prod'), # Продукция
     path('Grain/', views.grain, name='Grain'), # Зерновые
     path('Potato/', views.potato, name='Potato'), # Картофель
