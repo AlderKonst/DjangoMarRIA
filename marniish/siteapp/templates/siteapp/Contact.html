@@ -43,11 +43,6 @@
 				<a href="tel:+78362538366">+7 (8362) 53-83-66</a>
 			</article>
 			<article>
-				<h3><b>Автор сайта</b></h3>
-				<p>Свечников&nbsp;Александр&nbsp;Константинович, н.с. отд. технологий возделывания сельскохозяйственных культур</p>
-				<a href="tel:+79278797843">+7 (927) 879-78-43</a>
-			</article>
-			<article>
 				<p>ИНН 1207001789 КПП 120701001 ОКОНХ 95140 ОКПО 00670031 ОГРН 1021201051057</p>
 			</article>
 		</div>
@@ -59,15 +54,9 @@
 				</a>
 				<fieldset>
 					<legend>Напишите нам!</legend>
-					<form name="MyForm" action="http://марниисх.рф/Contact.php" method="post">
-						<label for="name">Имя *</label>
-						<input name="name" type="text" id="name" placeholder="Введите Ваше Имя" required/>
-						<label for="email">Электронная почта *</label>
-						<input name="email" type="text" id="email" placeholder="Например, email@email.ru" required/>
-						<label for="sub">Тема сообщения</label>
-						<input name="sub" type="text" id="sub"/>
-						<label for="body">Сообщение *</label>
-						<textarea name="body" id="body" placeholder="Произвольный текст сообщения ..."  required cols="1" rows="5"></textarea>
+					<form name="ContactForm" method="post">
+						{% csrf_token %}
+						{{form.as_table}}
 						<input type="submit" id="submit" value="Отправить"/>
 					</form>
 				</fieldset>
