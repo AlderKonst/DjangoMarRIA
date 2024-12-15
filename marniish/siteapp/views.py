@@ -6,6 +6,7 @@ from django.core.mail import send_mail # Импортируем функцию �
 # Импортируем модели соответствующих таблиц
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
+from .forms import ContactForm # Импортируем форму
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -20,6 +21,28 @@ def news(request, year): # Общая функция для рендеринга
                                  ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
     context = {'page': page, 'newses': newses, 'year': year} # Передаем поля в шаблон
     return render(request, 'siteapp/News.html', context) # Рендерим шаблон с передачей в него переменных
+
+def contact(request): # Для рендеринга страницы контактов
+    page = Page.objects.get(url='Contact')  # Получаем запись в таблице Page с именем Contact в поле url
+    if request.method == 'POST': # Если метод POST
+        form = ContactForm(request.POST) # Загружаем данные, полученные из формы
+        if form.is_valid(): # Если форма валидна (все данные правильные)
+            name = form.cleaned_data['name'] # Имя отправившего сообщение
+            email = form.cleaned_data['email'] # Email отправившего сообщение
+            subject = form.cleaned_data['subject'] # Тема отправившего сообщение
+            message = form.cleaned_data['message'] # Сообщение отправившего сообщение
+            send_mail(subject, # Тема сообщения
+                      f'{name} отпрвил текст сообщения: {message}',
+                      email, # Email отправившего сообщение
+                      ['marniish@yandex.ru'], # Кому отправляем
+                      fail_silently=True) # Если не удалось отправить, то пропускаем
+            return HttpResponseRedirect(reverse('siteapp:Contact')) # Перенаправляем на главную страницу
+        else: # Если данные формы неправильные
+            return render(request, 'siteapp/Contact.html', {'form': form}) # Рендерим шаблон с передачей в него переменной pag
+    else:
+        form = ContactForm() # Создаем форму
+        context = {'page': page, 'form': form} # Передаем шаблон
+        return render(request, 'siteapp/Contact.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def prod(request): # Для рендеринга страницы продукции
     page = Page.objects.get(url='Prod') # Получаем запись в таблице Page с именем Prod в поле url
@@ -81,11 +104,6 @@ def article(request): # Для рендеринга страницы стате�
     articles = Article.objects.all()  # Получаем все записи в таблице Article
     context = {'page': page, 'articles': articles} # Передаем шаблон
     return render(request, 'siteapp/Article.html', context) # Рендерим шаблон с передачей в него переменной page
-
-def contact(request): # Для рендеринга страницы контактов
-    page = Page.objects.get(url='Contact') # Получаем запись в таблице Page с именем Contact в поле url
-    context = {'page': page} # Передаем шаблон
-    return render(request, 'siteapp/Contact.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def price(request): # Для рендеринга страницы прайса
     page = Page.objects.get(url='Price') # Получаем запись в таблице Page с именем Price в поле url
