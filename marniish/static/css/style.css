@@ -1247,6 +1247,7 @@ span#red {
 	cursor: default;
 }
 #contact input[type=text],
+#contact input[type=email],
 #contact textarea {
 	font-size: inherit;
 	border: 3px solid #0b0;
