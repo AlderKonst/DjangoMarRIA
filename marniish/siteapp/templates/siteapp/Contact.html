@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     {{page.title}}
@@ -53,8 +54,8 @@
 		<div>
 			<article>
 				<a href="https://yandex.ru/maps/?um=constructor%3A04a93cdec4e7da2828396ef9505f7a3acbd97734afb1506ea2e3708d12fb46ee&amp;source=constructorStatic" target="_blank">
-					<img src="img/home.jpg" alt="Здание НИИ"/>
-					<img src="img/map.jpg" alt="Кликните по фото или здесь, чтобы показать месторасположение НИИ на Яндекс.карте"/>
+					<img src="{% static 'img/home.jpg' %}" alt="Здание НИИ"/>
+					<img src="{% static 'img/map.jpg' %}" alt="Кликните по фото или здесь, чтобы показать месторасположение НИИ на Яндекс.карте"/>
 				</a>
 				<fieldset>
 					<legend>Напишите нам!</legend>
