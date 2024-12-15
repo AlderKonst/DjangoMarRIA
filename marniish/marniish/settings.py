@@ -121,3 +121,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media") # Для медиа файлов, которые часто меняются
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # Используется для вывода сообщений в консоль
