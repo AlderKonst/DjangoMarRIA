@@ -5,8 +5,7 @@ from django.urls import reverse # Импортируем функцию для �
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
 # Импортируем модели соответствующих таблиц
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
-                     HistoryData, Culture, Taxon, CultureGroup, Document, Price,
-                     NewsBlock, News)  # Импортируем модели соответствующих таблиц
+                     HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
