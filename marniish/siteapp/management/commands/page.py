@@ -17,23 +17,22 @@ class Command(BaseCommand):
                 title = soup.find('title').get_text()[:-72] # Получаем уникальную часть текста титульника
                 description = soup.select_one('meta[name="description"]')['content'] # Получаем описание страницы
                 parent_block = soup.find('li', class_ = 'parent') # Получаем блок, указывающий на родительскую страницу
-                url = '' # Инициируем адрес текущей страницы пустым
                 parent_url = '' # Инициируем адрес родительской страницы пустым
                 parent_title = '' # Инициируем имя родительской страницы пустым
                 if parent_block: # Если блок родительской страницы есть
                     parent_url = parent_block.find('a').get('href') # Получаем адрес родительской страницы
                     parent_title = parent_block.find('a').get_text() # Получаем имя родительской страницы
 
-                    def format_url(url): # В страницах новостей убирает .html и форматирует в таком виде: News/ГГГГ
-                        url = url[:-5] # Убираем .html из имени файла
-                        if url.startswith('News'): # Если адрес начинается с News
-                            year = url[4:] # Извлекаем год из имени страницы
-                            return f"News/{year}" # Форматируем URL как News/ГГГГ
-                        else: # Если адрес не начинается с News (остальные)
-                            return url # Возвращаем адрес страницы без .html
+                def format_url(url): # В страницах новостей убирает .html и форматирует в таком виде: News/ГГГГ
+                    url = url[:-5] # Убираем .html из имени файла
+                    if url.startswith('News'): # Если адрес начинается с News
+                        year = url[4:] # Извлекаем год из имени страницы
+                        return f"News/{year}/" # Форматируем URL как News/ГГГГ
+                    else: # Если адрес не начинается с News (остальные)
+                        return url # Возвращаем адрес страницы без .html
 
-                    url = format_url(page) # Убираем .html из имени текущей страницы с таким (News/ГГГГ) форматом
-                    parent_url = format_url(parent_url) # Убираем .html из адреса родительской страницы с таким (News/ГГГГ) форматом
+                url = format_url(page) # Убираем .html из имени текущей страницы с таким (News/ГГГГ) форматом
+                parent_url = format_url(parent_url) # Убираем .html из адреса родительской страницы с таким (News/ГГГГ) форматом
                 Page.objects.get_or_create( # Создаем объект таблицы БД Page
                     title=title,  # Создаем поле именем страницы
                     url = url, # Создаем поле адреса текущей страницы без расширения
