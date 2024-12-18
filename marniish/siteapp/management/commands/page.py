@@ -17,6 +17,8 @@ class Command(BaseCommand):
                 title = soup.find('title').get_text()[:-72] # Получаем уникальную часть текста титульника
                 description = soup.select_one('meta[name="description"]')['content'] # Получаем описание страницы
                 parent_block = soup.find('li', class_ = 'parent') # Получаем блок, указывающий на родительскую страницу
+                parent_url = '' # Инициируем адрес родительской страницы пустым
+                parent_title = '' # Инициируем имя родительской страницы пустым
                 if parent_block: # Если блок родительской страницы есть
                     parent_url = parent_block.find('a').get('href') # Получаем адрес родительской страницы
                     parent_title = parent_block.find('a').get_text() # Получаем имя родительской страницы
@@ -31,10 +33,10 @@ class Command(BaseCommand):
 
                     url = format_url(page) # Убираем .html из имени текущей страницы с таким (News/ГГГГ) форматом
                     parent_url = format_url(parent_url) # Убираем .html из адреса родительской страницы с таким (News/ГГГГ) форматом
-                    Page.objects.get_or_create( # Создаем объект таблицы БД Page
-                        title=title,  # Создаем поле именем страницы
-                        url = url, # Создаем поле адреса текущей страницы без расширения
-                        description = description, # Создаем поле описания страницы
-                        parent_url = parent_url, # Создаем поле адреса родительской страницы без расширения
-                        parent_title = parent_title # Создаем поле имени родительской страницы
+                Page.objects.get_or_create( # Создаем объект таблицы БД Page
+                    title=title,  # Создаем поле именем страницы
+                    url = url, # Создаем поле адреса текущей страницы без расширения
+                    description = description, # Создаем поле описания страницы
+                    parent_url = parent_url, # Создаем поле адреса родительской страницы без расширения
+                    parent_title = parent_title # Создаем поле имени родительской страницы
                     )
