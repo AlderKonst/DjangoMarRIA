@@ -44,15 +44,6 @@ class Page(models.Model): # Страница сайта
         verbose_name = 'Страница сайта' # Для отображения в админке
         verbose_name_plural = 'Страницы сайта' # Для отображения в админке
 
-class Page(models.Model): # Страница сайта
-    title = models.CharField(max_length=100)  # Название страницы
-    description = models.CharField(max_length=150) # Метаописание страницы
-    def __str__(self):
-        return self.title # Для отображения названия страницы
-    class Meta:
-        verbose_name = 'Страница сайта' # Для отображения в админке
-        verbose_name_plural = 'Страницы сайта' # Для отображения в админке
-
 class TrendItem(NameStr): # Пункты направления
     name = models.CharField(max_length=250, unique=True)  # Название пункта направления
     trend = models.ForeignKey(Trend, on_delete=models.CASCADE) # К какому основному направлению относится
