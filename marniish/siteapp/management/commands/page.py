@@ -27,7 +27,7 @@ class Command(BaseCommand):
                     url = url[:-5] # Убираем .html из имени файла
                     if url.startswith('News'): # Если адрес начинается с News
                         year = url[4:] # Извлекаем год из имени страницы
-                        return f"News/{year}/" # Форматируем URL как News/ГГГГ
+                        return f"News/{year}" # Форматируем URL как News/ГГГГ
                     else: # Если адрес не начинается с News (остальные)
                         return url # Возвращаем адрес страницы без .html
 

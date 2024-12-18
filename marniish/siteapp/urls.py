@@ -22,11 +22,9 @@ from django.conf.urls.static import static # Импортируем функци
 
 app_name = 'siteapp' # Задаем имя приложения для использования в пространстве имен
 
-news_years = range(2016, 2025) # Список годов для новостей с 2016 по 2024 гг.
-# Как в занятии path('News/<int:year>/', views.news, name='News') почему-то никак не получалось, нашёл такой способ ниже
 urlpatterns = [
     path('', views.index, name='index'),  # Главная страница
-    *[path(f'News/{year}/', views.news, name=f'News{year}', kwargs={'year': year}) for year in news_years], # Добавляем пути для новостей за каждый год
+    path('News/<int:year>/', views.news, name='News'), # Добавляем пути для новостей за каждый год
     path('Prod/', views.prod, name='Prod'), # Продукция
     path('Grain/', views.grain, name='Grain'), # Зерновые
     path('Potato/', views.potato, name='Potato'), # Картофель
