@@ -12,9 +12,12 @@
 
 {% block content %}
 
+<nav class="nav_sub">
+	<span>Ещё ↑</span>
 {% block nav_sub_news %}
-	{% include "nav_sub_news.html" %}
+	{% include "news_nav.html" %}
 {% endblock %}
+</nav>
 
 <h2>Новости института за {{year}} год</h2>
 <div class="pages">
@@ -40,8 +43,11 @@
 	</article>
 	{% endfor %}
 	</div>
-{% block news_archive %}
-	{% include "news_archive.html" %}
-{% endblock %}
+	<aside id="news_archive">
+	<h3>Архив новостей</h3>
+	{% block news_archive %}
+		{% include "news_nav.html" %}
+	{% endblock %}
+	</aside>
 </div>
 {% endblock %}
