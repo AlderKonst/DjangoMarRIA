@@ -16,7 +16,7 @@ def index(request): # Для рендеринга главной страниц�
     return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
 
 def news(request, year): # Общая функция для рендеринга страницы новостей за определённый год
-    page = get_object_or_404(Page, url='News' + str(year)) # Получаем запись в таблице Page с именем News со строчным year в поле url
+    page = get_object_or_404(Page, url='News/' + str(year) + '/') # Получаем запись в таблице Page с именем News со строчным year в поле url
     newses = News.objects.filter(date__year=year # Получаем записи этого (year) года в таблице News и
                                  ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
     context = {'page': page, 'newses': newses, 'year': year} # Передаем поля в шаблон
