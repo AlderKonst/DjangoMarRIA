@@ -22,10 +22,19 @@ class Command(BaseCommand):
                 if parent_block: # Если блок родительской страницы есть
                     parent_url = parent_block.find('a').get('href') # Получаем адрес родительской страницы
                     parent_title = parent_block.find('a').get_text() # Получаем имя родительской страницы
+
+                    def format_url(url): # В страницах новостей убирает .html и форматирует в таком виде: News/ГГГГ
+                        url = url[:-5] # Убираем .html из имени файла
+                        if url.startswith('News'): # Если адрес начинается с News
+                            year = url[4:] # Извлекаем год из имени страницы
+                            return f"News/{year}" # Форматируем URL как News/ГГГГ
+
+                    url = format_url(page) # Убираем .html из имени текущей страницы с таким (News/ГГГГ) форматом
+                    parent_url = format_url(parent_url) # Убираем .html из адреса родительской страницы с таким (News/ГГГГ) форматом
                 Page.objects.get_or_create( # Создаем объект таблицы БД Page
                     title=title,  # Создаем поле именем страницы
-                    url = page[:-5], # Создаем поле адреса страницы без расширения
+                    url = url, # Создаем поле адреса текущей страницы без расширения
                     description = description, # Создаем поле описания страницы
-                    parent_url = parent_url[:-5], # Создаем поле адреса родительской страницы без расширения
+                    parent_url = parent_url, # Создаем поле адреса родительской страницы без расширения
                     parent_title = parent_title # Создаем поле имени родительской страницы
                 )
