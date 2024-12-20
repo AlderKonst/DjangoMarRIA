@@ -1184,57 +1184,57 @@ footer h4 {
 }
 /*Продукция: КОНЕЦ*/
 /*Контакты: НАЧАЛО*/
-#contact {
+.contact,  {
 	text-align: center;
 }
-#contact a {
+.contact a {
 	color: inherit;
 }
-#contact div {
+.contact div {
 	display: inline-block;
 	width: 100%;
 	text-align: left;
 	vertical-align: top;
 }
-#contact article * {
+.contact article * {
 	text-indent: 0;
 }
-#contact span {
+.contact span {
 	display: inline-block;
 	width: auto;
 	padding: .5em;
 	color: #fff;
 	background: #090; /*зелёный*/
 }
-#contact span:first-child {
+.contact span:first-child {
 	border-radius: .5em 0 0 .5em;
 }
-#contact span:last-child {
+.contact span:last-child {
 	border-radius: 0 .5em .5em 0;
 }
 span#red {
 	background: red;
 }
-#contact > * * {
+.contact > * * {
 	display: block;
 	width: 100%;
 	color: inherit;
 }
-#contact img {
+.contact img {
 	width: 100%;
 	height: 100%;
 }
-#contact fieldset {
+.contact fieldset {
 	margin-top: 1em;
 	padding: .5em;
 	border: 1px solid #080; /*зелёный*/
 	border-radius: 1em;
 }
-#contact legend,
-#contact form * {
+.contact legend,
+.contact form * {
 	border-radius: .375em;
 }
-#contact legend {
+.contact legend {
 	width: auto;
 	margin-left: 2em;
 	padding: .25em .5em;
@@ -1242,27 +1242,27 @@ span#red {
 	font-variant: small-caps;
 	background: #090; /*зелёный*/
 }
-#contact form * {
+.contact form * {
 	padding: .5em;
 	cursor: default;
 }
-#contact input[type=text],
-#contact input[type=email],
-#contact textarea {
+.contact input[type=text],
+.contact input[type=email],
+.contact textarea {
 	font-size: inherit;
 	border: 3px solid #0b0;
 }
-#contact label:hover:after {
+.contact label:hover:after {
 	display: none;
 }
-#contact input[type=submit] {
+.contact input[type=submit] {
 	margin-top: .5em;
 	font-size: inherit;
 	color: #fff;
 	background: #0a0; /*ярко-зелёный*/
 }
 @media (min-width: 38em){
-	#contact div {
+	.contact div {
 		width: 49%;
 	}
 }
