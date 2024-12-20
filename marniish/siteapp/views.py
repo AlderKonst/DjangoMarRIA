@@ -92,6 +92,8 @@ def trend(request): # Для рендеринга страницы направ�
     page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
     context = {'page': page} # Передаем шаблон
     return render(request, 'siteapp/Trend.html', context) # Рендерим шаблон с передачей в него переменной page
+def trend_change(request): # Для рендеринга страницы направлений деятельности
+    return render(request, 'siteapp/Trend_change.html') # Рендерим шаблон
 
 def progress(request): # Для рендеринга страницы достижений
     page = Page.objects.get(url='Progress') # Получаем запись в таблице Page с именем Progress в поле url
