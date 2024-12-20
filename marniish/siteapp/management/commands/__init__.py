@@ -1,10 +1,9 @@
 import os # Для работы с OC
-pc_dir = os.path.join('F:\\', 'UII', 'Python+') # Директория в моём ПК
-site_dir = os.path.join(pc_dir, 'DjangoMarRIA', 'marniish', 'templates', 'MarRIA') # Директория страниц для парсинга
+from django.conf import settings # Загружаем настройки Django
+site_dir = os.path.join(settings.BASE_DIR, 'marniish', 'templates', 'MarRIA') # Директория страниц для парсинга
 
-# Проверяем существование директорий
-if not os.path.exists(site_dir):
-    print(f"Директория {site_dir} не найдена!\nНеобходимо в ..DjangoMarRIA/marniish/siteapp/management/commands/__init__.py сменить значение pc_dir")
+if not os.path.exists(site_dir): # Проверяем существование директорий
+    print(f"Директория {site_dir} не найдена!\nПроверьте пути!")
 
 from datetime import datetime # Для работы со временем
 def date_transform( # Для прреобразования дат
