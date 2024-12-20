@@ -1,6 +1,6 @@
 import os # Для работы с OC
 from django.conf import settings # Загружаем настройки Django
-site_dir = os.path.join(settings.BASE_DIR, 'marniish', 'templates', 'MarRIA') # Директория страниц для парсинга
+site_dir = os.path.join(settings.BASE_DIR, 'templates', 'MarRIA') # Директория страниц для парсинга
 
 if not os.path.exists(site_dir): # Проверяем существование директорий
     print(f"Директория {site_dir} не найдена!\nПроверьте пути!")
