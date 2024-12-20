@@ -4,7 +4,7 @@ from django.shortcuts import (render, # Импортируем функцию д
 from django.urls import reverse # Импортируем функцию для получения URL по имени
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
 # Импортируем модели соответствующих таблиц
-from .models import (Page, TrendItem, Reference, Article, Progress, History,
+from .models import (Page, TrendItem, Reference, Article, TrendBasic, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
 from .forms import ContactForm # Импортируем форму
 
@@ -93,7 +93,9 @@ def trend(request): # Для рендеринга страницы направ�
     context = {'page': page} # Передаем шаблон
     return render(request, 'siteapp/Trend.html', context) # Рендерим шаблон с передачей в него переменной page
 def trend_change(request): # Для рендеринга страницы направлений деятельности
-    return render(request, 'siteapp/Trend_change.html') # Рендерим шаблон
+    trends = TrendBasic.objects.all() # Получаем все записи с таблицы TrendBasic
+    context = {'trends': trends}  # Передаем шаблон
+    return render(request, 'siteapp/Trend_change.html', context) # Рендерим шаблон с передачей в него переменной trends
 
 def progress(request): # Для рендеринга страницы достижений
     page = Page.objects.get(url='Progress') # Получаем запись в таблице Page с именем Progress в поле url
