@@ -86,16 +86,15 @@ def about(request): # Для рендеринга страницы истори�
     data = HistoryData.objects.all()  # Получаем все записи в таблице HistoryData
     histories = History.objects.all()  # Получаем все записи в таблице History
     context = {'page': page, 'histories': histories, 'data': data} # Передаем шаблон
-    return render(request, 'siteapp/About.html', context) # Рендерим шаблон с передачей в него переменной page
+    return render(request, 'siteapp/About.html', context) # Рендерим шаблон с передачей в него переменных
 
 def trend(request): # Для рендеринга страницы направлений деятельности
     page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
-    context = {'page': page} # Передаем шаблон
-    return render(request, 'siteapp/Trend.html', context) # Рендерим шаблон с передачей в него переменной page
-def trend_change(request): # Для рендеринга страницы направлений деятельности
     trends = TrendBasic.objects.all() # Получаем все записи с таблицы TrendBasic
-    context = {'trends': trends}  # Передаем шаблон
-    return render(request, 'siteapp/Trend_change.html', context) # Рендерим шаблон с передачей в него переменной trends
+    context = {'page': page, 'trends': trends} # Передаем шаблон
+    return render(request, 'siteapp/Trend.html', context) # Рендерим шаблон с передачей в него переменных
+def trend_change(request): # Для рендеринга страницы направлений деятельности
+    return render(request, 'siteapp/Trend_change.html') # Рендерим шаблон
 
 def progress(request): # Для рендеринга страницы достижений
     page = Page.objects.get(url='Progress') # Получаем запись в таблице Page с именем Progress в поле url
