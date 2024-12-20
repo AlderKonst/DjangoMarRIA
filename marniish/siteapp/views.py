@@ -6,7 +6,7 @@ from django.core.mail import send_mail # Импортируем функцию �
 # Импортируем модели соответствующих таблиц
 from .models import (Page, TrendItem, Reference, Article, TrendBasic, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
-from .forms import ContactForm # Импортируем форму
+from .forms import ContactForm, TrendBasicAddForm # Импортируем формы
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -88,13 +88,26 @@ def about(request): # Для рендеринга страницы истори�
     context = {'page': page, 'histories': histories, 'data': data} # Передаем шаблон
     return render(request, 'siteapp/About.html', context) # Рендерим шаблон с передачей в него переменных
 
-def trend(request): # Для рендеринга страницы направлений деятельности
+def trend(request): # Для рендеринга страницы основных направлений деятельности
     page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
     lis = TrendBasic.objects.all() # Получаем все записи с таблицы TrendBasic
     context = {'page': page, 'lis': lis} # Передаем шаблон
     return render(request, 'siteapp/Trend.html', context) # Рендерим шаблон с передачей в него переменных
-def trend_change(request): # Для рендеринга страницы направлений деятельности
-    return render(request, 'siteapp/Trend_change.html') # Рендерим шаблон
+def trend_change(request): # Для рендеринга страницы основных направлений деятельности
+    page = Page.objects.get(url='Trend')  # Получаем запись в таблице Page с именем Trend в поле url
+    lis = TrendBasic.objects.all()  # Получаем все записи с таблицы TrendBasic
+    if request.method == 'GET': # Если простой GET-запрос
+        form = TrendBasicAddForm() # Создаём форму
+        context = {'page': page, 'lis': lis, 'form': form} # Передаем шаблон
+        return render(request, 'siteapp/Trend_change.html', context) # то рендерим шаблон с передачей формы
+    else: # Если POST-запрос (скорее всего)
+        form = TrendBasicAddForm(request.POST) # Загружаем данные, полученные из формы
+        context = {'page': page, 'lis': lis, 'form': form}  # Передаем шаблон
+        if form.is_valid(): # Если форма валидна (все данные правильные)
+            TrendBasic.objects.get_or_create(name=form) # Текст из формы с пунктом списка добавляем, если ещё нет
+            return HttpResponseRedirect('siteapp/Trend_change.html') # Перенаправляет на эту же страницу с уже внесёнными правками
+        else: # Если данные формы заполнены неправильно
+            return render(request, 'siteapp/Trend_change.html', context) # то загрузит опять эту же страницу с формой для заполнения
 
 def progress(request): # Для рендеринга страницы достижений
     page = Page.objects.get(url='Progress') # Получаем запись в таблице Page с именем Progress в поле url

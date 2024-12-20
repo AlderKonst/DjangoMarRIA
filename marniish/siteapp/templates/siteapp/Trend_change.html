@@ -35,11 +35,13 @@
 			<img id="slide_1" src="{% static 'img/sprite_slide.jpg' %}">
 		</div>
 		<section>
-			<form name="TrendBasicAddForm" method="post">
-				{% csrf_token %}
-				{{form.as_table}}
-				<input type="submit" id="submit" value="Добавить"/>
-			</form>
+			<fieldset class="niicontact">
+				<form name="TrendBasicAddForm" method="post">
+					{% csrf_token %}
+					{{form.as_table}}
+					<input type="submit" id="submit" value="Добавить"/>
+				</form>
+			</fieldset>
 			<ol>
 			{% for li in lis %}
 				<li>{{li.name}}</li>
