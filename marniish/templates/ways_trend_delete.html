@@ -2,7 +2,11 @@
 {% block ways %}
 <li><a href="{% url 'siteapp:Trend' %}">Основные направления деятельности</a>
     <ul>
-        <li><a href="{% url 'siteapp:Trend_change' %}">Изменение основных направлений деятельности</a></li>
+        <li><a href="{% url 'siteapp:Trend_editing' %}">Редактирование</a>
+            <ul>
+                <li><a href="{% url 'siteapp:Trend_editing' %}">Удаление</a></li>
+            </ul>
+        </li>
     </ul>
 </li>
 {% endblock %}

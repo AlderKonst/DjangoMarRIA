@@ -2,19 +2,19 @@
 {% load static %}
 
 {% block title %}
-    Изменение основных направлений деятельности
+    Редактирование основных направлений деятельности
 {% endblock %}
 
 {% block description %}
-	Внесение изменений на странице основных направлений деятельности сайта Марийского НИИСХ, филиала ФБГНУ ФАНЦ Северо-Востока
+	Редактирование на странице основных направлений деятельности на сайте Марийского НИИСХ, филиала ФБГНУ ФАНЦ Северо-Востока
 {% endblock %}
 
 {% block ways_header %}
-    {% include "ways_trend_change.html" %}
+    {% include "ways_trend_editing.html" %}
 {% endblock %}
 
 {% block ways_nav %}
-    {% include "ways_trend_change.html" %}
+    {% include "ways_trend_editing.html" %}
 {% endblock %}
 
 {% block content %}
@@ -27,7 +27,7 @@
 <div class="pages">
 	<div id="news_institute">
 	<article>
-		<h3><b>Изменение основных направлений деятельности</b></h3>
+		<h3><b>Редактирование основных направлений деятельности</b></h3>
 		<div class="slides">
 			<div id="m1"></div><div id="m2"></div>
 			<img id="slide_3" src="{% static 'img/sprite_slide.jpg' %}">
@@ -44,7 +44,10 @@
 			</fieldset>
 			<ol>
 			{% for li in lis %}
-				<li>{{li.name}}</li>
+				<li>{{li.name}}
+					<a href="{% url 'siteapp:Trend_delete' li.id %}">Удалить</a
+					><a href="{% url 'siteapp:Trend_edit' li.id %}">Изменить</a>
+				</li>
 			{% endfor %}
 			</ol>
 		</section>
