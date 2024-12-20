@@ -2,6 +2,14 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}
+    Новости за {{year}} год
+{% endblock %}
+
+{% block description %}
+	{{page.description}}
+{% endblock %}
+
 {% block ways_header %}
     {% include "ways_news.html" %}
 {% endblock %}
