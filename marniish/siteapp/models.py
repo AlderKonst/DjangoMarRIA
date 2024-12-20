@@ -6,7 +6,7 @@ class NameStr(models.Model): # Абстрактный класс, который
     class Meta:
         abstract = True # Делаем абстрактный класс
 
-class Trend(NameStr):# Основные направления деятельности института
+class Trend(NameStr): # Основные направления деятельности института
     name = models.CharField(max_length=10, unique=True) # Название направления (достаточно было и 5)
     class Meta:
         verbose_name = 'Основное направление деятельности' # Для отображения в админке
@@ -64,6 +64,11 @@ class Reference(NameUnique100, NameStr): # Полезные ссылки
     class Meta:
         verbose_name = 'Полезная ссылка' # Для отображения в админке
         verbose_name_plural = 'Полезные ссылки' # Для отображения в админке
+
+class TrendBasic(NameUnique100, NameStr): # Основные направления деятельности института (для Trend.html)
+    class Meta:
+        verbose_name = 'Основное направление деятельности для Trend.html' # Для отображения в админке
+        verbose_name_plural = 'Основные направления деятельности для Trend.html' # Для отображения в админке
 
 class HistoryData(models.Model): # Историческая дата НИИ
     year = models.IntegerField() # Год
