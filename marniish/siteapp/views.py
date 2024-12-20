@@ -90,8 +90,8 @@ def about(request): # Для рендеринга страницы истори�
 
 def trend(request): # Для рендеринга страницы направлений деятельности
     page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
-    trends = TrendBasic.objects.all() # Получаем все записи с таблицы TrendBasic
-    context = {'page': page, 'trends': trends} # Передаем шаблон
+    lis = TrendBasic.objects.all() # Получаем все записи с таблицы TrendBasic
+    context = {'page': page, 'lis': lis} # Передаем шаблон
     return render(request, 'siteapp/Trend.html', context) # Рендерим шаблон с передачей в него переменных
 def trend_change(request): # Для рендеринга страницы направлений деятельности
     return render(request, 'siteapp/Trend_change.html') # Рендерим шаблон
