@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand  # Импорт базового класса команды Django
 from siteapp.models import (  # Импортируем все необходимые модели из приложения siteapp
-    Trend, Article, Progress, Page, TrendItem, Reference, HistoryData, History,
+    Trend, Article, Progress, Page, TrendItem, Reference, HistoryData, History, TrendBasic,
     CultureGroup, Culture, Taxon, Document, ProdCategory, Price, NewsPicture, News, NewsBlock
 )
 
@@ -35,7 +35,8 @@ class Command(BaseCommand):  # Определяем новый класс ком
             'price': Price,  # 'price' -> Price
             'newspicture': NewsPicture,  # 'newspicture' -> NewsPicture
             'news': News,  # 'news' -> News
-            'newsblock': NewsBlock  # 'newsblock' -> NewsBlock
+            'newsblock': NewsBlock, # 'newsblock' -> NewsBlock
+            'trendlist': TrendBasic # 'trendlist' -> TrendBasic
         }
 
         if not model_names:  # Если список имен моделей пустой (не переданы аргументы)
