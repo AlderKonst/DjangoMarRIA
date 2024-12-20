@@ -5,7 +5,7 @@ from . import site_dir # Импортируем переменную с дире
 from django.core.management.base import BaseCommand # Импорт базового класса команды Django
 from siteapp.models import TrendBasic # Импорт модели таблицы БД TrendBasic из siteapp
 
-# Здесь будет код для получения свойств полезных ссылок из index.html и style.css
+# Здесь будет код для получения основных направлений деятельности в Trend.html с записью в пока ещё несуществующем TrendBasic
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
