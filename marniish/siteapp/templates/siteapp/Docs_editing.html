@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Редактирование документов
+{% endblock %}
+
+{% block description %}
+	Редактирование на странице документов на сайте Марийского НИИСХ, филиала ФБГНУ ФАНЦ Северо-Востока
+{% endblock %}
+
+{% block ways_header %}
+    {% include "ways_docs_editing.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways_docs_editing.html" %}
+{% endblock %}
+
+{% block content %}
+<h2>Документы</h2>
+<table class="pages">
+	<tr>
+		<th>Дата</th>
+		<th class="left">Название документа</th>
+		<th><b class="download"></b>Загрузить</th>
+	</tr>
+	<form name="DocsAddForm" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		<tr>
+		{% for item in form %}
+		<td>{{item}}</td>
+		{% endfor %}
+		</tr>
+		<td><input type="submit" id="submit" value="Добавить"/></td>
+	</form>
+</table>
+<table class="pages">
+	<tr>
+		<th>Дата</th>
+		<th class="left">Название документа</th>
+		<th><b class="download"></b></th>
+	</tr>
+	{% for doc in docs %}
+	<tr>
+		<td class="time">{{doc.date|date:"j M Y"}}</td>
+	    <td class="left">{{doc.name}}</td>
+	    <td><a href="{{doc.url.url}}" target="_blank" title="Скачать" download></a></td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

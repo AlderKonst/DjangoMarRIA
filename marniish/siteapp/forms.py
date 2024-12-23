@@ -1,5 +1,5 @@
 from django import forms # Для работы с формами
-from .models import TrendItem, Trend # Для работы с моделью
+from .models import TrendItem, Trend, Document # Для работы с моделью
 
 class ContactForm(forms.Form): # Форма для страницы с контактами для отправки сообщений в почту
     name = forms.CharField(label="Имя *", max_length=100,
@@ -20,3 +20,14 @@ class TrendItemAddForm(forms.ModelForm): # Форма для страницы с
     class Meta: # Класс для описания модели
         model = TrendItem # Модель для описания пункта основного направления НИИ
         fields = ['name', 'trend'] # Пункт основного направления и основное направление деятельности НИИ
+
+class DocsAddForm(forms.ModelForm):
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), # Указываем тип для html
+        label="Дата публикации документа") # Указываем label здесь почему-то
+    name = forms.CharField(label="Название документа", max_length=250,
+                           widget=forms.Textarea(attrs={'placeholder': 'Введите название документа'}))
+    url = forms.FileField(label="Загрузить документ", # URL документа, с загрузкой в /media/
+                          widget=forms.FileInput(attrs={'accept': '.pdf,.doc,.docx'})) # Такие форматы лишь будут допустимы
+    class Meta: # Класс для описания модели
+        model = Document # Модель для описания документов
+        fields = ['date', 'name', 'url'] # Дата публикации документа, его название и URL

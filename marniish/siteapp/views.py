@@ -6,7 +6,7 @@ from django.core.mail import send_mail # Импортируем функцию �
 # Импортируем модели соответствующих таблиц
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
-from .forms import ContactForm, TrendItemAddForm # Импортируем формы
+from .forms import ContactForm, TrendItemAddForm, DocsAddForm # Импортируем формы
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -159,6 +159,24 @@ def docs(request): # Для рендеринга страницы докумен
     docs = Document.objects.all()  # Получаем все записи в таблице Docs
     context = {'page': page, 'docs': docs} # Передаем в шаблон
     return render(request, 'siteapp/Docs.html', context) # Рендерим шаблон с передачей в него переменной page
+
+def docs_editing(request): # Для рендеринга страницы редактирования документов
+    page = Page.objects.get(url='Docs')  # Получаем запись в таблице Page с именем Docs в поле url
+    docs = Document.objects.all()  # Получаем все записи в таблице Docs
+    if request.method == 'GET':  # Если простой GET-запрос
+        form = DocsAddForm()  # Создаём форму
+        context = {'page': page, 'form': form, 'docs': docs }  # Передаем шаблон
+        return render(request, 'siteapp/Docs_editing.html', context)  # И рендерим шаблон с передачей формы
+    else:  # Если POST-запрос (скорее всего)
+        form = DocsAddForm(request.POST)  # Загружаем данные, полученные из формы
+        context = {'page': page, 'form': form, 'docs': docs}  # Передаем шаблон
+        if form.is_valid():  # Если форма валидна (все данные правильные)
+            form.save()  # Сохраняем изменения в базе данных
+            return HttpResponseRedirect(
+                reverse('siteapp:Docs_editing'))  # Перенаправляет на эту же страницу с уже внесёнными правками
+        else:  # Если данные формы заполнены неправильно
+            return render(request, 'siteapp/Docs_editing.html',
+                          context)  # то загрузит опять эту же страницу с формой для заполнения
 
 def mapping(request): # Для рендеринга страницы карты сайта
     page = Page.objects.get(url='Map') # Получаем запись в таблице Page с именем Map в поле url
