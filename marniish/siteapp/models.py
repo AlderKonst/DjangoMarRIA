@@ -113,6 +113,7 @@ class Document(models.Model): # Документы НИИ
     def __str__(self):
         return self.date.strftime('%d.%m.%Y') # Для отображения даты
     class Meta:
+        ordering = ['date'] # Для сортировки по дате
         verbose_name = 'Документ' # Для отображения в админке
         verbose_name_plural = 'Документы' # Для отображения в админке
 
