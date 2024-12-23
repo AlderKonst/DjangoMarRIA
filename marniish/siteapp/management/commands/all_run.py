@@ -19,7 +19,6 @@ class Command(BaseCommand):
             'reference',  # Полезные ссылки
             'trenditem',  # Направления деятельности
             'price',  # Прайс-лист
-            'trendlist', # Список основных направлений деятельности
         ]
         for command in commands:  # Перебираем все команды
             os.system(f'python manage.py {command}')  # Запускаем каждую команду

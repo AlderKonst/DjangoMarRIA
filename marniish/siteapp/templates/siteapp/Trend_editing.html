@@ -45,8 +45,10 @@
 			<ol>
 			{% for li in lis %}
 				<li>{{li.name}}
-					<a href="{% url 'siteapp:Trend_delete' li.id %}">Удалить</a
-					><a href="{% url 'siteapp:Trend_edit' li.id %}">Изменить</a>
+					<p>
+						<a href="{% url 'siteapp:Trend_delete' li.id %}">Удалить</a
+						><a href="{% url 'siteapp:Trend_edit' li.id %}">Изменить</a>
+					</p>
 				</li>
 			{% endfor %}
 			</ol>
