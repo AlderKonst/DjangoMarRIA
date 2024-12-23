@@ -39,7 +39,12 @@
 	{% for doc in docs %}
 	<tr>
 		<td class="time">{{doc.date|date:"j M Y"}}</td>
-	    <td class="left">{{doc.name}}</td>
+	    <td class="left">{{doc.name}}
+			<article id="news_institute" style="margin: 0; padding: 0;">
+				<a href="#">Удалить</a
+				><a href="#">Изменить</a>
+			</article>
+		</td>
 	    <td><a href="{{doc.url.url}}" target="_blank" title="Скачать" download></a></td>
 	</tr>
 	{% endfor %}
