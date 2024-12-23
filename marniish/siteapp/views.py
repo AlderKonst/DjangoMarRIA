@@ -168,7 +168,8 @@ def docs_editing(request): # Для рендеринга страницы ред
         context = {'page': page, 'form': form, 'docs': docs }  # Передаем шаблон
         return render(request, 'siteapp/Docs_editing.html', context)  # И рендерим шаблон с передачей формы
     else:  # Если POST-запрос (скорее всего)
-        form = DocsAddForm(request.POST)  # Загружаем данные, полученные из формы
+        form = DocsAddForm(request.POST, # Передаём данные, которые сюда придут
+                        files=request.FILES) # Если есть изображения или файлы, то ещё и это прописываем
         context = {'page': page, 'form': form, 'docs': docs}  # Передаем шаблон
         if form.is_valid():  # Если форма валидна (все данные правильные)
             form.save()  # Сохраняем изменения в базе данных
