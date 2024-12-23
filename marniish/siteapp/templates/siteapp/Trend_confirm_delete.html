@@ -37,7 +37,7 @@
 		<section>
 			<fieldset class="niicontact">
 				<legend>Вы уверены, что хотите удалить "{{trend.name}}"?</legend>
-				<form name="TrendBasicAddForm" method="post">
+				<form name="TrendItemAddForm" method="post">
 					{% csrf_token %}
 					{{form.as_table}}
 					<input type="submit" id="submit" value="Удалить"/>
