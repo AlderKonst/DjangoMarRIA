@@ -65,11 +65,6 @@ class Reference(NameUnique100, NameStr): # Полезные ссылки
         verbose_name = 'Полезная ссылка' # Для отображения в админке
         verbose_name_plural = 'Полезные ссылки' # Для отображения в админке
 
-class TrendBasic(NameUnique100, NameStr): # Основные направления деятельности института (для Trend.html)
-    class Meta:
-        verbose_name = 'Основное направление деятельности для Trend.html' # Для отображения в админке
-        verbose_name_plural = 'Основные направления деятельности для Trend.html' # Для отображения в админке
-
 class HistoryData(models.Model): # Историческая дата НИИ
     year = models.IntegerField() # Год
     day_month = models.CharField(max_length=15, blank=True, null=True) # Месяц и день
