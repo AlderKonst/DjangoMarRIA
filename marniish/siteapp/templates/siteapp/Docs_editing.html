@@ -19,22 +19,17 @@
 
 {% block content %}
 <h2>Документы</h2>
-<table class="pages">
-	<tr>
-		<th>Дата</th>
-		<th class="left">Название документа</th>
-		<th><b class="download"></b>Загрузить</th>
-	</tr>
+<div class="pages niicontact">
+	<fieldset>
 	<form name="DocsAddForm" method="post" enctype="multipart/form-data">
 		{% csrf_token %}
-		<tr>
 		{% for item in form %}
-		<td>{{item}}</td>
+		<tr>{{item}}</tr>
 		{% endfor %}
-		</tr>
-		<td><input type="submit" id="submit" value="Добавить"/></td>
+		<input type="submit" value="Добавить"/>
 	</form>
-</table>
+	</fieldset>
+</div>
 <table class="pages">
 	<tr>
 		<th>Дата</th>
