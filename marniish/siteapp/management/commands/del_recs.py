@@ -1,3 +1,6 @@
+import os # Для работы с файлами
+import shutil # Для копирования файлов
+from django.conf import settings # Импорт конфигурации проекта
 from django.core.management.base import BaseCommand  # Импорт базового класса команды Django
 from siteapp.models import (  # Импортируем все необходимые модели из приложения siteapp
     Trend, Article, Progress, Page, TrendItem, Reference, HistoryData, History,
@@ -6,7 +9,7 @@ from siteapp.models import (  # Импортируем все необходим
 
 # Решение этой задачи сильно подсказала нейросеть:
 class Command(BaseCommand):  # Определяем новый класс команды
-    help = 'Удаляет записи из указанных таблиц или из всех таблиц'  # Описание команды
+    help = 'Удаляет записи из указанных таблиц или из всех таблиц и очищает папку /media/'  # Описание команды
 
     def add_arguments(self, parser):  # Метод для добавления аргументов командной строки
         parser.add_argument(  # Добавляем аргумент для передачи имен моделей
@@ -38,10 +41,20 @@ class Command(BaseCommand):  # Определяем новый класс ком
             'newsblock': NewsBlock, # 'newsblock' -> NewsBlock
         }
 
+        def clear_media_folder(): # Для очистки папки /media/
+            media_root = settings.MEDIA_ROOT # Путь к папке /media/
+            for root, dirs, files in os.walk(media_root): # Цикл по папке /media/
+                for f in files:  # Цикл по файлам
+                    os.unlink(os.path.join(root, f)) # Удаляем файл
+                for d in dirs: # Цикл по директориям
+                    shutil.rmtree(os.path.join(root, d)) # Удаляем директорию
+
         if not model_names:  # Если список имен моделей пустой (не переданы аргументы)
             for model in model_mapping.values():  # Перебираем все модели в словаре
                 deleted_count, _ = model.objects.all().delete()  # Удаляем все записи из текущей модели и получаем количество удалённых записей
                 self.stdout.write(self.style.SUCCESS(f'Удалено {deleted_count} записей из {model.__name__}'))  # Выводим сообщение об успешном удалении
+                clear_media_folder() # Очищаем папку /media/ созданной функцией выше
+                self.stdout.write(self.style.SUCCESS('Папка /media/ очищена')) # Выводим сообщение об успешном удалении
 
         else:  # Если переданы имена моделей для удаления
             for name in model_names:  # Перебираем переданные имена моделей
