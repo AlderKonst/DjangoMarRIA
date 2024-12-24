@@ -30,4 +30,4 @@ class DocsAddForm(forms.ModelForm):
                           widget=forms.FileInput(attrs={'accept': '.pdf,.doc,.docx'})) # Такие форматы лишь будут допустимы
     class Meta: # Класс для описания модели
         model = Document # Модель для описания документов
-        fields = ['date', 'name', 'url'] # Дата публикации документа, его название и URL
+        fields = ['date', 'url', 'name'] # Дата публикации документа, его название и URL
