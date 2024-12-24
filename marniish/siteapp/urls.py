@@ -23,9 +23,9 @@ from django.conf.urls.static import static # Импортируем функци
 app_name = 'siteapp' # Задаем имя приложения для использования в пространстве имен
 
 urlpatterns = [
-    path('', views.index, name='index'),  # Главная страница
+    path('', views.IndexTemplateView.as_view(), name='index'),  # Главная страница
     path('News/<int:year>/', views.news, name='News'), # Добавляем пути для новостей за каждый год
-    path('Prod/', views.prod, name='Prod'), # Продукция
+    path('Prod/', views.ProdTemplateView.as_view(), name='Prod'), # Продукция
     path('Grain/', views.grain, name='Grain'), # Зерновые
     path('Potato/', views.potato, name='Potato'), # Картофель
     path('Grass/', views.grass, name='Grass'), # Многолетние травы

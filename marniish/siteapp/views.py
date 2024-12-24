@@ -9,12 +9,23 @@ from .models import (Page, TrendItem, Reference, Article, Progress, History,
 from .forms import ContactForm, TrendItemAddForm, DocsAddForm # Импортируем формы
 import os # Здесь для удаления файла из /media/
 
-def index(request): # Для рендеринга главной страницы
-    page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
-    trends = TrendItem.objects.all() # Получаем все записи в таблице TrendItem
-    references = Reference.objects.all() # Получаем все записи в таблице Reference
-    context = {'page': page, 'trends': trends, 'references': references} # Передаем поля в шаблон
-    return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
+from django.views.generic.base import ContextMixin # Для создание общего класса
+from django.views.generic import ListView, TemplateView # Базовые классы
+
+class PageContextMixin(ContextMixin): # Миксин для добавления объекта Page в контекст
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['page'] = Page.objects.get(url=self.page_url) # Добавляем страницу в контекст
+        return context # Возвращаем контекст
+
+class IndexTemplateView(PageContextMixin, TemplateView): # Для рендеринга главной страницы
+    page_url = 'index' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/index.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['trends'] = TrendItem.objects.all() # Добавляем все записи таблицы TrendItem в контекст
+        context['references'] = Reference.objects.all() # Добавляем все записи таблицы Reference в контекст
+        return context # Передаём обновлённый контекст в страницу
 
 def news(request, year): # Общая функция для рендеринга страницы новостей за определённый год
     page = get_object_or_404(Page, url='News/' + str(year)) # Получаем запись в таблице Page с именем News со строчным year в поле url
@@ -45,10 +56,9 @@ def contact(request): # Для рендеринга страницы конта�
         context = {'page': page, 'form': form} # Передаем шаблон
         return render(request, 'siteapp/Contact.html', context) # Рендерим шаблон с передачей в него переменной page
 
-def prod(request): # Для рендеринга страницы продукции
-    page = Page.objects.get(url='Prod') # Получаем запись в таблице Page с именем Prod в поле url
-    context = {'page': page} # Передаем шаблон
-    return render(request, 'siteapp/Prod.html', context) # Рендерим шаблон с передачей в него переменной page
+class ProdTemplateView(PageContextMixin, TemplateView): # Для рендеринга главной страницы
+    page_url = 'Prod' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Prod.html' # Указываем расположение шаблона рендеринга
 
 def grain(request): # Для рендеринга страницы зерновых
     page = Page.objects.get(url='Grain') # Получаем запись в таблице Page с именем Grain в поле url
