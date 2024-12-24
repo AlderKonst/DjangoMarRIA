@@ -1,16 +1,15 @@
 from django.shortcuts import (render, # Импортируем функцию для рендеринга шаблонов,
                               get_object_or_404, # получения объекта или возврата 404 ошибки
                               HttpResponseRedirect) # и перенаправления
-from django.urls import reverse # Импортируем функцию для получения URL по имени
+from django.urls import reverse, reverse_lazy # Импортируем функцию для получения URL по имени
 from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
-# Импортируем модели соответствующих таблиц
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
 from .forms import ContactForm, TrendItemAddForm, DocsAddForm # Импортируем формы
 import os # Здесь для удаления файла из /media/
 
-from django.views.generic.base import ContextMixin # Для создание общего класса
-from django.views.generic import ListView, TemplateView # Базовые классы
+from django.views.generic.base import ContextMixin # Для создания общего класса
+from django.views.generic import TemplateView, ListView # Базовые классы
 
 class PageContextMixin(ContextMixin): # Миксин для добавления объекта Page в контекст
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
@@ -27,83 +26,103 @@ class IndexTemplateView(PageContextMixin, TemplateView): # Для рендери
         context['references'] = Reference.objects.all() # Добавляем все записи таблицы Reference в контекст
         return context # Передаём обновлённый контекст в страницу
 
-def news(request, year): # Общая функция для рендеринга страницы новостей за определённый год
-    page = get_object_or_404(Page, url='News/' + str(year)) # Получаем запись в таблице Page с именем News со строчным year в поле url
-    newses = News.objects.filter(date__year=year # Получаем записи этого (year) года в таблице News и
-                                 ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
-    context = {'page': page, 'newses': newses, 'year': year} # Передаем поля в шаблон
-    return render(request, 'siteapp/News.html', context) # Рендерим шаблон с передачей в него переменных
+class NewsListView(PageContextMixin, ListView): # Для рендеринга страницы новостей
+    template_name = 'siteapp/News.html' # Указываем расположение шаблона рендеринга
+    context_object_name = 'newses' # Указываем имя контекста
+    def get_queryset(self): # Для получения записей в таблице News
+        self.year = self.kwargs['year'] # Получаем значение поля year (благодаря self. ненужно передавать в контексте с помощью def get_context_data)
+        self.page_url = self.year # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+        return News.objects.filter(date__year=self.year # Получаем записи этого (year) года в таблице News со
+                                   ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['year'] = self.year # Добавляем year в контекст (столько кода из-за одного year!!!)
+        return context # Передаём обновлённый контекст в страницу
 
-def contact(request): # Для рендеринга страницы контактов
-    page = Page.objects.get(url='Contact')  # Получаем запись в таблице Page с именем Contact в поле url
-    if request.method == 'POST': # Если метод POST
+class ContactTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы контактов (вот тебе и, блин, сокращённый код)
+    page_url = 'Contact' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Contact.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Contact') # Перенаправляем на главную страницу при успешном отправлении сообщения
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['form'] = ContactForm() # Добавляем форму в контекст
+        return context # Передаём обновлённый контекст в страницу
+    def post(self, request): # Для обработки данных формы
         form = ContactForm(request.POST) # Загружаем данные, полученные из формы
         if form.is_valid(): # Если форма валидна (все данные правильные)
             name = form.cleaned_data['name'] # Имя отправившего сообщение
             email = form.cleaned_data['email'] # Email отправившего сообщение
             subject = form.cleaned_data['subject'] # Тема отправившего сообщение
             message = form.cleaned_data['message'] # Сообщение отправившего сообщение
-            send_mail(subject, # Тема сообщения
-                      f'{name} отправил текст сообщения: {message}',
-                      email, # Email отправившего сообщение
-                      ['marniish@yandex.ru'], # Кому отправляем
-                      fail_silently=True) # Если не удалось отправить, то пропускаем
-            return HttpResponseRedirect(reverse('siteapp:Contact')) # Перенаправляем на главную страницу
+            send_mail(subject or "Сообщение с сайта",  # Тема сообщения с возможным значением по умолчанию
+                      f"От: {name} <{email}>\n\n{message}",
+                      email,  # Email отправившего сообщение
+                      ['marniish@yandex.ru'],  # Кому отправляем
+                      fail_silently=True)  # Если не удалось отправить, то пропускаем
+            return HttpResponseRedirect(self.success_url) # Перенаправляем на главную страницу
         else: # Если данные формы неправильные
-            return render(request, 'siteapp/Contact.html', {'form': form}) # Рендерим шаблон с передачей в него переменной pag
-    else:
-        form = ContactForm() # Создаем форму
-        context = {'page': page, 'form': form} # Передаем шаблон
-        return render(request, 'siteapp/Contact.html', context) # Рендерим шаблон с передачей в него переменной page
+            context = self.get_context_data() # Создаем контекст
+            context['form'] = form # Добавляем форму в контекст
+            return render(request, self.template_name, context) # Рендерим шаблон с передачей в него контекста
 
 class ProdTemplateView(PageContextMixin, TemplateView): # Для рендеринга главной страницы
     page_url = 'Prod' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Prod.html' # Указываем расположение шаблона рендеринга
 
-def grain(request): # Для рендеринга страницы зерновых
-    page = Page.objects.get(url='Grain') # Получаем запись в таблице Page с именем Grain в поле url
-    group = CultureGroup.objects.get(name='Зерновые культуры') # Получаем запись в таблице Culture с нужным именем
-    cultures = Culture.objects.filter(group=group) # Получаем запись в таблице Culture с культурами этой группы
-    taxons = Taxon.objects.filter(culture__in=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page, 'groups': group, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
-    return render(request, 'siteapp/Grain.html', context) # Рендерим шаблон с передачей в него переменных
+class GrainTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы зерновых
+    page_url = 'Grain' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Grain.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['group'] = CultureGroup.objects.get(name='Зерновые культуры') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
+        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
+        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
+        return context # Передаём обновлённый контекст в страницу
 
-def potato(request): # Для рендеринга страницы картофеля
-    page = Page.objects.get(url='Potato') # Получаем запись в таблице Page с именем Potato в поле url
-    group = CultureGroup.objects.get(name='Клубнеплоды') # Получаем запись в таблице Culture с нужным именем
-    cultures = Culture.objects.filter(group=group) # Получаем запись в таблице Culture с культурами этой группы
-    taxons = Taxon.objects.filter(culture__in=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page, 'groups': group, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
-    return render(request, 'siteapp/Potato.html', context) # Рендерим шаблон с передачей в него переменной page
+class PotatoTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы клубнеплодов
+    page_url = 'Potato' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Potato.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['group'] = CultureGroup.objects.get(name='Клубнеплоды') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
+        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
+        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
+        return context # Передаём обновлённый контекст в страницу
 
-def grass(request): # Для рендеринга страницы многолетних трав
-    page = Page.objects.get(url='Grass') # Получаем запись в таблице Page с именем Grass в поле url
-    group = CultureGroup.objects.get(name='Многолетние травы') # Получаем запись в таблице Culture с нужным именем
-    cultures = Culture.objects.filter(group=group) # Получаем запись в таблице Culture с культурами этой группы
-    taxons = Taxon.objects.filter(culture__in=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page, 'groups': group, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
-    return render(request, 'siteapp/Grass.html', context) # Рендерим шаблон с передачей в него переменной page
+class GrassTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы многолетних трав
+    page_url = 'Grass' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Grass.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['group'] = CultureGroup.objects.get(name='Многолетние травы') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
+        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
+        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
+        return context # Передаём обновлённый контекст в страницу
 
-def jim(request): # Для рендеринга страницы жимолости
-    page = Page.objects.get(url='Jim') # Получаем запись в таблице Page с именем Jim в поле url
-    group = CultureGroup.objects.get(name='Плодово-ягодные культуры') # Получаем запись в таблице Culture с нужным именем
-    cultures = Culture.objects.filter(group=group) # Получаем запись в таблице Culture с культурами этой группы
-    taxons = Taxon.objects.filter(culture__in=cultures) # Получаем запись в таблице Taxon с таксонами этих культур
-    context = {'page': page, 'groups': group, 'cultures': cultures, 'taxons': taxons} # Передаем записи в шаблон
-    return render(request, 'siteapp/Jim.html', context) # Рендерим шаблон с передачей в него переменной page
+class JimTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы жимолости
+    page_url = 'Jim' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Jim.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['group'] = CultureGroup.objects.get(name='Плодово-ягодные культуры') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
+        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
+        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
+        return context # Передаём обновлённый контекст в страницу
 
-def about(request): # Для рендеринга страницы истории института
-    page = Page.objects.get(url='About') # Получаем запись в таблице Page с именем About в поле url
-    data = HistoryData.objects.all()  # Получаем все записи в таблице HistoryData
-    histories = History.objects.all()  # Получаем все записи в таблице History
-    context = {'page': page, 'histories': histories, 'data': data} # Передаем шаблон
-    return render(request, 'siteapp/About.html', context) # Рендерим шаблон с передачей в него переменных
+class AboutTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы истории института
+    page_url = 'About' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/About.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['histories'] = History.objects.all() # Добавляем все записи таблицы History в контекст
+        context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
+        return context # Передаём обновлённый контекст в страницу
 
-def trend(request): # Для рендеринга страницы направлений деятельности
-    page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
-    lis = TrendItem.objects.all() # Получаем все записи с таблицы TrendItem
-    context = {'page': page, 'lis': lis} # Передаем шаблон
-    return render(request, 'siteapp/Trend.html', context) # Рендерим шаблон с передачей в него переменных
+class TrendListView(PageContextMixin, ListView): # Для рендеринга страницы направлений деятельности
+    page_url = 'Trend' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Trend.html' # Указываем расположение шаблона рендеринга
+    context_object_name = 'lis' # Указываем имя переменной контекста таким
+    queryset = TrendItem.objects.all() # Добавляем все записи таблицы TrendItem в контекст
 
 def trend_editing(request): # Для рендеринга страницы редактирования направлений деятельности
     page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
@@ -146,29 +165,29 @@ def trend_delete(request, id): # Для рендеринга страницы п
         trend.delete() # Удаляем объект с записью в таблице TrendBasic
         return HttpResponseRedirect(reverse('siteapp:Trend_editing')) # Перенаправляем на страницу редактирования
 
-def progress(request): # Для рендеринга страницы достижений
-    page = Page.objects.get(url='Progress') # Получаем запись в таблице Page с именем Progress в поле url
-    progresses = Progress.objects.all()  # Получаем все записи в таблице Progress
-    context = {'page': page, 'progresses': progresses} # Передаем в шаблон
-    return render(request, 'siteapp/Progress.html', context) # Рендерим шаблон с передачей в него переменной page
+class ProgressListView(PageContextMixin, ListView): # Для рендеринга страницы направлений деятельности
+    page_url = 'Progress' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Progress.html' # Указываем расположение шаблона рендеринга
+    context_object_name = 'progresses' # Указываем имя переменной контекста таким
+    queryset = Progress.objects.all() # Добавляем все записи таблицы TrendItem в контекст
 
-def article(request): # Для рендеринга страницы статей
-    page = Page.objects.get(url='Article') # Получаем запись в таблице Page с именем Article в поле url
-    articles = Article.objects.all()  # Получаем все записи в таблице Article
-    context = {'page': page, 'articles': articles} # Передаем шаблон
-    return render(request, 'siteapp/Article.html', context) # Рендерим шаблон с передачей в него переменной page
+class ArticleListView(PageContextMixin, ListView): # Для рендеринга страницы статей
+    page_url = 'Article' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Article.html' # Указываем расположение шаблона рендеринга
+    context_object_name = 'articles' # Указываем имя переменной контекста таким
+    queryset = Article.objects.all() # Добавляем все записи таблицы Article в контекст
 
-def price(request): # Для рендеринга страницы прайса
-    page = Page.objects.get(url='Price') # Получаем запись в таблице Page с именем Price в поле url
-    prices = Price.objects.all()  # Получаем все записи в таблице Price
-    context = {'page': page, 'prices': prices} # Передаем шаблон
-    return render(request, 'siteapp/Price.html', context) # Рендерим шаблон с передачей в него переменной page
+class PriceListView(PageContextMixin, ListView): # Для рендеринга страницы прайс-листа
+    page_url = 'Price' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Price.html' # Указываем расположение шаблона рендеринга
+    context_object_name = 'prices' # Указываем имя переменной контекста таким
+    queryset = Price.objects.all() # Добавляем все записи таблицы Price в контекст
 
-def docs(request): # Для рендеринга страницы документов
-    page = Page.objects.get(url='Docs') # Получаем запись в таблице Page с именем Docs в поле url
-    docs = Document.objects.all()  # Получаем все записи в таблице Docs
-    context = {'page': page, 'docs': docs} # Передаем в шаблон
-    return render(request, 'siteapp/Docs.html', context) # Рендерим шаблон с передачей в него переменной page
+class DocsListView(PageContextMixin, ListView): # Для рендеринга страницы документов
+    page_url = 'Docs' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Docs.html' # Указываем расположение шаблона рендеринга
+    context_object_name = 'docs' # Указываем имя переменной контекста таким
+    queryset = Document.objects.all() # Добавляем все записи таблицы Document в контекст
 
 def docs_editing(request): # Для рендеринга страницы редактирования документов
     page = Page.objects.get(url='Docs')  # Получаем запись в таблице Page с именем Docs в поле url
@@ -220,16 +239,20 @@ def docs_delete(request, id): # Для рендеринга страницы п�
         one_doc.delete() # Удаляем запись по документу в таблице Document
         return HttpResponseRedirect(reverse('siteapp:Docs_editing')) # Перенаправляем на страницу редактирования
 
-def mapping(request): # Для рендеринга страницы карты сайта
-    page = Page.objects.get(url='Map') # Получаем запись в таблице Page с именем Map в поле url
-    context = {'page': page} # Передаем шаблон
-    return render(request, 'siteapp/Map.html', context) # Рендерим шаблон с передачей в него переменной page
+class MapTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы карты сайта
+    page_url = 'Map' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Map.html' # Указываем расположение шаблона рендеринга
 
-# Для отображения текущих и родительских страниц
-def this_page(request, url):  # Для отображения пути к текущей странице
-    context = {'page': {'url': url}} # Передаем в шаблон page переменную url
-    return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
+class ThisPageListView(ListView): # Для отображения путей к текущим страницам
+    template_name = 'siteapp/index.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['page'] = {'url': kwargs['url']} # Добавляем url в цикл контекста
+        return context # Передаём обновлённый контекст в страницу
 
-def parent_page(request, parent_url): # Для отображения пути к родительской странице
-    context = {'page': {'parent_url': parent_url}} # Передаем в шаблон page переменную parent_url
-    return render(request, 'siteapp/index.html', context) # Рендерим шаблон с передачей в него переменной page
+class ParentPageListView(ListView): # Для отображения путей к родительским страницам
+    template_name = 'siteapp/index.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['page'] = {'parent_url': kwargs['parent_url']} # Добавляем parent_url в цикл контекста
+        return context # Передаём обновлённый контекст в страницу

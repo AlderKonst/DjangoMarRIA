@@ -24,28 +24,28 @@ app_name = 'siteapp' # Задаем имя приложения для испо�
 
 urlpatterns = [
     path('', views.IndexTemplateView.as_view(), name='index'),  # Главная страница
-    path('News/<int:year>/', views.news, name='News'), # Добавляем пути для новостей за каждый год
+    path('News/<int:year>/', views.NewsListView.as_view(), name='News'), # Добавляем пути для новостей за каждый год
     path('Prod/', views.ProdTemplateView.as_view(), name='Prod'), # Продукция
-    path('Grain/', views.grain, name='Grain'), # Зерновые
-    path('Potato/', views.potato, name='Potato'), # Картофель
-    path('Grass/', views.grass, name='Grass'), # Многолетние травы
-    path('Jim/', views.jim, name='Jim'), # Жимолость
-    path('About/', views.about, name='About'), # История института
-    path('Trend/', views.trend, name='Trend'), # Направления деятельности
+    path('Grain/', views.GrainTemplateView.as_view(), name='Grain'), # Зерновые
+    path('Potato/', views.PotatoTemplateView.as_view(), name='Potato'), # Картофель
+    path('Grass/', views.GrassTemplateView.as_view(), name='Grass'), # Многолетние травы
+    path('Jim/', views.JimTemplateView.as_view(), name='Jim'), # Жимолость
+    path('About/', views.AboutTemplateView.as_view(), name='About'), # История института
+    path('Trend/', views.TrendListView.as_view(), name='Trend'), # Направления деятельности
     path('Trend/editing/', views.trend_editing, name='Trend_editing'), # Редактирование направлений деятельности
     path('Trend/delete/<int:id>/', views.trend_delete, name='Trend_delete'), # Удаление направления деятельности
     path('Trend/edit/<int:id>/', views.trend_edit, name='Trend_edit'), # Изменение направления деятельности
-    path('Progress/', views.progress, name='Progress'), # Достижения
-    path('Article/', views.article, name='Article'), # Статьи
-    path('Contact/', views.contact, name='Contact'), # Контакты
-    path('Price/', views.price, name='Price'), # Прайс
-    path('Docs/', views.docs, name='Docs'), # Документы
+    path('Progress/', views.ProgressListView.as_view(), name='Progress'), # Достижения
+    path('Article/', views.ArticleListView.as_view(), name='Article'), # Статьи
+    path('Contact/', views.ContactTemplateView.as_view(), name='Contact'), # Контакты
+    path('Price/', views.PriceListView.as_view(), name='Price'), # Прайс
+    path('Docs/', views.DocsListView.as_view(), name='Docs'), # Документы
     path('Docs/editing/', views.docs_editing, name='Docs_editing'), # Редактирование документов
     path('Docs/delete/<int:id>/', views.docs_delete, name='Docs_delete'), # Подтверждение удаления документа
     path('Docs/edit/<int:id>/', views.docs_edit, name='Docs_edit'), # Изменение
-    path('Map/', views.mapping, name='Map'), # Карта сайта
-    path('<str:url>/', views.this_page, name='this_page'), # Текущая страница
-    path('<str:parent_url>/', views.parent_page, name='parent_page'), # Страница родителя
+    path('Map/', views.MapTemplateView.as_view(), name='Map'), # Карта сайта
+    path('<str:url>/', views.ThisPageListView.as_view(), name='this_page'), # Текущая страница
+    path('<str:parent_url>/', views.ParentPageListView.as_view(), name='parent_page'), # Страница родителя
 ]
 
 if settings.DEBUG: # Чтобы изображения могли отображаться в браузере
