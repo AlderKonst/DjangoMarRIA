@@ -1,10 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+    Изменение документа
+{% endblock %}
+
+{% block description %}
+	Изменение документа на странице документов сайта Марийского НИИСХ, филиала ФБГНУ ФАНЦ Северо-Востока
+{% endblock %}
+
+{% block ways_header %}
+    {% include "ways_docs_edit.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways_docs_edit.html" %}
+{% endblock %}
+
+{% block content %}
+<h2>Документы</h2>
+<div class="pages niicontact">
+	<fieldset>
+		<form name="DocsAddForm" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			{% for item in form %}
+			<tr>{{item}}</tr>
+			{% endfor %}
+			<input type="submit" value="Сохранить"/>
+		</form>
+	</fieldset>
+</div>
+<table class="pages">
+	<tr>
+		<th>Дата</th>
+		<th class="left">Название документа</th>
+		<th><b class="download"></b></th>
+	</tr>
+	{% for doc in docs %}
+	<tr>
+		<td class="time">{{doc.date|date:"j M Y"}}</td>
+	    <td class="left">{{doc.name}}</td>
+	    <td><a href="{{doc.url.url}}" target="_blank" title="Скачать" download></a></td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock %}

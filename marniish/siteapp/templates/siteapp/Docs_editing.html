@@ -21,13 +21,13 @@
 <h2>Документы</h2>
 <div class="pages niicontact">
 	<fieldset>
-	<form name="DocsAddForm" method="post" enctype="multipart/form-data">
-		{% csrf_token %}
-		{% for item in form %}
-		<tr>{{item}}</tr>
-		{% endfor %}
-		<input type="submit" value="Добавить"/>
-	</form>
+		<form name="DocsAddForm" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			{% for item in form %}
+			<tr>{{item}}</tr>
+			{% endfor %}
+			<input type="submit" value="Добавить"/>
+		</form>
 	</fieldset>
 </div>
 <table class="pages">
@@ -41,8 +41,8 @@
 		<td class="time">{{doc.date|date:"j M Y"}}</td>
 	    <td class="left">{{doc.name}}
 			<article id="news_institute" style="margin: 0; padding: 0;">
-				<a href="#">Удалить</a
-				><a href="#">Изменить</a>
+				<a href="{% url 'siteapp:Docs_delete' doc.id %}">Удалить</a
+				><a href="{% url 'siteapp:Docs_edit' doc.id %}">Изменить</a>
 			</article>
 		</td>
 	    <td><a href="{{doc.url.url}}" target="_blank" title="Скачать" download></a></td>

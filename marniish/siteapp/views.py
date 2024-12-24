@@ -132,8 +132,7 @@ def trend_delete(request, id): # Для рендеринга страницы п
         context = {'page': page, 'lis': lis, 'trend': trend} # Передаем шаблон
         return render(request, 'siteapp/Trend_confirm_delete.html', context) # И отображаем шаблон с передачей формы
     else: # Если POST-запрос (скорее всего)
-        trend.delete()  # Удаляем объект с записью в таблице TrendBasic
-        context = {'page': page, 'lis': lis} # Передаем шаблон
+        trend.delete() # Удаляем объект с записью в таблице TrendBasic
         return HttpResponseRedirect(reverse('siteapp:Trend_editing')) # Перенаправляем на страницу редактирования
 
 def progress(request): # Для рендеринга страницы достижений
@@ -178,6 +177,33 @@ def docs_editing(request): # Для рендеринга страницы ред
         else:  # Если данные формы заполнены неправильно
             return render(request, 'siteapp/Docs_editing.html',
                           context)  # то загрузит опять эту же страницу с формой для заполнения
+
+def docs_edit(request, id): # Для рендеринга страницы изменеения одного из документов
+    page = Page.objects.get(url='Docs') # Получаем запись в таблице Page с именем Docs в поле url
+    docs = Document.objects.all() # Получаем все записи в таблице Docs
+    one_doc = get_object_or_404(Document, id=id) # Получаем объект по переданному идентификатору
+    if request.method == 'POST': # Если есть POST-запрос
+        form = DocsAddForm(request.POST, # Передаём данные, которые сюда придут
+                           instance=one_doc, # Передаем объект для изменения
+                           files=request.FILES) # Поскольку есть файлы, то ещё и это прописываем
+        if form.is_valid():  # Если форма валидна (все данные правильные)
+            form.save() # Сохраняем изменения в базе данных
+            return HttpResponseRedirect(reverse('siteapp:Docs_editing')) # Перенаправляем на страницу редактирования
+    else: # Если GET-запрос (скорее всего)
+        form = DocsAddForm(instance=one_doc) # Заполняем форму данными существующего объекта (записью с ксивами)
+        context = {'page': page, 'docs': docs, 'form': form} # Передаем шаблон
+        return render(request, 'siteapp/Docs_edit.html', context) # И рендерим шаблон с передачей формы
+
+def docs_delete(request, id): # Для рендеринга страницы подтверждения удаления одного из документов
+    page = Page.objects.get(url='Docs')  # Получаем запись в таблице Page с именем Docs в поле url
+    docs = Document.objects.all()  # Получаем все записи в таблице Docs
+    one_doc = get_object_or_404(Document, id=id) # Получаем объект по переданному идентификатору
+    if request.method == 'GET': # Если есть GET-запрос
+        context = {'page': page, 'docs': docs, 'one_doc': one_doc } # Передаем шаблон
+        return render(request, 'siteapp/Docs_confirm_delete.html', context)  # И рендерим шаблон с передачей формы
+    else: # Если POST-запрос (скорее всего)
+        one_doc.delete() # Удаляем запись по документу в таблице Document
+        return HttpResponseRedirect(reverse('siteapp:Docs_editing')) # Перенаправляем на страницу редактирования
 
 def mapping(request): # Для рендеринга страницы карты сайта
     page = Page.objects.get(url='Map') # Получаем запись в таблице Page с именем Map в поле url
