@@ -7,6 +7,7 @@ from django.core.mail import send_mail # Импортируем функцию �
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
 from .forms import ContactForm, TrendItemAddForm, DocsAddForm # Импортируем формы
+import os # Здесь для удаления файла из /media/
 
 def index(request): # Для рендеринга главной страницы
     page = Page.objects.get(url='index') # Получаем запись в таблице Page с именем index в поле url
@@ -117,6 +118,8 @@ def trend_edit(request, id): # Для рендеринга страницы из
     if request.method == 'POST': # Если POST-запрос
         form = TrendItemAddForm(request.POST, instance=trend) # Передаем объект для изменения
         if form.is_valid(): # Если форма валидна (все данные правильные)
+            if trend.url and os.path.isfile(trend.url.path): # Если есть медиафайл с соответствующим url
+                os.remove(trend.url.path) # то удаляем старый файл перед сохранением нового
             form.save() # Сохраняем изменения в базе данных
             return HttpResponseRedirect(reverse('siteapp:Trend_editing')) # Перенаправляет на страницу редактирования с уже внесёнными правками
     else: # Если простой GET-запрос
@@ -132,6 +135,8 @@ def trend_delete(request, id): # Для рендеринга страницы п
         context = {'page': page, 'lis': lis, 'trend': trend} # Передаем шаблон
         return render(request, 'siteapp/Trend_confirm_delete.html', context) # И отображаем шаблон с передачей формы
     else: # Если POST-запрос (скорее всего)
+        if trend.url and os.path.isfile(trend.url.path): # Если есть медиафайл с соответствующим url
+            os.remove(trend.url.path) # то удаляем старый файл перед удалением
         trend.delete() # Удаляем объект с записью в таблице TrendBasic
         return HttpResponseRedirect(reverse('siteapp:Trend_editing')) # Перенаправляем на страницу редактирования
 
@@ -187,6 +192,8 @@ def docs_edit(request, id): # Для рендеринга страницы из�
                            instance=one_doc, # Передаем объект для изменения
                            files=request.FILES) # Поскольку есть файлы, то ещё и это прописываем
         if form.is_valid():  # Если форма валидна (все данные правильные)
+            if one_doc.url and os.path.isfile(one_doc.url.path): # Если есть медиафайл с соответствующим url
+                os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
             form.save() # Сохраняем изменения в базе данных
             return HttpResponseRedirect(reverse('siteapp:Docs_editing')) # Перенаправляем на страницу редактирования
     else: # Если GET-запрос (скорее всего)
@@ -202,6 +209,8 @@ def docs_delete(request, id): # Для рендеринга страницы п�
         context = {'page': page, 'docs': docs, 'one_doc': one_doc } # Передаем шаблон
         return render(request, 'siteapp/Docs_confirm_delete.html', context)  # И рендерим шаблон с передачей формы
     else: # Если POST-запрос (скорее всего)
+        if one_doc.url and os.path.isfile(one_doc.url.path): # Если есть медиафайл с соответствующим url
+            os.remove(one_doc.url.path) # то удаляем старый файл перед удалением
         one_doc.delete() # Удаляем запись по документу в таблице Document
         return HttpResponseRedirect(reverse('siteapp:Docs_editing')) # Перенаправляем на страницу редактирования
 
