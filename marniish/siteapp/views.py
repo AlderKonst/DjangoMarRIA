@@ -118,8 +118,6 @@ def trend_edit(request, id): # Для рендеринга страницы из
     if request.method == 'POST': # Если POST-запрос
         form = TrendItemAddForm(request.POST, instance=trend) # Передаем объект для изменения
         if form.is_valid(): # Если форма валидна (все данные правильные)
-            if trend.url and os.path.isfile(trend.url.path): # Если есть медиафайл с соответствующим url
-                os.remove(trend.url.path) # то удаляем старый файл перед сохранением нового
             form.save() # Сохраняем изменения в базе данных
             return HttpResponseRedirect(reverse('siteapp:Trend_editing')) # Перенаправляет на страницу редактирования с уже внесёнными правками
     else: # Если простой GET-запрос
@@ -135,8 +133,6 @@ def trend_delete(request, id): # Для рендеринга страницы п
         context = {'page': page, 'lis': lis, 'trend': trend} # Передаем шаблон
         return render(request, 'siteapp/Trend_confirm_delete.html', context) # И отображаем шаблон с передачей формы
     else: # Если POST-запрос (скорее всего)
-        if trend.url and os.path.isfile(trend.url.path): # Если есть медиафайл с соответствующим url
-            os.remove(trend.url.path) # то удаляем старый файл перед удалением
         trend.delete() # Удаляем объект с записью в таблице TrendBasic
         return HttpResponseRedirect(reverse('siteapp:Trend_editing')) # Перенаправляем на страницу редактирования
 
