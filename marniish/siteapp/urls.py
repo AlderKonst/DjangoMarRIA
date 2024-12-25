@@ -46,6 +46,7 @@ urlpatterns = [
     path('Map/', views.MapTemplateView.as_view(), name='Map'), # Карта сайта
     path('<str:url>/', views.ThisPageListView.as_view(), name='this_page'), # Текущая страница
     path('<str:parent_url>/', views.ParentPageListView.as_view(), name='parent_page'), # Страница родителя
+    path('<str:pre_parent_url>/', views.PreParentPageListView.as_view(), name='pre_parent_page'), # Страница прародителя
 ]
 
 if settings.DEBUG: # Чтобы изображения могли отображаться в браузере

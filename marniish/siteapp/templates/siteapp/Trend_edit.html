@@ -2,19 +2,19 @@
 {% load static %}
 
 {% block title %}
-    Изменение основного направления деятельности
+    {{page.title}}
 {% endblock %}
 
 {% block description %}
-	Изменение одного из основных направлений деятельности на сайте Марийского НИИСХ, филиала ФБГНУ ФАНЦ Северо-Востока
+	{{page.description}}
 {% endblock %}
 
 {% block ways_header %}
-    {% include "ways_trend_edit.html" %}
+    {% include "ways.html" %}
 {% endblock %}
 
 {% block ways_nav %}
-    {% include "ways_trend_edit.html" %}
+    {% include "ways.html" %}
 {% endblock %}
 
 {% block content %}

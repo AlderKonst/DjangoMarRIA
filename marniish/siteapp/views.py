@@ -252,3 +252,10 @@ class ParentPageListView(ListView): # Для отображения путей �
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['page'] = {'parent_url': kwargs['parent_url']} # Добавляем parent_url в цикл контекста
         return context # Передаём обновлённый контекст в страницу
+
+class PreParentPageListView(ListView):
+    template_name = 'siteapp/index.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['page'] = {'pre_parent_url': kwargs['pre_parent_url']} # Добавляем pre_parent_url в цикл контекста
+        return context # Передаём обновлённый контекст в страницу

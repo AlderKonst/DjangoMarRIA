@@ -2,19 +2,19 @@
 {% load static %}
 
 {% block title %}
-    Удаление документа
+    {{page.title}}
 {% endblock %}
 
 {% block description %}
-	Подтверждение удаления документа на странице документов сайта Марийского НИИСХ, филиала ФБГНУ ФАНЦ Северо-Востока
+	{{page.description}}
 {% endblock %}
 
 {% block ways_header %}
-    {% include "ways_docs_delete.html" %}
+    {% include "ways.html" %}
 {% endblock %}
 
 {% block ways_nav %}
-    {% include "ways_docs_delete.html" %}
+    {% include "ways.html" %}
 {% endblock %}
 
 {% block content %}

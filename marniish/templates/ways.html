@@ -1,6 +1,16 @@
 <!--Отображение пути страницы в левом углу окна-->
 {% block ways %}
-    {% if page.parent_url %}
+    {% if page.pre_parent_url %}
+    <li><<a href="{% url 'siteapp:pre_parent_page' page.pre_parent_url %}">{{page.pre_parent_title}}</a>
+        <ul>
+            <li><a href="{% url 'siteapp:parent_page' page.parent_url %}">{{page.parent_title}}</a>
+                <ul>
+                    <li><a href="{% url 'siteapp:parent_page' page.parent_page %}">{{page.title}}</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    {% elif page.parent_url %}
         <li><a href="{% url 'siteapp:parent_page' page.parent_url %}">{{page.parent_title}}</a>
             <ul>
                 <li><a href="{% url 'siteapp:this_page' page.url %}">{{page.title}}</a></li>

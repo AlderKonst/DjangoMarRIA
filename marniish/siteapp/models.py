@@ -33,11 +33,13 @@ class Progress(YearTrends, NameStr): # Наиболее значимые дос�
         verbose_name_plural = 'Достижения' # Для отображения в админке
 
 class Page(models.Model): # Страница сайта
-    title = models.CharField(max_length=100)  # Название страницы
-    url = models.CharField(max_length=30, unique=True)  # URL страницы (без .html)
+    title = models.CharField(max_length=100) # Название страницы
+    url = models.CharField(max_length=30, unique=True) # URL страницы (без .html)
     description = models.CharField(max_length=150) # Метаописание страницы
-    parent_url = models.URLField(max_length=30, blank=True, null=True)  # URL родительской страницы (без .html)
-    parent_title = models.CharField(max_length=100, blank=True, null=True)  # Название родительской страницы
+    parent_url = models.URLField(max_length=30, blank=True, null=True) # URL родительской страницы (без .html)
+    parent_title = models.CharField(max_length=100, blank=True, null=True) # Название родительской страницы
+    pre_parent_url = models.URLField(max_length=30, blank=True, null=True) # URL прародительской страницы (без .html)
+    pre_parent_title = models.CharField(max_length=100, blank=True, null=True) # Название прародительской страницы
     def __str__(self):
         return self.title # Для отображения названия страницы
     class Meta:
@@ -45,7 +47,7 @@ class Page(models.Model): # Страница сайта
         verbose_name_plural = 'Страницы сайта' # Для отображения в админке
 
 class TrendItem(NameStr): # Пункты направления
-    name = models.CharField(max_length=250, unique=True)  # Название пункта направления
+    name = models.CharField(max_length=250, unique=True) # Название пункта направления
     trend = models.ForeignKey(Trend, on_delete=models.CASCADE) # К какому основному направлению относится
     class Meta:
         verbose_name = 'Пункт направления' # Для отображения в админке
