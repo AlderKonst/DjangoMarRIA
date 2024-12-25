@@ -9,12 +9,13 @@ from .forms import ContactForm, TrendItemAddForm, DocsAddForm # Импортир
 import os # Здесь для удаления файла из /media/
 
 from django.views.generic.base import ContextMixin # Для создания общего класса
-from django.views.generic import TemplateView, ListView # Базовые классы
+from django.views.generic import TemplateView, ListView, CreateView # Базовые классы
 
 class PageContextMixin(ContextMixin): # Миксин для добавления объекта Page в контекст
+    page_url = None # Инициируем переменную
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['page'] = Page.objects.get(url=self.page_url) # Добавляем страницу в контекст
+        context['page'] = get_object_or_404(Page, url=self.page_url) # Добавляем страницу в контекст
         return context # Возвращаем контекст
 
 class IndexTemplateView(PageContextMixin, TemplateView): # Для рендеринга главной страницы
@@ -42,7 +43,7 @@ class NewsListView(PageContextMixin, ListView): # Для рендеринга с
 class ContactTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы контактов (вот тебе и, блин, сокращённый код)
     page_url = 'Contact' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Contact.html' # Указываем расположение шаблона рендеринга
-    success_url = reverse_lazy('siteapp:Contact') # Перенаправляем на главную страницу при успешном отправлении сообщения
+    success_url = reverse_lazy('siteapp:Contact') # Перенаправляем на страницу контактов даже при успешном отправлении сообщения
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['form'] = ContactForm() # Добавляем форму в контекст
@@ -121,24 +122,16 @@ class AboutTemplateView(PageContextMixin, TemplateView): # Для рендери
 class TrendListView(PageContextMixin, ListView): # Для рендеринга страницы направлений деятельности
     page_url = 'Trend' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Trend.html' # Указываем расположение шаблона рендеринга
-    context_object_name = 'lis' # Указываем имя переменной контекста таким
     queryset = TrendItem.objects.all() # Добавляем все записи таблицы TrendItem в контекст
+    context_object_name = 'lis' # Указываем имя переменной контекста таким
 
-def trend_editing(request): # Для рендеринга страницы редактирования направлений деятельности
-    page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
-    lis = TrendItem.objects.all() # Получаем все записи с таблицы TrendItem
-    if request.method == 'GET': # Если простой GET-запрос
-        form = TrendItemAddForm() # Создаём форму
-        context = {'page': page, 'lis': lis, 'form': form} # Передаем шаблон
-        return render(request, 'siteapp/Trend_editing.html', context) # И рендерим шаблон с передачей формы
-    else: # Если POST-запрос (скорее всего)
-        form = TrendItemAddForm(request.POST) # Загружаем данные, полученные из формы
-        context = {'page': page, 'lis': lis, 'form': form} # Передаем шаблон
-        if form.is_valid(): # Если форма валидна (все данные правильные)
-            form.save() # Сохраняем изменения в базе данных
-            return HttpResponseRedirect(reverse('siteapp:Trend_editing')) # Перенаправляет на эту же страницу с уже внесёнными правками
-        else: # Если данные формы заполнены неправильно
-            return render(request, 'siteapp/Trend_editing.html', context) # то загрузит опять эту же страницу с формой для заполнения
+class TrendEditingCreateView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования направлений деятельности
+    page_url = 'Trend' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = TrendItem # Указываем модель
+    form_class = TrendItemAddForm # Указываем форму с передачей в виде контекста как 'form'
+    template_name = 'siteapp/Trend_editing.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Trend_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
+    context_object_name = 'lis' # Указываем имя переменной контекста таким
 
 def trend_edit(request, id): # Для рендеринга страницы изменения направления деятельности
     page = Page.objects.get(url='Trend') # Получаем запись в таблице Page с именем Trend в поле url
