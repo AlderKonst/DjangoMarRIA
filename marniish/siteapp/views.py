@@ -2,7 +2,8 @@ from django.shortcuts import (render, # Импортируем функцию д
                               get_object_or_404, # получения объекта или возврата 404 ошибки
                               HttpResponseRedirect) # и перенаправления
 from django.urls import reverse, reverse_lazy # Импортируем функцию для получения URL по имени
-from django.core.mail import send_mail # Импортируем функцию для отправки электронной почты
+from django.core.mail import EmailMessage # Импортируем функцию для отправки электронной почты
+from django.utils.encoding import force_bytes # Импортируем функцию для кодирования
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
 from .forms import ContactForm, TrendItemAddForm, DocsAddForm # Импортируем формы
@@ -53,13 +54,15 @@ class ContactTemplateView(PageContextMixin, TemplateView): # Для рендер
         if form.is_valid(): # Если форма валидна (все данные правильные)
             name = form.cleaned_data['name'] # Имя отправившего сообщение
             email = form.cleaned_data['email'] # Email отправившего сообщение
-            subject = form.cleaned_data['subject'] # Тема отправившего сообщение
+            subject = form.cleaned_data['subject'] or "Сообщение с сайта" # Тема отправившего сообщение с возможным значением по умолчанию
             message = form.cleaned_data['message'] # Сообщение отправившего сообщение
-            send_mail(subject or "Сообщение с сайта",  # Тема сообщения с возможным значением по умолчанию
-                      f"От: {name} <{email}>\n\n{message}",
-                      email,  # Email отправившего сообщение
-                      ['marniish@yandex.ru'],  # Кому отправляем
-                      fail_silently=True)  # Если не удалось отправить, то пропускаем
+            message_txt = f"{message}\nОт: {name} <{email}>" # Текст сообщения
+            email_message = EmailMessage( # Тут оказывается есть более новое и универсальное решение, чем send_email()
+                subject, # Тема сообщения, на русском не работает правильно
+                f'Тема сообщения: {subject}\nТекст сообщения: {message_txt}\n', # Тема и текст сообщения
+                email, # Email отправившего сообщение
+                ['marniish@yandex.ru']) # Кому отправляем
+            email_message.send(fail_silently=False) # Отправляем сообщение
             return HttpResponseRedirect(self.success_url) # Перенаправляем на главную страницу
         else: # Если данные формы неправильные
             context = self.get_context_data() # Создаем контекст

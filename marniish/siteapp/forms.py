@@ -6,7 +6,8 @@ class ContactForm(forms.Form): # Форма для страницы с конт�
                            widget=forms.TextInput(attrs={'placeholder': 'Введите Ваше Имя'})) # Поле для ввода имени
     email = forms.EmailField(label="Электронная почта *", max_length=100,
                            widget=forms.EmailInput(attrs={'placeholder': 'email@email.ru'})) # Поле для ввода email
-    subject = forms.CharField(label="Тема сообщения", max_length=150, required=False) # Поле для ввода темы
+    subject = forms.CharField(label="Тема сообщения *", max_length=150,
+                              widget=forms.TextInput(attrs={'placeholder': 'Введите Тему сообщения'})) # Поле для ввода темы
     message = forms.CharField(label="Сообщение *",
                               widget=forms.Textarea(attrs={'placeholder': 'Произвольный текст сообщения ...'})) # Поле для ввода сообщения
 
