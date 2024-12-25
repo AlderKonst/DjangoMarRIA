@@ -44,9 +44,7 @@ urlpatterns = [
     path('Docs/delete/<int:pk>/', views.DocsDeleteView.as_view(), name='Docs_delete'), # Подтверждение удаления документа
     path('Docs/edit/<int:pk>/', views.DocsEditUpdateView.as_view(), name='Docs_edit'), # Изменение
     path('Map/', views.MapTemplateView.as_view(), name='Map'), # Карта сайта
-    path('<str:url>/', views.ThisPageListView.as_view(), name='this_page'), # Текущая страница
-    path('<str:parent_url>/', views.ParentPageListView.as_view(), name='parent_page'), # Страница родителя
-    path('<str:pre_parent_url>/', views.PreParentPageListView.as_view(), name='pre_parent_page'), # Страница прародителя
+    path('<path:url>/', views.PageTemplateView.as_view(), name='page'), # Текущая страница
 ]
 
 if settings.DEBUG: # Чтобы изображения могли отображаться в браузере
