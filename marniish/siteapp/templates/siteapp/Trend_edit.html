@@ -36,7 +36,7 @@
 		</div>
 		<section>
 			<fieldset class="niicontact">
-				<form name="TrendItemAddForm" method="post">
+				<form method="post">
 					{% csrf_token %}
 					{{form.as_table}}
 					<input type="submit" id="submit" value="Сохранить">

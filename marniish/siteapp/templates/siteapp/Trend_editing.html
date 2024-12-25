@@ -37,7 +37,7 @@
 		</div>
 		<section>
 			<fieldset class="niicontact">
-				<form name="TrendItemAddForm" method="post">
+				<form method="post">
 					{% csrf_token %}
 					{{form.as_table}}
 					<input type="submit" id="submit" value="Добавить"/>
@@ -47,8 +47,8 @@
 			{% for li in lis %}
 				<li>{{li.name}}
 					<p>
-						<a href="{% url 'siteapp:Trend_delete' li.id %}">Удалить</a
-						><a href="{% url 'siteapp:Trend_edit' li.id %}">Изменить</a>
+						<a href="{% url 'siteapp:Trend_delete' pk=li.pk %}">Удалить</a
+						><a href="{% url 'siteapp:Trend_edit' li.pk %}">Изменить</a>
 					</p>
 				</li>
 			{% endfor %}
