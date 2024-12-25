@@ -30,6 +30,9 @@
 		</form>
 	</fieldset>
 </div>
+<div class="pages" id="news_institute">
+	<a href="{% url 'siteapp:Docs' %}">Завершить редактирование</a>
+</div>
 <table class="pages">
 	<tr>
 		<th>Дата</th>
@@ -42,7 +45,7 @@
 	    <td class="left">{{doc.name}}
 			<article id="news_institute" style="margin: 0; padding: 0;">
 				<a href="{% url 'siteapp:Docs_delete' doc.id %}">Удалить</a
-				><a href="{% url 'siteapp:Docs_edit' doc.id %}">Изменить</a>
+				><a href="{% url 'siteapp:Docs_edit' doc.pk %}">Изменить</a>
 			</article>
 		</td>
 	    <td><a href="{{doc.url.url}}" target="_blank" title="Скачать" download></a></td>

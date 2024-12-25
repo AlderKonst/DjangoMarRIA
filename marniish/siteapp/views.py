@@ -179,42 +179,45 @@ class DocsListView(PageContextMixin, ListView): # Для рендеринга с
     context_object_name = 'docs' # Указываем имя переменной контекста таким
     queryset = Document.objects.all() # Добавляем все записи таблицы Document в контекст
 
-def docs_editing(request): # Для рендеринга страницы редактирования документов
-    page = Page.objects.get(url='Docs')  # Получаем запись в таблице Page с именем Docs в поле url
-    docs = Document.objects.all()  # Получаем все записи в таблице Docs
-    if request.method == 'GET':  # Если простой GET-запрос
-        form = DocsAddForm()  # Создаём форму
-        context = {'page': page, 'form': form, 'docs': docs }  # Передаем шаблон
-        return render(request, 'siteapp/Docs_editing.html', context)  # И рендерим шаблон с передачей формы
-    else:  # Если POST-запрос (скорее всего)
-        form = DocsAddForm(request.POST, # Передаём данные, которые сюда придут
-                        files=request.FILES) # Если есть изображения или файлы, то ещё и это прописываем
-        context = {'page': page, 'form': form, 'docs': docs}  # Передаем шаблон
-        if form.is_valid():  # Если форма валидна (все данные правильные)
-            form.save()  # Сохраняем изменения в базе данных
-            return HttpResponseRedirect(
-                reverse('siteapp:Docs_editing'))  # Перенаправляет на эту же страницу с уже внесёнными правками
-        else:  # Если данные формы заполнены неправильно
-            return render(request, 'siteapp/Docs_editing.html',
-                          context)  # то загрузит опять эту же страницу с формой для заполнения
+class DocsEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования направлений деятельности
+    page_url = 'Docs' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = Document # Указываем модель
+    form_class = DocsAddForm # Указываем форму с передачей в виде контекста как 'form'
+    template_name = 'siteapp/Docs_editing.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
+    context_object_name = 'docs' # Указываем имя переменной контекста таким
 
-def docs_edit(request, id): # Для рендеринга страницы изменеения одного из документов
-    page = Page.objects.get(url='Docs') # Получаем запись в таблице Page с именем Docs в поле url
-    docs = Document.objects.all() # Получаем все записи в таблице Docs
-    one_doc = get_object_or_404(Document, id=id) # Получаем объект по переданному идентификатору
-    if request.method == 'POST': # Если есть POST-запрос
-        form = DocsAddForm(request.POST, # Передаём данные, которые сюда придут
-                           instance=one_doc, # Передаем объект для изменения
-                           files=request.FILES) # Поскольку есть файлы, то ещё и это прописываем
-        if form.is_valid():  # Если форма валидна (все данные правильные)
-            if one_doc.url and os.path.isfile(one_doc.url.path): # Если есть медиафайл с соответствующим url
-                os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
-            form.save() # Сохраняем изменения в базе данных
-            return HttpResponseRedirect(reverse('siteapp:Docs_editing')) # Перенаправляем на страницу редактирования
-    else: # Если GET-запрос (скорее всего)
-        form = DocsAddForm(instance=one_doc) # Заполняем форму данными существующего объекта (записью с ксивами)
-        context = {'page': page, 'docs': docs, 'form': form} # Передаем шаблон
-        return render(request, 'siteapp/Docs_edit.html', context) # И рендерим шаблон с передачей формы
+class DocsEditUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности
+    page_url = 'Docs' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = Document # Указываем модель
+    form_class = DocsAddForm # Указываем форму с передачей в виде контекста как 'form'
+    template_name = 'siteapp/Docs_edit.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['docs'] = Document.objects.all() # Добавляем все записи таблицы Document в контекст
+        return context # Передаём обновлённый контекст в страницу
+    def form_valid(self, form): # Для переопределения работы с правильными данными
+        one_doc = self.get_object() # Получаем текущий объект
+        if one_doc.url and os.path.isfile(one_doc.url.path): # Если есть медиафайл с соответствующим url
+            os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
+        return super().form_valid(form) # Вызываем стандартный метод form_valid
+
+class DocsDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы редактирования направлений деятельности
+    page_url = 'Docs' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = Document # Указываем модель
+    template_name = 'siteapp/Docs_confirm_delete.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
+    context_object_name = 'one_doc' # Указываем имя переменной контекста таким
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['docs'] = Document.objects.all() # Добавляем все записи таблицы Document в контекст
+        return context # Передаём обновлённый контекст в страницу
+    def form_valid(self, form): # Для переопределения работы с правильными данными
+        one_doc = self.get_object() # Получаем текущий объект
+        if one_doc.url and os.path.isfile(one_doc.url.path): # Если есть медиафайл с соответствующим url
+            os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
+        return super().form_valid(form) # Вызываем стандартный метод form_valid
 
 def docs_delete(request, id): # Для рендеринга страницы подтверждения удаления одного из документов
     page = Page.objects.get(url='Docs')  # Получаем запись в таблице Page с именем Docs в поле url
