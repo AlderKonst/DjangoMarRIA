@@ -8,7 +8,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width">
 	<meta name="description" content="{% block description %}{% endblock %}">
-	<link rel="icon" type="image/png" href="favicon.png"/>
+	<link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}"/>
 	<link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
 	<link href="{% static 'css/style.css' %}" rel="stylesheet">
 	<link href="{% static 'css/news.css' %}" rel="stylesheet">
@@ -43,7 +43,7 @@
 				><li><a href="{% url 'siteapp:Jim' %}">Жимолость</a></li>
 			</ul>
 		</li
-		><li class="about"><span><img src="img/sprite_nav.png"></span><a href="{% url 'siteapp:About' %}">О нас</a>
+		><li class="about"><span><img src="{% static 'img/star.png' %}"></span><a href="{% url 'siteapp:About' %}">О нас</a>
 			<ul>
 				<li><a href="{% url 'siteapp:About' %}">История института</a></li
 				><li><a href="{% url 'siteapp:Trend' %}">Направления деятельности</a></li
@@ -115,7 +115,7 @@
 		</div>
 	</div>
 	<div class="author">
-		<h4><span class="fonts_ico"><img src="img/star.png"></span> Разработчик</h4>
+		<h4><span class="fonts_ico"><img src="{% static 'img/star.png' %}"></span> Разработчик</h4>
 		<a class="vk" href="http://vk.com/koalder">vk</a>
 		<a class="email_ico" href="mailto:koalder@yandex.ru"></a>
 	</div>

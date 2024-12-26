@@ -230,5 +230,5 @@ class PageTemplateView(TemplateView): # Для отображения путей
     template_name = 'siteapp/index.html' # Указываем расположение шаблона рендеринга
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['page'] = Page.objects.get(url=kwargs['url']) # Добавляем url в цикл контекста
+        context['page'] = get_object_or_404(Page, url=kwargs['url']) # Добавляем url в цикл контекста
         return context # Передаём обновлённый контекст в страницу
