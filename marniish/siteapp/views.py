@@ -6,11 +6,11 @@ from django.core.mail import EmailMessage # Импортируем функци�
 from django.utils.encoding import force_bytes # Импортируем функцию для кодирования
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
-from .forms import ContactForm, TrendItemAddForm, DocsAddForm # Импортируем формы
+from .forms import ContactForm, TrendItemAddForm, DocsAddForm, HistoryAddForm, HistoryDataAddForm # Импортируем формы
 import os # Здесь для удаления файла из /media/
 
 from django.views.generic.base import ContextMixin # Для создания общего класса
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView # Базовые классы
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, FormView  # Базовые классы
 
 class PageContextMixin(ContextMixin): # Миксин для добавления объекта Page в контекст
     page_url = None # Инициируем переменную
@@ -121,6 +121,32 @@ class AboutTemplateView(PageContextMixin, TemplateView): # Для рендери
         context['histories'] = History.objects.all() # Добавляем все записи таблицы History в контекст
         context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
         return context # Передаём обновлённый контекст в страницу
+
+class AboutEditingView(PageContextMixin, FormView):
+    template_name = 'About_editing.html'
+    about_data_form = HistoryDataAddForm()
+    about_add_form = HistoryAddForm()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['about_add_form'] = self.about_add_form
+        context['about_data_form'] = self.about_data_form
+        return context
+    def post(self, request, *args, **kwargs):
+        # Обработка формы добавления абзаца события
+        if 'about_add' in request.POST:
+            about_add_form = HistoryAddForm(request.POST)
+            if about_add_form.is_valid():
+                about_add_form.save()
+                return redirect('about_editing')  # Возврат на ту же страницу
+        # Обработка формы добавления даты события
+        if 'about_data_add' in request.POST:
+            about_data_form = HistoryDataAddForm(request.POST)
+            if about_data_form.is_valid():
+                about_data_form.save()
+                return redirect('about_editing')  # Возврат на ту же страницу
+
+        # Если формы не валидны, возвращаем их в контекст
+        return self.get(request, *args, **kwargs)
 
 class TrendListView(PageContextMixin, ListView): # Для рендеринга страницы направлений деятельности
     page_url = 'Trend' # Создаём наследованный из ContextMixin контекст из записи таблицы Page

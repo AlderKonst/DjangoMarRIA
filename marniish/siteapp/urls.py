@@ -31,6 +31,7 @@ urlpatterns = [
     path('Grass/', views.GrassTemplateView.as_view(), name='Grass'), # Многолетние травы
     path('Jim/', views.JimTemplateView.as_view(), name='Jim'), # Жимолость
     path('About/', views.AboutTemplateView.as_view(), name='About'), # История института
+    path('About/editing/', views.AboutEditingView.as_view(), name='About_editing'),
     path('Trend/', views.TrendListView.as_view(), name='Trend'), # Направления деятельности
     path('Trend/editing/', views.TrendEditingView.as_view(), name='Trend_editing'), # Редактирование направлений деятельности
     path('Trend/edit/<int:pk>/', views.TrendEditUpdateView.as_view(), name='Trend_edit'), # Изменение направления деятельности
