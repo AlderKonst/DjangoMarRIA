@@ -823,6 +823,10 @@ h1 span span {
 #ras img {
 	left: -85%;
 }
+#fanc img {
+    top: .25em;
+	left: -656%;
+}
 #mcx img {
 	top: .375em;
 	left: -185%;
