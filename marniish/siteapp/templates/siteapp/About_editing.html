@@ -29,20 +29,26 @@
 	</article>
 	<div class="niicontact">
 		<fieldset>
-			<legend>Добавить абзац события</legend>
-			<form method="post">
-				{% csrf_token %}
-				{{about_add_form.as_p}}
-				{% endfor %}
-				<input type="submit" value="Добавить" name="about_add">
-			</form>
-			<legend>Добавить дату</legend>
-			<form method="post">
-				{% csrf_token %}
-				{{about_data_form.as_p}}
-				{% endfor %}
-				<input type="submit" value="Добавить" name="about_data_add">
-			</form>
+			{% if form_type == 'add' %}
+            <legend>Добавить абзац события</legend>
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Добавить" name="about_add">
+            </form>
+			<a href="{% url 'siteapp:About_editing_data_add' %}">Добавить дату события</a>
+        	{% elif form_type == 'data_add' %}
+            <legend>Добавить дату</legend>
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Добавить" name="about_data_add">
+            </form>
+			<a href="{% url 'siteapp:About_editing_add' %}">Добавить абзац события</a>
+			{% else %}
+			<a href="{% url 'siteapp:About_editing_add' %}">Добавить абзац события</a>
+			<a href="{% url 'siteapp:About_editing_data_add' %}">Добавить дату события</a>
+        {% endif %}
 		</fieldset>
 	</div>
 	<a href="{% url 'siteapp:About' %}">Завершить редактирование</a>
@@ -67,7 +73,6 @@
 			<p>{{about.text}}</p>
 			{% endif %}
 		{% endfor %}
-			<a href="{% url 'siteapp:About_editing' %}">Редактировать</a>
 		</section>
 	</article>
 	{% endfor %}

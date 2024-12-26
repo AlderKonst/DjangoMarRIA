@@ -71,7 +71,7 @@ class HistoryData(models.Model): # Историческая дата НИИ
     year = models.IntegerField() # Год
     day_month = models.CharField(max_length=15, blank=True, null=True) # Месяц и день
     def __str__(self):
-        return str(self.year) # Для отображения года в строковом виде
+        return f'{self.year} год {self.day_month or ''}' # Для отображения даты в строковом виде
     class Meta:
         verbose_name = 'Историческая дата' # Для отображения в админке
         verbose_name_plural = 'Исторические даты' # Для отображения в админке
