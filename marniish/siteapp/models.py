@@ -73,6 +73,7 @@ class HistoryData(models.Model): # Историческая дата НИИ
     def __str__(self):
         return f'{self.year} год {self.day_month or ''}' # Для отображения даты в строковом виде
     class Meta:
+        ordering = ['year', 'day_month'] # Для сортировки
         verbose_name = 'Историческая дата' # Для отображения в админке
         verbose_name_plural = 'Исторические даты' # Для отображения в админке
 

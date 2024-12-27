@@ -28,28 +28,14 @@
 		<h2 id="in">Этапы становления, развития и преемственности института</h2>
 	</article>
 	<div class="niicontact">
-		<fieldset>
-			{% if form_type == 'add' %}
-            <legend>Добавить абзац события</legend>
-            <form method="post">
-                {% csrf_token %}
-                {{form.as_p}}
-                <input type="submit" value="Добавить" name="about_add">
-            </form>
-			<a href="{% url 'siteapp:About_editing_data_add' %}">Добавить дату события</a>
-        	{% elif form_type == 'data_add' %}
-            <legend>Добавить дату</legend>
-            <form method="post">
-                {% csrf_token %}
-                {{form.as_p}}
-                <input type="submit" value="Добавить" name="about_data_add">
-            </form>
-			<a href="{% url 'siteapp:About_editing_add' %}">Добавить абзац события</a>
-			{% else %}
-			<a href="{% url 'siteapp:About_editing_add' %}">Добавить абзац события</a>
-			<a href="{% url 'siteapp:About_editing_data_add' %}">Добавить дату события</a>
-        {% endif %}
-		</fieldset>
+	<fieldset>
+	    <legend>Добавить событие</legend>
+	    <form method="post">
+	        {% csrf_token %}
+	        {{ form.as_p }}
+	        <input type="submit" value="Добавить">
+	    </form>
+	</fieldset>
 	</div>
 	<a href="{% url 'siteapp:About' %}">Завершить редактирование</a>
 {% for d in data %}

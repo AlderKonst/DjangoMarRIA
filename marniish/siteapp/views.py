@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage # Импортируем функци�
 from django.utils.encoding import force_bytes # Импортируем функцию для кодирования
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
-from .forms import ContactForm, TrendItemAddForm, DocsAddForm, HistoryAddForm, HistoryDataAddForm # Импортируем формы
+from .forms import ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm # Импортируем формы
 import os # Здесь для удаления файла из /media/
 
 from django.views.generic.base import ContextMixin # Для создания общего класса
@@ -122,29 +122,23 @@ class AboutTemplateView(PageContextMixin, TemplateView): # Для рендери
         context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class HistoryAddView(PageContextMixin, CreateView):
-    page_url = 'About_editing'
-    template_name = 'siteapp/About_editing.html'
-    form_class = HistoryAddForm
-    success_url = reverse_lazy('siteapp:About_editing_add')
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form_type'] = 'add' # Добавляем индикатор типа формы
-        context['histories'] = History.objects.all()  # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all()  # Добавляем все записи таблицы HistoryData в контекст
-        return context
-
-class HistoryDataAddView(PageContextMixin, CreateView):
-    page_url = 'About_editing'
-    template_name = 'siteapp/About_editing.html'
-    form_class = HistoryDataAddForm
-    success_url = reverse_lazy('siteapp:About_editing_add')
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form_type'] = 'data_add' # Добавляем индикатор типа формы
-        context['histories'] = History.objects.all()  # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all()  # Добавляем все записи таблицы HistoryData в контекст
-        return context
+class HistoryEditingView(PageContextMixin, CreateView): # Для рендеринга страницы редактирования истории
+    page_url = 'About_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/About_editing.html' # Указываем расположение шаблона рендеринга
+    form_class = HistoryEditingForm # Указываем форму для редактирования абзаца события
+    success_url = reverse_lazy('siteapp:About_editing') # URL перенаправления после успешного сохранения
+    def form_valid(self, form): # Метод для обработки валидной формы
+        history_data, _ = HistoryData.objects.get_or_create( # Получаем или создаем объект HistoryData
+            year=form.cleaned_data['year'], # Используем год из формы как параметр
+            day_month=form.cleaned_data['day_month'] # Используем день и месяц из формы как параметр
+        ) # Если объект не существует, он будет создан
+        form.instance.data = history_data # Связываем событие с созданной или найденной датой
+        return super().form_valid(form) # Вызываем родительский метод для завершения обработки формы
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['histories'] = History.objects.all() # Добавляем все записи таблицы History в контекст
+        context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
+        return context # Передаём обновлённый контекст в страницу
 
 class TrendListView(PageContextMixin, ListView): # Для рендеринга страницы направлений деятельности
     page_url = 'Trend' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
