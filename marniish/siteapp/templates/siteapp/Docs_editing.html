@@ -44,7 +44,7 @@
 		<td class="time">{{doc.date|date:"j M Y"}}</td>
 	    <td class="left">{{doc.name}}
 			<article id="news_institute" style="margin: 0; padding: 0;">
-				<a href="{% url 'siteapp:Docs_delete' doc.id %}">Удалить</a
+				<a href="{% url 'siteapp:Docs_delete' doc.pk %}">Удалить</a
 				><a href="{% url 'siteapp:Docs_edit' doc.pk %}">Изменить</a>
 			</article>
 		</td>
