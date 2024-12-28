@@ -22,16 +22,30 @@
 <div class="pages">
 	<div id="news_institute">
 	<div class="niicontact">
+		<article>
+			<h3>{{paragraph.data.year}} год
+				{% if paragraph.data.day_month %}
+				<b>{{paragraph.data.day_month}}</b>
+				{% endif %}
+			</h3>
+			<section>
+			{% if paragraph.img %}
+			<label>
+				<img src="{% static paragraph.img %}" alt="{{paragraph.alt}}" title="{{paragraph.alt}}">
+			</label>
+			{% endif %}
+			<p>{{paragraph.text}}</p>
+			</section>
+		</article>
 	<fieldset>
-	    <legend>Добавить событие</legend>
+	    <legend>Подтверждаете ли удаление абзаца события?</legend>
 	    <form method="post">
 	        {% csrf_token %}
-	        {{ form.as_p }}
-	        <input type="submit" value="Добавить">
+	        <input type="submit" value="Удалить">
 	    </form>
 	</fieldset>
 	</div>
-	<a href="{% url 'siteapp:About' %}">Завершить редактирование</a>
+	<a href="{% url 'siteapp:About_editing' %}">Отменить удаление</a>
 	<article>
 		<h2 id="in">Этапы становления, развития и преемственности института</h2>
 	</article>
@@ -54,8 +68,6 @@
 					</label>
 					{% endif %}
 				<p>{{about.text}}</p>
-				<a href="{% url 'siteapp:About_delete' about.pk %}">Удалить</a
-				><a href="{% url 'siteapp:About_edit' about.pk %}">Изменить</a>
 				{% endif %}
 			{% endfor %}
 			</section>

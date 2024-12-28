@@ -32,6 +32,8 @@ urlpatterns = [
     path('Jim/', views.JimTemplateView.as_view(), name='Jim'), # Жимолость
     path('About/', views.AboutTemplateView.as_view(), name='About'), # История института
     path('About/editing', views.HistoryEditingView.as_view(), name='About_editing'), # Добавление абзаца события
+    path('About/delete/<int:pk>/', views.HistoryDeleteView.as_view(), name='About_delete'), # Подтверждение удаления абзаца события
+    path('About/edit/<int:pk>/', views.HistoryEditUpdateView.as_view(), name='About_edit'), # Изменение абзаца события
     path('Trend/', views.TrendListView.as_view(), name='Trend'), # Направления деятельности
     path('Trend/editing/', views.TrendEditingView.as_view(), name='Trend_editing'), # Редактирование направлений деятельности
     path('Trend/edit/<int:pk>/', views.TrendEditUpdateView.as_view(), name='Trend_edit'), # Изменение направления деятельности
@@ -43,7 +45,7 @@ urlpatterns = [
     path('Docs/', views.DocsListView.as_view(), name='Docs'), # Документы
     path('Docs/editing/', views.DocsEditingView.as_view(), name='Docs_editing'), # Редактирование документов
     path('Docs/delete/<int:pk>/', views.DocsDeleteView.as_view(), name='Docs_delete'), # Подтверждение удаления документа
-    path('Docs/edit/<int:pk>/', views.DocsEditUpdateView.as_view(), name='Docs_edit'), # Изменение
+    path('Docs/edit/<int:pk>/', views.DocsEditUpdateView.as_view(), name='Docs_edit'), # Изменение документа
     path('Map/', views.MapTemplateView.as_view(), name='Map'), # Карта сайта
     path('<path:url>/', views.PageTemplateView.as_view(), name='page'), # Текущая страница
 ]
