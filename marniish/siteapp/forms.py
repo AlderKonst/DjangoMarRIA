@@ -14,7 +14,7 @@ class ArticleEditingForm(forms.ModelForm): # Форма для страницы 
     name = forms.CharField( # Поле для ввода статьи
         label="Статья *", # Метка для поля ввода статьи
         max_length=500, # Максимальное количество символов статьи
-        widget=forms.TextInput( # Виджет для ввода текста в html-код
+        widget=forms.Textarea( # Виджет для ввода текста в html-код
             attrs={'placeholder': 'Введите статью'})) # Подсказка для ввода статьи
     doi = forms.CharField( # Поле для ввода DOI документа
         label="DOI", # Метка для поля ввода DOI документа
@@ -49,7 +49,7 @@ class ProgressEditingForm(forms.ModelForm): # Форма для страницы
     name = forms.CharField( # Поле для ввода достижения
         label="Достижение *", # Метка для поля ввода достижения
         max_length=250, # Максимальное количество символов достижения
-        widget=forms.TextInput( # Виджет для ввода текста в html-код
+        widget=forms.Textarea( # Виджет для ввода текста в html-код
             attrs={'placeholder': 'Введите достижение'})) # Подсказка для ввода достижения
     def __init__(self, *args, **kwargs): # Конструктор формы
         super().__init__(*args, **kwargs) # Вызываем метод родительского класса

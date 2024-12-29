@@ -26,22 +26,19 @@
 <div class="pages" id="news_institute">
 	<article>
 		<fieldset class="niicontact">
+			<legend>Изменение достижений</legend>
 			<form method="post">
 				{% csrf_token %}
 				{{form.as_p}}
-				<input type="submit" id="submit" value="Добавить"/>
+				<input type="submit" id="submit" value="Изменить"/>
 			</form>
 		</fieldset>
-		<a href="{% url 'siteapp:Progress' %}">Завершить редактирование</a>
+		<a href="{% url 'siteapp:Progress_editing' %}">Отменить изменение</a>
 	</article>
 	<h5>Наиболее значимые по направлениям научно-исследовательские разработки за период работы НИУ</h5>
 	<ul>
 	    {% for pr in progresses %}
 		<li><span class="{{pr.trend}}" title="{{pr.year}}"></span>{{pr.name}}</li>
-		<article>
-			<a href="{% url 'siteapp:Progress_update' pr.pk %}">Изменить</a
-			><a href="{% url 'siteapp:Progress_delete' pr.pk %}">Удалить</a>
-		</article>
 		{% endfor %}
 	</ul>
 </div>
