@@ -24,7 +24,16 @@
 
 <h2>Статьи</h2>
 <div class="pages">
-	<ul>
+	<article>
+		<fieldset class="niicontact">
+			<form method="post">
+				{% csrf_token %}
+				{{form.as_p}}
+				<input type="submit" id="submit" value="Добавить"/>
+			</form>
+		</fieldset>
+	</article>
+		<ul>
 		{% for ale in articles %}
 		<li>
 			<span class="{{ale.trend}}" title="{{ale.year}}"></span>{{ale.name}}
@@ -36,10 +45,11 @@
 			<p></p>
 			{% endif %}
 		</li>
+		<article id="news_institute">
+			<a href="">Удалить</a
+			><a href="">Изменить</a>
+		</article>
 		{% endfor %}
 	</ul>
-	<article id="news_institute">
-		<a href="{% url 'siteapp:Article_editing' %}">Редактировать</a>
-	</article>
 </div>
 {% endblock %}

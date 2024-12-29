@@ -1,5 +1,64 @@
 from django import forms # Для работы с формами
-from .models import TrendItem, Trend, Document, History # Для работы с моделью
+from django.db.models import Max # Для получения максимального значения в БД
+from .models import TrendItem, Trend, Document, History, Article, Progress # Для работы с моделью
+
+class ArticleEditingForm(forms.ModelForm): # Форма для страницы со списком статей НИИ
+    year = forms.IntegerField( # Поле для ввода года публикации статьи
+        label="Год *", # Метка для поля ввода года
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите год'})) # Подсказка для ввода года
+    trend = forms.ModelChoiceField( # Поле выбора основного направления
+        label="Основное направление НИИ *", # Метка для поля выбора основного направления НИИ
+        queryset=Trend.objects.all(), # Получение всех объектов модели Trend
+        widget=forms.Select())  # Использование стандартного виджета выбора
+    name = forms.CharField( # Поле для ввода статьи
+        label="Статья *", # Метка для поля ввода статьи
+        max_length=500, # Максимальное количество символов статьи
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите статью'})) # Подсказка для ввода статьи
+    doi = forms.CharField( # Поле для ввода DOI документа
+        label="DOI", # Метка для поля ввода DOI документа
+        max_length=50, # Максимальное количество символов DOI
+        required=False, # Поле не является обязательным для заполнения
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите без https://doi.org/'})) # Подсказка для ввода DOI документа
+    link = forms.CharField( # Поле для ввода ссылки
+        label="URL", # Метка для поля ввода ссылки
+        max_length=100, # Максимальное количество символов ссылки
+        required=False, # Поле не является обязательным для заполнения
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+             attrs={'placeholder': 'Введите полный URL'})) # Подсказка для ввода ссылки
+    def __init__(self, *args, **kwargs): # Конструктор формы
+        super().__init__(*args, **kwargs) # Вызываем метод родительского класса
+        max_year = Article.objects.aggregate(Max('year'))['year__max'] # Получаем максимальный год из БД (спасибо нейросети)
+        self.fields['year'].initial = max_year # Устанавливаем значение по умолчанию для поля year
+        self.fields['trend'].initial = Trend.objects.get(name='plant') # Устанавливаем значение по умолчанию для поля trend
+    class Meta: # Класс для работы с моделью формы
+        model = Article # Модель для работы с моделью
+        fields = ['year', 'trend', 'name', 'doi', 'link'] # Поля для работы с моделью
+
+class ProgressEditingForm(forms.ModelForm): # Форма для страницы со списком достижений НИИ
+    year = forms.IntegerField( # Поле для ввода года достижения
+        label="Год *", # Метка для поля ввода года
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите год'})) # Подсказка для ввода года
+    trend = forms.ModelChoiceField( # Поле выбора основного направления
+        label="Основное направление НИИ *", # Метка для поля выбора основного направления НИИ
+        queryset=Trend.objects.all(), # Получение всех объектов модели Trend
+        widget=forms.Select()) # Использование стандартного виджета выбора
+    name = forms.CharField( # Поле для ввода достижения
+        label="Достижение *", # Метка для поля ввода достижения
+        max_length=250, # Максимальное количество символов достижения
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите достижение'})) # Подсказка для ввода достижения
+    def __init__(self, *args, **kwargs): # Конструктор формы
+        super().__init__(*args, **kwargs) # Вызываем метод родительского класса
+        max_year = Article.objects.aggregate(Max('year'))['year__max'] # Получаем максимальный год из БД (спасибо нейросети)
+        self.fields['year'].initial = max_year # Устанавливаем значение по умолчанию для поля year
+        self.fields['trend'].initial = Trend.objects.get(name='plant') # Устанавливаем значение по умолчанию для поля trend
+    class Meta: # Класс для работы с моделью
+        model = Progress # Модель для работы с моделью
+        fields = ['year', 'trend', 'name'] # Поля для работы с моделью
 
 class HistoryEditingForm(forms.ModelForm): # Форма для страницы с событием НИИ
     year = forms.IntegerField( # Поле для ввода года

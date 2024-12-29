@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage # Импортируем функци�
 from django.utils.encoding import force_bytes # Импортируем функцию для кодирования
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
-from .forms import ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm # Импортируем формы
+from .forms import ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm # Импортируем формы
 import os # Здесь для удаления файла из /media/
 
 from django.views.generic.base import ContextMixin # Для создания общего класса
@@ -122,6 +122,7 @@ class AboutTemplateView(PageContextMixin, TemplateView): # Для рендери
         context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
         return context # Передаём обновлённый контекст в страницу
 
+# Для создания этих 3-х классов существенно помогла нейросеть
 class HistoryEditingView(PageContextMixin, CreateView): # Для рендеринга страницы редактирования истории
     page_url = 'About_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About_editing.html' # Указываем расположение шаблона рендеринга
@@ -226,12 +227,36 @@ class ProgressListView(PageContextMixin, ListView): # Для рендеринг�
     template_name = 'siteapp/Progress.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'progresses' # Указываем имя переменной контекста таким
     queryset = Progress.objects.all() # Добавляем все записи таблицы TrendItem в контекст
+    def get_queryset(self): # Возвращает отсортированный по году список статей
+        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
+
+class ProgressEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка достижений НИИ
+    page_url = 'Progress_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = Progress # Указываем модель
+    form_class = ProgressEditingForm # Указываем форму с передачей в виде контекста как 'form'
+    template_name = 'siteapp/Progress_editing.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Progress_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
+    context_object_name = 'progresses' # Указываем имя переменной контекста таким
+    def get_queryset(self): # Возвращает отсортированный по году список статей
+        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
 
 class ArticleListView(PageContextMixin, ListView): # Для рендеринга страницы статей
     page_url = 'Article' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Article.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'articles' # Указываем имя переменной контекста таким
     queryset = Article.objects.all() # Добавляем все записи таблицы Article в контекст
+    def get_queryset(self): # Возвращает отсортированный по году список статей
+        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
+
+class ArticleEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка статей
+    page_url = 'Article_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = Article # Указываем модель
+    form_class = ArticleEditingForm # Указываем форму с передачей в виде контекста как 'form'
+    template_name = 'siteapp/Article_editing.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Article_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
+    context_object_name = 'articles' # Указываем имя переменной контекста таким
+    def get_queryset(self): # Возвращает отсортированный по году список статей
+        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
 
 class PriceListView(PageContextMixin, ListView): # Для рендеринга страницы прайс-листа
     page_url = 'Price' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
