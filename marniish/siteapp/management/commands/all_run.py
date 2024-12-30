@@ -15,7 +15,6 @@ class Command(BaseCommand):
             'history', # История
             'news', # Новости
             'page', # Страницы
-            'edit_pages', # Страницы для редактирования
             'progress', # Достижения
             'reference', # Полезные ссылки
             'trenditem', # Направления деятельности

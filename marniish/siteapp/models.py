@@ -89,6 +89,7 @@ class History(models.Model): # Исторические события НИИ
         verbose_name_plural = 'Исторические события' # Для отображения в админке
 
 class CultureGroup(NameUnique100, NameStr): # Группа агрокультур, выращиваемых в НИИ
+    add_info = models.CharField(max_length=250, blank=True, null=True) # Допинфа по группе
     class Meta:
         verbose_name = 'Группа агрокультур' # Для отображения в админке
         verbose_name_plural = 'Группы агрокультур' # Для отображения в админке
