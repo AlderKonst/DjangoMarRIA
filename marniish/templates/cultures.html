@@ -19,33 +19,37 @@
 
 {% block content %}
 
-{% block nav_sub_prod %}  {% include "nav_sub_prod.html" %}
+{% block nav_sub_prod %}
+	{% include "nav_sub_prod.html" %}
 {% endblock %}
 
 {% block cultures %}
-{% load static %}
-<h2>{{group.name}}</h2>
-<div class="pages">
-	<div id="news_institute">
-	{% for taxon in taxons %}
+	{% load static %}
+	<h2>{{group.name}}</h2>
+	<div class="pages">
+		<div id="news_institute">
+		{% for taxon in taxons %}
+		<article>
+			<h3>{{taxon.culture.name}} <b>{{taxon.name}}</b></h3>
+			<section>
+				{% if taxon.img %}
+				<label>
+					<input type="checkbox" hidden>
+					<img src="{{taxon.img.url}}" alt="{{taxon.alt}}" title="{{taxon.alt}}">
+					<img src="{{taxon.img.url}}" alt="{{taxon.alt}}" title="{{taxon.alt}}">
+					<div class="overlay"></div>
+				</label>
+				{% endif %}
+				{{taxon.text|safe}}
+			</section>
+		</article>
+		{% endfor %}
+		<article>
+			<p>{{group.add_info|safe}}</p>
+		</article>
+	{% endblock %}
 	<article>
-		<h3>{{taxon.culture.name}} <b>{{taxon.name}}</b></h3>
-		<section>
-			{% if taxon.img %}
-			<label>
-				<input type="checkbox" hidden>
-				<img src="{{taxon.img.url}}" alt="{{taxon.alt}}" title="{{taxon.alt}}">
-				<img src="{{taxon.img.url}}" alt="{{taxon.alt}}" title="{{taxon.alt}}">
-				<div class="overlay"></div>
-			</label>
-			{% endif %}
-			{{taxon.text|safe}}
-		</section>
+		<a href="{% url 'siteapp:Taxon_editing' %}">Редактировать</a>
 	</article>
-	{% endfor %}
-	<article>
-		<p>{{group.add_info}}</p>
-	</article>
-{% endblock %}
-
+</div>
 {% endblock %}

@@ -1,6 +1,66 @@
 from django import forms # Для работы с формами
 from django.db.models import Max # Для получения максимального значения в БД
-from .models import TrendItem, Trend, Document, History, Article, Progress # Для работы с моделью
+from .models import TrendItem, Trend, Document, History, Article, Progress, CultureGroup, Culture, Taxon # Для работы с моделью
+
+class CultureGroupEditingForm(forms.ModelForm): # Форма для страницы со списком групп культуры
+    name = forms.CharField( # Поле для ввода имени группы культуры
+        label="Имя группы культур *", # Метка для поля
+        max_length=100, # Максимальное количество символов имени группы культур
+        widget=forms.Textarea( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите имя группы культуры'})) # Подсказка для ввода имени группы культуры
+    add_info = forms.CharField( # Поле для ввода дополнительной информации
+        label="Дополнительная информация *", # Метка для поля
+        max_length=250, # Максимальное количество символов дополнительной информации
+        widget=forms.Textarea( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите дополнительную информацию'})) # Подсказка для ввода дополнительной информации
+    class Meta: # Класс для описания формы
+        model = CultureGroup # Модель, с которой связана форма
+        fields = ['name', 'add_info'] # Поля, которые будут отображаться в форме
+
+class CultureEditingForm(forms.ModelForm): # Форма для страницы со списком культур
+    name = forms.CharField( # Поле для ввода названия культуры
+        label="Название культуры *", # Метка для поля ввода названия культуры
+        max_length=100, # Максимальное количество символов названия культуры
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите название культуры'})) # Подсказка для ввода названия культуры
+    group = forms.ModelChoiceField( # Поле выбора группы культуры
+        label="Группа культуры *", # Метка для поля выбора группы культуры
+        queryset=CultureGroup.objects.all(), # Получение всех объектов модели CultureGroup
+        widget=forms.Select()) # Использование стандартного виджета выбора
+    class Meta: # Класс для описания формы
+        model = Culture # Модель, с которой связана форма
+        fields = ['name', 'group'] # Поля, которые будут отображаться в форме
+
+class TaxonEditingForm(forms.ModelForm): # Форма для страницы со списком таксонов
+    name = forms.CharField( # Поле для ввода названия таксона
+        label="Название таксона *", # Метка для поля ввода названия таксона
+        max_length=100, # Максимальное количество символов названия таксона
+        required=False, # Поле не является обязательным для заполнения
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите таксон (гибрид, сорт)'})) # Подсказка для ввода названия таксона
+    culture = forms.ModelChoiceField( # Поле выбора культуры
+        label="Культура *", # Метка для поля выбора культуры
+        queryset=Culture.objects.all(), # Получение всех объектов модели Culture
+        widget=forms.Select()) # Использование стандартного виджета выбора
+    text = forms.CharField( # Поле для ввода текста
+        label="Описание *", # Метка для поля ввода текста
+        max_length=1000, # Максимальное количество символов описания таксона
+        widget=forms.Textarea( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите описание таксона'})) # Подсказка для ввода текста
+    img = forms.FileField( # Поле для загрузки изображения
+        label="Загрузить документ", # Метка для загрузки изображения, с загрузкой в /media/
+        required=False, # Поле не является обязательным для заполнения
+        widget=forms.FileInput( # Виджет для загрузки изображения через html-код
+            attrs={'accept': '.png,.jpeg,.jpg'})) # Такие форматы лишь будут допустимы
+    alt = forms.CharField( # Поле для ввода описания картинки
+        label="Описание картинки", # Метка для поля ввода описания картинки
+        max_length=100, # Максимальная количество символов текста описания картинки
+        required=False, # Поле не является обязательным
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Описание'})) # Подсказка для ввода описания картинки
+    class Meta: # Класс для описания формы
+        model = Taxon # Модель, с которой связана форма
+        fields = ['name', 'culture', 'text', 'img', 'alt'] # Поля, которые будут отображаться в форме
 
 class ArticleEditingForm(forms.ModelForm): # Форма для страницы со списком статей НИИ
     year = forms.IntegerField( # Поле для ввода года публикации статьи

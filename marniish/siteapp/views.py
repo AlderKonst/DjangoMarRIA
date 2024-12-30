@@ -6,7 +6,8 @@ from django.core.mail import EmailMessage # Импортируем функци�
 from django.utils.encoding import force_bytes # Импортируем функцию для кодирования
 from .models import (Page, TrendItem, Reference, Article, Progress, History,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
-from .forms import ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm # Импортируем формы
+from .forms import (ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm,
+                    TaxonEditingForm, CultureEditingForm, CultureGroupEditingForm) # Импортируем формы
 import os # Здесь для удаления файла из /media/
 
 from django.views.generic.base import ContextMixin # Для создания общего класса
@@ -72,6 +73,85 @@ class ContactTemplateView(PageContextMixin, TemplateView): # Для рендер
 class ProdTemplateView(PageContextMixin, TemplateView): # Для рендеринга главной страницы
     page_url = 'Prod' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Prod.html' # Указываем расположение шаблона рендеринга
+
+class TaxonEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования таксонов
+    page_url = 'Taxon_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Taxon_editing.html' # Указываем расположение шаблона рендеринга
+    model = Taxon # Указываем модель
+    form_class = TaxonEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    context_object_name = 'taxons' # Указываем имя контекста
+
+class TaxonUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения таксона
+    page_url = 'Taxon_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Taxon_update.html' # Указываем расположение шаблона рендеринга
+    model = Taxon # Указываем модель
+    form_class = TaxonEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    def get_context_data(self, **kwargs): # Для получения контекста
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['taxons'] = [self.object] # Оборачиваем объект для контекста в список
+        return context # Возвращаем обновленный контекст
+
+class TaxonDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления таксона
+    page_url = 'Taxon_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Taxon_delete.html' # Указываем расположение шаблона рендеринга
+    model = Taxon # Указываем модель
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    def get_context_data(self, **kwargs): # Для получения контекста
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['taxons'] = [self.object] # Оборачиваем объект для контекста в список
+        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
+        return context # Возвращаем обновленный контекст
+
+class CultureEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования культур
+    page_url = 'Culture_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Culture_editing.html' # Указываем расположение шаблона рендеринга
+    model = Culture # Указываем модель
+    form_class = CultureEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    context_object_name = 'cultures' # Указываем имя контекста
+
+class CultureUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения культуры
+    page_url = 'Culture_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Culture_update.html' # Указываем расположение шаблона рендеринга
+    model = Culture # Указываем модель
+    form_class = CultureEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    def get_context_data(self, **kwargs): # Для получения контекста
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['cultures'] = [self.object] # Оборачиваем объект для контекста в список
+        return context  # Возвращаем обновленный контекст
+
+class CultureDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления культуры
+    page_url = 'Culture_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Culture_delete.html' # Указываем расположение шаблона рендеринга
+    model = Culture # Указываем модель
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    context_object_name = 'cultures' # Указываем имя контекста
+    def get_context_data(self, **kwargs): # Для получения контекста
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['cultures'] = [self.object]  # Оборачиваем объект для контекста в список
+        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
+        return context # Возвращаем обновленный контекст
+
+class CultureGroupEditingView(PageContextMixin, ListView): # Для рендеринга страницы группы культур
+    page_url = 'Culture_group_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Culture_group_editing.html' # Указываем расположение шаблона рендеринга
+    model = CultureGroup # Указываем модель
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    context_object_name = 'groups' # Указываем имя контекста
+
+class CultureGroupUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения группы культур
+    page_url = 'Culture_group_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Culture_group_update.html' # Указываем расположение шаблона рендеринга
+    model = CultureGroup # Указываем модель
+    form_class = CultureGroupEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    def get_context_data(self, **kwargs): # Для получения контекста
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['groups'] = [self.object] # Оборачиваем объект для контекста в список
+        return context  # Возвращаем обновленный контекст
 
 class GrainTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы зерновых
     page_url = 'Grain' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
@@ -263,6 +343,7 @@ class ProgressDeleteView(PageContextMixin, DeleteView): # Для рендери�
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['progresses'] = Progress.objects.all() # Добавляем все записи таблицы Progress в контекст
+        context['deleted'] = self.get_object()  # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class ArticleListView(PageContextMixin, ListView): # Для рендеринга страницы статей
