@@ -1,4 +1,27 @@
 <!--Заполнение различными сортами и гибридами культур возделываемых в НИИ-->
+{% extends "base.html" %}
+
+{% block title %}
+    {{page.title}}
+{% endblock %}
+
+{% block description %}
+	{{page.description}}
+{% endblock %}
+
+{% block ways_header %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block content %}
+
+{% block nav_sub_prod %}  {% include "nav_sub_prod.html" %}
+{% endblock %}
+
 {% block cultures %}
 {% load static %}
 <h2>{{group.name}}</h2>
@@ -20,4 +43,9 @@
 		</section>
 	</article>
 	{% endfor %}
+	<article>
+		<p>{{group.add_info}}</p>
+	</article>
+{% endblock %}
+
 {% endblock %}
