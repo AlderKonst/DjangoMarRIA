@@ -26,7 +26,7 @@
 <div class="pages" id="news_institute">
 	<article>
 		<fieldset class="niicontact">
-			<legend>Вы уверены, что хотите удалить "{{progres.name}}"?</legend>
+			<legend>Вы уверены, что хотите удалить "{{deleted.name}}"?</legend>
 			<form method="post">
 				{% csrf_token %}
 				<input type="submit" id="submit" value="Удалить"/>
@@ -38,10 +38,6 @@
 	<ul>
 	    {% for pr in progresses %}
 		<li><span class="{{pr.trend}}" title="{{pr.year}}"></span>{{pr.name}}</li>
-		<article>
-			<a href="">Удалить</a
-			><a href="">Изменить</a>
-		</article>
 		{% endfor %}
 	</ul>
 </div>
