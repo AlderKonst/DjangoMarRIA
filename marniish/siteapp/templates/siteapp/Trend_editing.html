@@ -47,7 +47,7 @@
 				<li>{{li.name}}
 					<p>
 						<a href="{% url 'siteapp:Trend_delete' li.pk %}">Удалить</a
-						><a href="{% url 'siteapp:Trend_edit' li.pk %}">Изменить</a>
+						><a href="{% url 'siteapp:Trend_update' li.pk %}">Изменить</a>
 					</p>
 				</li>
 			{% endfor %}

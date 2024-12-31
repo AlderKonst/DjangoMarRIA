@@ -55,7 +55,7 @@
 					{% endif %}
 				<p>{{about.text}}</p>
 				<a href="{% url 'siteapp:About_delete' about.pk %}">Удалить</a
-				><a href="{% url 'siteapp:About_edit' about.pk %}">Изменить</a>
+				><a href="{% url 'siteapp:About_update' about.pk %}">Изменить</a>
 				{% endif %}
 			{% endfor %}
 			</section>
