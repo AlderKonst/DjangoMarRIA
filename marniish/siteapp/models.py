@@ -100,12 +100,14 @@ class Culture(NameUnique100, NameStr): # Виды агрокультур, выр
         verbose_name = 'Вид агрокультуры' # Для отображения в админке
         verbose_name_plural = 'Виды агрокультур' # Для отображения в админке
 
-class Taxon(NameStr): # Низшие таксоны агрокультур, выращиваемых в НИИ
+class Taxon(models.Model): # Низшие таксоны агрокультур, выращиваемых в НИИ
     name = models.CharField(max_length=100) # Таксон с/х культуры (в редких случаях сорта и гибриды у различных культур могут совпадать)
     culture = models.ForeignKey(Culture, on_delete=models.CASCADE) # Культура (связь один-ко-многим)
     text = models.CharField(max_length=1500) # Текст описания
     img = models.ImageField(upload_to='Taxons', blank=True, null=True) # URL картинки, с загрузкой в /media/Taxons
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
+    def __str__(self):
+        return f'{self.culture.name} {self.name}' # Для отображения наименования записи name и культуры
     class Meta:
         verbose_name = 'Таксон' # Для отображения в админке
         verbose_name_plural = 'Таксоны' # Для отображения в админке
@@ -131,7 +133,7 @@ class Price(models.Model): # Цены продукции
     taxon = models.ForeignKey(Taxon, on_delete=models.CASCADE) # Таксон (связь один-ко-многим)
     category = models.ForeignKey(ProdCategory, on_delete=models.CASCADE) # Категория качества (связь один-ко-многим)
     mass = models.FloatField() # Масса, т
-    price = models.IntegerField(blank=True, null=True) # Цена
+    price = models.CharField(max_length=10, blank=True, null=True) # Цена
     def __str__(self):
         return self.taxon.name # Для отображения названия таксона
     class Meta:

@@ -4,10 +4,10 @@ from django.shortcuts import (render, # Импортируем функцию д
 from django.urls import reverse, reverse_lazy # Импортируем функцию для получения URL по имени
 from django.core.mail import EmailMessage # Импортируем функцию для отправки электронной почты
 from django.utils.encoding import force_bytes # Импортируем функцию для кодирования
-from .models import (Page, TrendItem, Reference, Article, Progress, History,
+from .models import (Page, TrendItem, Reference, Article, Progress, History, ProdCategory,
                      HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
 from .forms import (ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm,
-                    TaxonEditingForm, CultureEditingForm, CultureGroupEditingForm) # Импортируем формы
+                    TaxonEditingForm, CultureEditingForm, CultureGroupEditingForm, PriceEditingForm, CategoryEditingForm) # Импортируем формы
 import os # Здесь для удаления файла из /media/
 
 from django.views.generic.base import ContextMixin # Для создания общего класса
@@ -394,6 +394,66 @@ class PriceListView(PageContextMixin, ListView): # Для рендеринга �
     template_name = 'siteapp/Price.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'prices' # Указываем имя переменной контекста таким
     queryset = Price.objects.all() # Добавляем все записи таблицы Price в контекст
+
+class PriceEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования прайс-листа
+    page_url = 'Price_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Price_editing.html' # Указываем расположение шаблона рендеринга
+    context_object_name = 'prices' # Указываем имя переменной контекста таким
+    model = Price # Указываем модель
+    form_class = PriceEditingForm # Указываем форму с передачей в виде контекста как 'form'
+    success_url = reverse_lazy('siteapp:Price_editing') # Перенаправляем на страницу редактирования даже при успешном изменении записи
+
+class PriceUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы редактирования прайс-листа
+    page_url = 'Price_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Price_update.html' # Указываем расположение шаблона рендеринга
+    model = Price # Указываем модель
+    form_class = PriceEditingForm # Указываем форму с передачей в виде контекста как 'form'
+    success_url = reverse_lazy('siteapp:Price_editing') # Перенаправляем на страницу редактирования при успешном изменении записи
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['prices'] = Price.objects.all() # Добавляем все записи таблицы Price в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class PriceDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления записи прайс-листа
+    page_url = 'Price_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Price_delete.html' # Указываем расположение шаблона рендеринга
+    model = Price # Указываем модель
+    success_url = reverse_lazy('siteapp:Price_editing') # Перенаправляем на страницу редактирования при успешном удалении записи
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['prices'] = Price.objects.all() # Добавляем все записи таблицы Price в контекст
+        context['deleted'] = self.get_object()  # Передаем удаляемую запись в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class CategoryEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования категорий продукции
+    page_url = 'Category_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Category_editing.html' # Указываем расположение шаблона рендеринга
+    model = ProdCategory # Указываем модель
+    form_class = CategoryEditingForm # Указываем форму с передачей в виде контекста как 'form'
+    success_url = reverse_lazy('siteapp:Category_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
+    context_object_name = 'prod_categories' # Указываем имя переменной контекста таким
+
+class CategoryUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы редактирования категорий продукции
+    page_url = 'Category_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = ProdCategory # Указываем модель
+    form_class = CategoryEditingForm # Указываем форму с передачей в виде контекста как 'form'
+    template_name = 'siteapp/Category_update.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Category_editing') # Перенаправляем на страницу редактирования при успешном
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['prod_categories'] = ProdCategory.objects.all() # Добавляем все записи таблицы ProdCategory в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class CategoryDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления записи категории продукции
+    page_url = 'Category_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = ProdCategory # Указываем модель
+    template_name = 'siteapp/Category_delete.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Category_editing') # Перенаправляем на страницу редактирования при успешном удалении записи
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['prod_categories'] = ProdCategory.objects.all() # Добавляем все записи таблицы ProdCategory в контекст
+        context['deleted'] = self.get_object() # Добавляем объект удалённой записи в контекст
+        return context # Передаём обновлённый контекст в страницу
 
 class DocsListView(PageContextMixin, ListView): # Для рендеринга страницы документов
     page_url = 'Docs' # Создаём наследованный из ContextMixin контекст из записи таблицы Page

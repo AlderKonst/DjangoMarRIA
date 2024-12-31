@@ -1,6 +1,39 @@
 from django import forms # Для работы с формами
 from django.db.models import Max # Для получения максимального значения в БД
-from .models import TrendItem, Trend, Document, History, Article, Progress, CultureGroup, Culture, Taxon # Для работы с моделью
+from .models import TrendItem, Trend, Document, History, Article, Progress, CultureGroup, Culture, Taxon, ProdCategory, Price # Для работы с моделью
+
+class PriceEditingForm(forms.ModelForm): # Форма для страницы со списком цен
+    taxon = forms.ModelChoiceField( # Поле для выбора таксона
+        label="Таксон *", # Метка для поля
+        queryset=Taxon.objects.all(), # Список таксонов
+        widget=forms.Select()) # Виджет для выбора таксона
+    category = forms.ModelChoiceField( # Поле для выбора категории продукции
+        label="Категория продукции *", # Метка для поля
+        queryset=ProdCategory.objects.all(), # Список категорий продукции
+        widget=forms.Select()) # Виджет для выбора категории продукции
+    mass = forms.FloatField( # Поле для ввода массы продукции
+        label="Масса, т *", # Метка для поля
+        widget=forms.NumberInput( # Виджет для ввода числа
+            attrs={'placeholder': 'Введите массу продукции в тоннах'})) # Подсказка для ввода массы продукции
+    price = forms.CharField( # Поле для ввода цены продукции
+        label="Цена", # Метка для поля
+        initial="договорная", # Значение по умолчанию
+        required=False, # Поле не обязательно для заполнения
+        widget=forms.TextInput( # Виджет для ввода цены продукции
+            attrs={'placeholder': 'Оставить договорную или ввести цену с указанием единицы измерения'})) # Подсказка для ввода цены продукции
+    class Meta: # Класс для описания формы
+        model = Price # Модель, с которой связана форма
+        fields = ['taxon', 'category', 'mass', 'price'] # Поля, которые будут отображаться в форме
+
+class CategoryEditingForm(forms.ModelForm): # Форма для страницы со списком категорий продукции
+    name = forms.CharField( # Поле для ввода названия категории продукции
+        label="Название категории продукции *", # Метка для поля ввода названия категории продукции
+        max_length=25, # Максимальное количество символов названия категории продукции
+        widget=forms.TextInput( # Виджет для ввода текста в html-код
+            attrs={'placeholder': 'Введите название категории продукции (не более 25 символов)'})) # Подсказка для ввода названия категории продукции
+    class Meta: # Класс для описания формы
+        model = ProdCategory # Модель, с которой связана форма
+        fields = ['name'] # Поля, которые будут отображаться в форме
 
 class CultureGroupEditingForm(forms.ModelForm): # Форма для страницы со списком групп культуры
     name = forms.CharField( # Поле для ввода имени группы культуры
