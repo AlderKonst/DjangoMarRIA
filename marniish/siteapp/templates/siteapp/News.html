@@ -35,18 +35,15 @@
 		<h3>{{news.title}}</h3>
 		<time datetime="{{news.date}}">{{news.date}}</time>
 		<section>
-		{% for block in news.news_blocks.all %}
-			{% if block.content_type == 'image' %}
-				<label>
-					<input type="checkbox" hidden>
-					<img src="{{block.img.src.url}}" alt="{{block.img.alt}}">
-					<img src="{{block.img.src.url}}" alt="{{block.img.alt}}">
-					<div class="overlay"></div>
-				</label>
-			{% elif block.content_type == 'text' %}
-				<p>{{block.text|safe}}</p>
-			{% endif %}
-		{% endfor %}
+			{% for img in news.img.all %}
+			<label>
+				<input type="checkbox" hidden>
+				<img src="{{img.src.url}}" alt="{{img.alt}}">
+				<img src="{{img.src.url}}" alt="{{img.alt}}">
+				<div class="overlay"></div>
+			</label>
+			{% endfor %}
+			<p>{{news.text|safe}}</p>
 		</section>
 	</article>
 	{% endfor %}

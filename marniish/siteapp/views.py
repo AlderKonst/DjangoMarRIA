@@ -9,6 +9,7 @@ from .models import (Page, TrendItem, Reference, Article, Progress, History, Pro
 from .forms import (ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm,
                     TaxonEditingForm, CultureEditingForm, CultureGroupEditingForm, PriceEditingForm, CategoryEditingForm) # Импортируем формы
 import os # Здесь для удаления файла из /media/
+from django.db.models import Min, Max # Импортируем функцию для получения мин и макс значений из БД
 
 from django.views.generic.base import ContextMixin # Для создания общего класса
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView  # Базовые классы
@@ -35,11 +36,14 @@ class NewsListView(PageContextMixin, ListView): # Для рендеринга с
     def get_queryset(self): # Для получения записей в таблице News
         self.year = self.kwargs['year'] # Получаем значение поля year (благодаря self. ненужно передавать в контексте с помощью def get_context_data)
         self.page_url = self.year # Создаём наследованный из ContextMixin контекст из записи таблицы Page
-        return News.objects.filter(date__year=self.year # Получаем записи этого (year) года в таблице News со
-                                   ).prefetch_related('news_blocks') # связанными блоками NewsBlock, через имя 'news_bloks'
+        return News.objects.filter(date__year=self.year) # Получаем записи этого (year) года в таблице News
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['year'] = self.year # Добавляем year в контекст (столько кода из-за одного year!!!)
+        context['year'] = self.year # Добавляем year в контекст
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
+        context['max_year'] = max_year # Добавляем текущий год в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class ContactTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы контактов (вот тебе и, блин, сокращённый код)

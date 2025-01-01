@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.safestring import mark_safe # Для избегания экранирования в News (нейросеть предложила)
 
 class NameStr(models.Model): # Абстрактный класс, который является родительским для большинства моделей
     def __str__(self):
@@ -152,24 +153,11 @@ class NewsPicture(models.Model): # Адрес картинки
 class News(models.Model): # Новости сайта
     date = models.DateField(unique=True) # Дата события
     title = models.CharField(max_length=150) # Название события
+    img = models.ManyToManyField(NewsPicture, blank=True) # Картинка блока
+    text = models.TextField() # Текст неограниченной длины
     def __str__(self):
         return str(self.date) # Отображаем дату события
     class Meta:
         ordering = ['date'] # Упорядочивание новостей по дате также подсказал нейросеть
         verbose_name = 'Событие' # Для отображения в админке
         verbose_name_plural = 'Новости НИИ' # Для отображения в админке
-
-class NewsBlock(models.Model): # 1 блок события
-    content_type = models.CharField(max_length=10, # Тип контента
-                                    choices=(('text', 'Текст'), # Текст
-                                             ('image', 'Картинка'))) # Картинка
-    text = models.CharField(max_length=3000, blank=True, null=True) # Текст блока
-    news = models.ForeignKey(News, null=True, on_delete=models.CASCADE, related_name='news_blocks')  # Событие (связь один-ко-многим)
-    img = models.ForeignKey(NewsPicture, blank=True, null=True, on_delete=models.CASCADE) # Картинка блока
-    order = models.PositiveIntegerField(default=0) # Порядоковый номер отображения блока
-    def __str__(self):
-        return self.text or str(self.img) # Отображаем или текст, или картинку
-    class Meta:
-        ordering = ['order', 'news'] # Упорядочивание новостей по новости и порядку также подсказал нейросеть
-        verbose_name = 'Блок события' # Для отображения в админке
-        verbose_name_plural = 'Блоки события' # Для отображения в админке

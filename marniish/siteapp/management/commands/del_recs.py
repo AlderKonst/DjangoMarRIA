@@ -4,7 +4,7 @@ from django.conf import settings # Импорт конфигурации про�
 from django.core.management.base import BaseCommand  # Импорт базового класса команды Django
 from siteapp.models import (  # Импортируем все необходимые модели из приложения siteapp
     Trend, Article, Progress, Page, TrendItem, Reference, HistoryData, History,
-    CultureGroup, Culture, Taxon, Document, ProdCategory, Price, NewsPicture, News, NewsBlock
+    CultureGroup, Culture, Taxon, Document, ProdCategory, Price, NewsPicture, News
 )
 
 # Решение этой задачи сильно подсказала нейросеть:
@@ -38,7 +38,6 @@ class Command(BaseCommand):  # Определяем новый класс ком
             'price': Price,  # 'price' -> Price
             'newspicture': NewsPicture,  # 'newspicture' -> NewsPicture
             'news': News,  # 'news' -> News
-            'newsblock': NewsBlock, # 'newsblock' -> NewsBlock
         }
 
         def clear_media_folder(): # Для очистки папки /media/
