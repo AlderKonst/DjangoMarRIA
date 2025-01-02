@@ -23,7 +23,8 @@ from django.conf.urls.static import static # Импортируем функци
 app_name = 'siteapp' # Задаем имя приложения для использования в пространстве имен
 
 urlpatterns = [
-    path('', views.IndexTemplateView.as_view(), name='index'),  # Главная страница
+    path('', views.IndexTemplateView.as_view(), name='index'), # Главная страница
+    path('News_last/', views.NewsLastTemplateView.as_view(), name='News_last'), # Страница последних новостей
     path('News/<int:year>/', views.NewsListView.as_view(), name='News'), # Добавляем пути для новостей за каждый год
     path('News/editing/', views.NewsEditingView.as_view(), name='News_editing'), # Редактирование новостей
     path('News/update/<int:pk>/', views.NewsUpdateView.as_view(), name='News_update'), # Изменение новости

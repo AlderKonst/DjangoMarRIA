@@ -31,6 +31,17 @@ class IndexTemplateView(PageContextMixin, TemplateView): # Для рендери
         context['references'] = Reference.objects.all() # Добавляем все записи таблицы Reference в контекст
         return context # Передаём обновлённый контекст в страницу
 
+class NewsLastTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы последних новостей
+    page_url = 'News_last' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/News_last.html' # Указываем расположение шаблона рендеринга
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['newses'] = News.objects.all()[:3]  # Получаем последние 3 записи в таблице News
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
+        return context # Передаём обновлённый контекст в страницу
+
 class NewsListView(PageContextMixin, ListView): # Для рендеринга страницы новостей
     template_name = 'siteapp/News.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'newses' # Указываем имя контекста
@@ -44,7 +55,6 @@ class NewsListView(PageContextMixin, ListView): # Для рендеринга с
         min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
-        context['max_year'] = max_year # Добавляем текущий год в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class NewsEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования новостей НИИ
@@ -59,7 +69,6 @@ class NewsEditingView(PageContextMixin, CreateView, ListView): # Для ренд
         min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
-        context['max_year'] = max_year  # Добавляем текущий год в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class NewsUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы новостей НИИ
@@ -74,7 +83,6 @@ class NewsUpdateView(PageContextMixin, UpdateView): # Для рендеринг�
         min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
-        context['max_year'] = max_year  # Добавляем текущий год в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class NewsDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостей НИИ
@@ -88,7 +96,6 @@ class NewsDeleteView(PageContextMixin, DeleteView): # Для рендеринг�
         min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
-        context['max_year'] = max_year  # Добавляем текущий год в контекст
         context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
@@ -104,7 +111,6 @@ class NewsPictureEditingView(PageContextMixin, CreateView, ListView): # Для �
         min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
-        context['max_year'] = max_year # Добавляем текущий год в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class NewsPictureUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения новостного изображения
@@ -119,7 +125,6 @@ class NewsPictureUpdateView(PageContextMixin, UpdateView): # Для рендер
         min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
-        context['max_year'] = max_year # Добавляем текущий год в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class NewsPictureDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостного изображения
@@ -133,7 +138,6 @@ class NewsPictureDeleteView(PageContextMixin, DeleteView): # Для рендер
         min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
-        context['max_year'] = max_year # Добавляем текущий год в контекст
         context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
