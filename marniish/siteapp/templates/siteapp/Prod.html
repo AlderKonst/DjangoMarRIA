@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-<h2>Продукция</h2>
+<h2>{{page.title}}</h2>
 	<div class="pages" id="prod">
 		<a id="grain" href="{% url 'siteapp:Grain' %}">
 			<img src="{% static 'img/sprite_prod.jpg' %}" alt="Зерновые">
