@@ -1,12 +1,13 @@
 from django.shortcuts import (render, # Импортируем функцию для рендеринга шаблонов,
                               get_object_or_404, # получения объекта или возврата 404 ошибки
                               HttpResponseRedirect) # и перенаправления
-from django.urls import reverse, reverse_lazy # Импортируем функцию для получения URL по имени
+from django.urls import reverse_lazy # Импортируем функцию для получения URL по имени
 from django.core.mail import EmailMessage # Импортируем функцию для отправки электронной почты
-from django.utils.encoding import force_bytes # Импортируем функцию для кодирования
+
 from .models import (Page, TrendItem, Reference, Article, Progress, History, ProdCategory,
-                     HistoryData, Culture, Taxon, CultureGroup, Document, Price, News)  # Импортируем модели соответствующих таблиц
-from .forms import (ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm,
+                     HistoryData, Culture, Taxon, CultureGroup, Document, Price, News,
+                     NewsPicture)  # Импортируем модели соответствующих таблиц
+from .forms import (ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm, NewsEditingForm, NewsPictureEditingForm,
                     TaxonEditingForm, CultureEditingForm, CultureGroupEditingForm, PriceEditingForm, CategoryEditingForm) # Импортируем формы
 import os # Здесь для удаления файла из /media/
 from django.db.models import Min, Max # Импортируем функцию для получения мин и макс значений из БД
@@ -44,6 +45,96 @@ class NewsListView(PageContextMixin, ListView): # Для рендеринга с
         max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
         context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
         context['max_year'] = max_year # Добавляем текущий год в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class NewsEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования новостей НИИ
+    page_url = 'News_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/News_editing.html' # Указываем расположение шаблона рендеринга
+    model = News # Указываем модель
+    form_class = NewsEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на эту же страницу в случае успеха
+    context_object_name = 'newses' # Указываем имя контекста
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
+        context['max_year'] = max_year  # Добавляем текущий год в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class NewsUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы новостей НИИ
+    page_url = 'News_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/News_update.html' # Указываем расположение шаблона рендеринга
+    model = News # Указываем модель
+    form_class = NewsEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
+        context['max_year'] = max_year  # Добавляем текущий год в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class NewsDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостей НИИ
+    page_url = 'News_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/News_delete.html' # Указываем расположение шаблона рендеринга
+    model = News # Указываем модель
+    success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
+        context['max_year'] = max_year  # Добавляем текущий год в контекст
+        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class NewsPictureEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка изображений новостей НИИ
+    page_url = 'News_picture_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/News_picture_editing.html' # Указываем расположение шаблона рендеринга
+    model = NewsPicture # Указываем модель
+    form_class = NewsPictureEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
+    context_object_name = 'pictures' # Указываем имя контекста
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
+        context['max_year'] = max_year # Добавляем текущий год в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class NewsPictureUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения новостного изображения
+    page_url = 'News_picture_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/News_picture_update.html' # Указываем расположение шаблона рендеринга
+    model = NewsPicture # Указываем модель
+    form_class = NewsPictureEditingForm # Указываем форму
+    success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['pictures'] = NewsPicture.objects.all() # Оборачиваем объект для контекста в список
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
+        context['max_year'] = max_year # Добавляем текущий год в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class NewsPictureDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостного изображения
+    page_url = 'News_picture_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/News_picture_delete.html' # Указываем расположение шаблона рендеринга
+    model = NewsPicture # Указываем модель
+    success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs)  # Получаем базовый контекст
+        context['pictures'] = NewsPicture.objects.all() # Оборачиваем объект для контекста в список
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
+        context['max_year'] = max_year # Добавляем текущий год в контекст
+        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class ContactTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы контактов (вот тебе и, блин, сокращённый код)

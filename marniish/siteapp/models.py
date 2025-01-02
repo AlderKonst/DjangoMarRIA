@@ -144,9 +144,11 @@ class Price(models.Model): # Цены продукции
 class NewsPicture(models.Model): # Адрес картинки
     src = models.ImageField(upload_to='News', unique=True) # URL картинки, с загрузкой в /media/News
     alt = models.CharField(max_length=150, blank=True, null=True) # Описание картинки
+    date = models.DateField(auto_now_add=True) # Дата добавления картинки
     def __str__(self):
-        return self.src.url # Отображаем адрес
+        return f'{self.date}: {self.alt} ' # Отображаем время и название картинки
     class Meta:
+        ordering = ['-date'] # Упорядочивание по дате
         verbose_name = 'Картинка' # Для отображения в админке
         verbose_name_plural = 'Картинки' # Для отображения в админке
 
@@ -158,6 +160,6 @@ class News(models.Model): # Новости сайта
     def __str__(self):
         return str(self.date) # Отображаем дату события
     class Meta:
-        ordering = ['date'] # Упорядочивание новостей по дате также подсказал нейросеть
+        ordering = ['-date'] # Упорядочивание новостей по дате
         verbose_name = 'Событие' # Для отображения в админке
         verbose_name_plural = 'Новости НИИ' # Для отображения в админке

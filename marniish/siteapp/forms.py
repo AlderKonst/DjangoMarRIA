@@ -1,6 +1,42 @@
 from django import forms # Для работы с формами
 from django.db.models import Max # Для получения максимального значения в БД
-from .models import TrendItem, Trend, Document, History, Article, Progress, CultureGroup, Culture, Taxon, ProdCategory, Price # Для работы с моделью
+from .models import TrendItem, Trend, Document, History, Article, Progress, CultureGroup, Culture, Taxon, ProdCategory, \
+    Price, News, NewsPicture  # Для работы с моделью
+import datetime # Для работы с примененными зонами (для NewsEditingForm)
+
+class NewsEditingForm(forms.ModelForm): # Форма для страницы со списком новостей
+    date = forms.DateField( # Поле для выбора даты
+        label="Дата *", # Метка для поля
+        initial=datetime.date.today, # Устанавливаем текущую дату по умолчанию
+        widget=forms.DateInput(attrs={'type': 'date'})) # Виджет для выбора даты
+    title = forms.CharField( # Поле для ввода заголовка
+        label="Заголовок *", # Метка для поля
+        max_length=150, # Максимальная длина заголовка
+        widget=forms.TextInput(attrs={'placehholder': 'Введите текст заголовка'})) # Виджет для ввода заголовка
+    text = forms.CharField( # Поле для ввода текста
+        label="Текст *", # Метка для поля
+        initial= '<p>Абзац №1</p>\n<p>Абзац №2</p>\n<p>Абзац №3</p>\n<p><a href="http://адрес">Текст ссылки</a></p>', # Значение по умолчанию
+        widget=forms.Textarea()) # Виджет для ввода текста
+    img = forms.ModelMultipleChoiceField( # Поле для выбора нескольких изображений
+        label="Изображения", # Метка для поля
+        queryset=NewsPicture.objects.all(), # Список изображений
+        widget=forms.SelectMultiple(attrs={'size': 5})) # Виджет для выбора нескольких изображений
+    class Meta: # Класс для описания формы
+        model = News # Модель, с которой связана форма
+        fields = ['date', 'title', 'text', 'img'] # Поля, которые будут отображаться в форме
+
+class NewsPictureEditingForm(forms.ModelForm): # Форма для страницы со списком изображений
+    src = forms.FileField( # Поле для выбора и загрузки изображения
+        label="Загрузить изображение *", # Метка для поля
+        widget=forms.FileInput( # Виджет для выбора и загрузки изображения
+            attrs={'accept': '.png,.jpeg,.jpg'})) # Такие форматы лишь будут допустимы
+    alt = forms.CharField( # Поле для ввода альтернативного текста
+        label="Альтернативный текст", # Метка для поля
+        required=False, # Поле не обязательно для заполнения
+        widget=forms.TextInput(attrs={'placehholder': 'Введите описание картинки'})) # Виджет для ввода описания картинки
+    class Meta: # Класс для описания формы
+        model = NewsPicture # Модель, с которой связана форма
+        fields = ['src', 'alt'] # Поля, которые будут отображаться в форме
 
 class PriceEditingForm(forms.ModelForm): # Форма для страницы со списком цен
     taxon = forms.ModelChoiceField( # Поле для выбора таксона
