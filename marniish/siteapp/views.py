@@ -31,18 +31,23 @@ class IndexTemplateView(PageContextMixin, TemplateView): # Для рендери
         context['references'] = Reference.objects.all() # Добавляем все записи таблицы Reference в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class NewsLastTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы последних новостей
+class AllYearsContextMixin(ContextMixin): # Миксин для добавления объектов в контекст
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
+        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
+        context['all_years'] = range(min_year, max_year + 1) if min_year and max_year else [] # Добавляем все годы в контекст
+        return context # Передаём обновлённый контекст в страницу
+
+class NewsLastTemplateView(PageContextMixin, AllYearsContextMixin, TemplateView): # Для рендеринга страницы последних новостей
     page_url = 'News_last' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_last.html' # Указываем расположение шаблона рендеринга
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['newses'] = News.objects.all()[:3]  # Получаем последние 3 записи в таблице News
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class NewsListView(PageContextMixin, ListView): # Для рендеринга страницы новостей
+class NewsListView(PageContextMixin, AllYearsContextMixin, ListView): # Для рендеринга страницы новостей
     template_name = 'siteapp/News.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'newses' # Указываем имя контекста
     def get_queryset(self): # Для получения записей в таблице News
@@ -52,26 +57,17 @@ class NewsListView(PageContextMixin, ListView): # Для рендеринга с
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['year'] = self.year # Добавляем year в контекст
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class NewsEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования новостей НИИ
+class NewsEditingView(PageContextMixin, AllYearsContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования новостей НИИ
     page_url = 'News_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_editing.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
     form_class = NewsEditingForm # Указываем форму
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на эту же страницу в случае успеха
     context_object_name = 'newses' # Указываем имя контекста
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
-        return context # Передаём обновлённый контекст в страницу
 
-class NewsUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы новостей НИИ
+class NewsUpdateView(PageContextMixin, AllYearsContextMixin, UpdateView): # Для рендеринга страницы новостей НИИ
     page_url = 'News_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_update.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
@@ -80,9 +76,6 @@ class NewsUpdateView(PageContextMixin, UpdateView): # Для рендеринг�
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class NewsDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостей НИИ
@@ -90,30 +83,21 @@ class NewsDeleteView(PageContextMixin, DeleteView): # Для рендеринг�
     template_name = 'siteapp/News_delete.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
+    context_object_name = 'deleted' # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min']  # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max']  # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
-        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class NewsPictureEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка изображений новостей НИИ
+class NewsPictureEditingView(PageContextMixin, AllYearsContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка изображений новостей НИИ
     page_url = 'News_picture_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_picture_editing.html' # Указываем расположение шаблона рендеринга
     model = NewsPicture # Указываем модель
     form_class = NewsPictureEditingForm # Указываем форму
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
     context_object_name = 'pictures' # Указываем имя контекста
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1)  # Добавляем все годы в контекст
-        return context # Передаём обновлённый контекст в страницу
 
-class NewsPictureUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения новостного изображения
+class NewsPictureUpdateView(PageContextMixin, AllYearsContextMixin, UpdateView): # Для рендеринга страницы изменения новостного изображения
     page_url = 'News_picture_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_picture_update.html' # Указываем расположение шаблона рендеринга
     model = NewsPicture # Указываем модель
@@ -121,24 +105,18 @@ class NewsPictureUpdateView(PageContextMixin, UpdateView): # Для рендер
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['pictures'] = NewsPicture.objects.all() # Оборачиваем объект для контекста в список
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
+        context['pictures'] = NewsPicture.objects.all() # Передаем объект для контекста в список
         return context # Передаём обновлённый контекст в страницу
 
-class NewsPictureDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостного изображения
+class NewsPictureDeleteView(PageContextMixin, AllYearsContextMixin, DeleteView): # Для рендеринга страницы удаления новостного изображения
     page_url = 'News_picture_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_picture_delete.html' # Указываем расположение шаблона рендеринга
     model = NewsPicture # Указываем модель
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
+    context_object_name = 'deleted' # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs)  # Получаем базовый контекст
         context['pictures'] = NewsPicture.objects.all() # Оборачиваем объект для контекста в список
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1) # Добавляем все годы в контекст
-        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class ContactTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы контактов (вот тебе и, блин, сокращённый код)
@@ -197,10 +175,10 @@ class TaxonDeleteView(PageContextMixin, DeleteView): # Для рендеринг
     template_name = 'siteapp/Taxon_delete.html' # Указываем расположение шаблона рендеринга
     model = Taxon # Указываем модель
     success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
+    context_object_name = 'deleted'  # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для получения контекста
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['taxons'] = [self.object] # Оборачиваем объект для контекста в список
-        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
         return context # Возвращаем обновленный контекст
 
 class CultureEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования культур
@@ -219,7 +197,7 @@ class CultureUpdateView(PageContextMixin, UpdateView): # Для рендерин
     success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
     def get_context_data(self, **kwargs): # Для получения контекста
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['cultures'] = [self.object] # Оборачиваем объект для контекста в список
+        context['cultures'] = Culture.objects.all() # Получаем все культуры
         return context  # Возвращаем обновленный контекст
 
 class CultureDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления культуры
@@ -227,11 +205,10 @@ class CultureDeleteView(PageContextMixin, DeleteView): # Для рендерин
     template_name = 'siteapp/Culture_delete.html' # Указываем расположение шаблона рендеринга
     model = Culture # Указываем модель
     success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
-    context_object_name = 'cultures' # Указываем имя контекста
+    context_object_name = 'deleted' # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для получения контекста
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['cultures'] = [self.object]  # Оборачиваем объект для контекста в список
-        context['deleted'] = self.get_object() # Передаем удаляемую запись в контекст
+        context['cultures'] = Culture.objects.all() # Получаем все культуры
         return context # Возвращаем обновленный контекст
 
 class CultureGroupEditingView(PageContextMixin, ListView): # Для рендеринга страницы группы культур
@@ -249,60 +226,51 @@ class CultureGroupUpdateView(PageContextMixin, UpdateView): # Для ренде�
     success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
     def get_context_data(self, **kwargs): # Для получения контекста
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['groups'] = [self.object] # Оборачиваем объект для контекста в список
+        context['groups'] = CultureGroup.objects.all() # Получаем все группы культур
         return context  # Возвращаем обновленный контекст
 
-class GrainTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы зерновых
+class CultureTaxonMixin(ContextMixin): # Миксин для добавления в контекст культуры и таксонов
+    group_name = None # Определяем атрибут для имени группы
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['group'] = CultureGroup.objects.get(name=self.group_name) # Добавляем запись таблицы CultureGroup с нужным именем в контекст
+        context['cultures'] = Culture.objects.filter(group=context['group'])  # Добавляем запись таблицы Culture в контекст с культурами этой группы
+        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures'])  # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
+        return context # Передаём обновлённый контекст в страницу
+
+class GrainTemplateView(PageContextMixin, CultureTaxonMixin, TemplateView): # Для рендеринга страницы зерновых
     page_url = 'Grain' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Grain.html' # Указываем расположение шаблона рендеринга
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['group'] = CultureGroup.objects.get(name='Зерновые культуры') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
-        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
-        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
-        return context # Передаём обновлённый контекст в страницу
+    group_name = 'Зерновые культуры' # Указываем имя группы для передачи в контекст через миксин CultureTaxonMixin
 
-class PotatoTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы клубнеплодов
+class PotatoTemplateView(PageContextMixin, CultureTaxonMixin, TemplateView): # Для рендеринга страницы клубнеплодов
     page_url = 'Potato' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Potato.html' # Указываем расположение шаблона рендеринга
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['group'] = CultureGroup.objects.get(name='Клубнеплоды') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
-        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
-        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
-        return context # Передаём обновлённый контекст в страницу
+    group_name = 'Клубнеплоды' # Указываем имя группы для передачи в контекст через миксин CultureTaxonMixin
 
-class GrassTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы многолетних трав
+class GrassTemplateView(PageContextMixin, CultureTaxonMixin, TemplateView): # Для рендеринга страницы многолетних трав
     page_url = 'Grass' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Grass.html' # Указываем расположение шаблона рендеринга
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['group'] = CultureGroup.objects.get(name='Многолетние травы') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
-        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
-        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
-        return context # Передаём обновлённый контекст в страницу
+    group_name = 'Многолетние травы' # Указываем имя группы для передачи в контекст через миксин CultureTaxonMixin
 
-class JimTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы жимолости
+class JimTemplateView(PageContextMixin, CultureTaxonMixin, TemplateView): # Для рендеринга страницы жимолости
     page_url = 'Jim' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Jim.html' # Указываем расположение шаблона рендеринга
+    group_name = 'Плодово-ягодные культуры' # Указываем имя группы для передачи в контекст через миксин CultureTaxonMixin
+
+class HistoriesDataMixin(ContextMixin): # Миксин для добавления в контекст всех данных истории
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['group'] = CultureGroup.objects.get(name='Плодово-ягодные культуры') # Добавляем запись таблицы CultureGroup с нужным именем в контекст
-        context['cultures'] = Culture.objects.filter(group=context['group']) # Добавляем запись таблицы Culture в контекст с культурами этой группы
-        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures']) # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
+        context['histories'] = History.objects.all()  # Добавляем все записи таблицы History в контекст
+        context['data'] = HistoryData.objects.all()  # Добавляем все записи таблицы HistoryData в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class AboutTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы истории института
+class AboutTemplateView(PageContextMixin, HistoriesDataMixin, TemplateView): # Для рендеринга страницы истории института
     page_url = 'About' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About.html' # Указываем расположение шаблона рендеринга
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['histories'] = History.objects.all() # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
-        return context # Передаём обновлённый контекст в страницу
 
 # Для создания этих 3-х классов существенно помогла нейросеть
-class HistoryEditingView(PageContextMixin, CreateView): # Для рендеринга страницы редактирования истории
+class HistoryEditingView(PageContextMixin, HistoriesDataMixin, CreateView): # Для рендеринга страницы редактирования истории
     page_url = 'About_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About_editing.html' # Указываем расположение шаблона рендеринга
     form_class = HistoryEditingForm # Указываем форму для редактирования абзаца события
@@ -314,13 +282,8 @@ class HistoryEditingView(PageContextMixin, CreateView): # Для рендери�
         ) # Если объект не существует, он будет создан
         form.instance.data = history_data # Связываем событие с созданной или найденной датой
         return super().form_valid(form) # Вызываем родительский метод для завершения обработки формы
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['histories'] = History.objects.all() # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
-        return context # Передаём обновлённый контекст в страницу
 
-class HistoryUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения абзаца события
+class HistoryUpdateView(PageContextMixin, HistoriesDataMixin, UpdateView): # Для рендеринга страницы изменения абзаца события
     page_url = 'About_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About_update.html' # Указываем расположение шаблона рендеринга
     form_class = HistoryEditingForm  # Указываем форму для редактирования абзаца события
@@ -339,13 +302,8 @@ class HistoryUpdateView(PageContextMixin, UpdateView): # Для рендерин
         initial['year'] = history_instance.data.year # Используем год из формы как параметр
         initial['day_month'] = history_instance.data.day_month # Используем день и месяц из формы как параметр
         return initial # Возвращаем инициализированные данные
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['histories'] = History.objects.all() # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
-        return context # Передаём обновлённый контекст в страницу
 
-class HistoryDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления абзаца события
+class HistoryDeleteView(PageContextMixin, HistoriesDataMixin, DeleteView): # Для рендеринга страницы подтверждения удаления абзаца события
     page_url = 'About_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About_delete.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:About_editing') # После успешного сохранения возвращаемся на страницу редактирования
@@ -353,8 +311,6 @@ class HistoryDeleteView(PageContextMixin, DeleteView): # Для рендерин
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['paragraph'] = self.get_object() # Получаем объект удаления для отображения в шаблоне
-        context['histories'] = History.objects.all() # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all() # Добавляем все записи таблицы HistoryData в контекст
         return context # Передаём обновлённый контекст в страницу
     def post(self, request, *args, **kwargs): # POST-метод для обработки формы
         pk = self.kwargs.get('pk') # Получаем первичный ключ из URL
@@ -437,12 +393,12 @@ class ProgressDeleteView(PageContextMixin, DeleteView): # Для рендери�
     model = Progress # Указываем модель
     template_name = 'siteapp/Progress_delete.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Progress_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
+    context_object_name = 'deleted' # Указываем имя контекста удаления
     def get_queryset(self): # Возвращает отсортированный по году список статей
         return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['progresses'] = Progress.objects.all() # Добавляем все записи таблицы Progress в контекст
-        context['deleted'] = self.get_object()  # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class ArticleListView(PageContextMixin, ListView): # Для рендеринга страницы статей
@@ -518,10 +474,10 @@ class PriceDeleteView(PageContextMixin, DeleteView): # Для рендеринг
     template_name = 'siteapp/Price_delete.html' # Указываем расположение шаблона рендеринга
     model = Price # Указываем модель
     success_url = reverse_lazy('siteapp:Price_editing') # Перенаправляем на страницу редактирования при успешном удалении записи
+    context_object_name = 'deleted'  # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['prices'] = Price.objects.all() # Добавляем все записи таблицы Price в контекст
-        context['deleted'] = self.get_object()  # Передаем удаляемую запись в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class CategoryEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования категорий продукции
@@ -548,10 +504,10 @@ class CategoryDeleteView(PageContextMixin, DeleteView): # Для рендери�
     model = ProdCategory # Указываем модель
     template_name = 'siteapp/Category_delete.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Category_editing') # Перенаправляем на страницу редактирования при успешном удалении записи
+    context_object_name = 'deleted' # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['prod_categories'] = ProdCategory.objects.all() # Добавляем все записи таблицы ProdCategory в контекст
-        context['deleted'] = self.get_object() # Добавляем объект удалённой записи в контекст
         return context # Передаём обновлённый контекст в страницу
 
 class DocsListView(PageContextMixin, ListView): # Для рендеринга страницы документов
@@ -568,12 +524,7 @@ class DocsEditingView(PageContextMixin, CreateView, ListView): # Для ренд
     success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'docs' # Указываем имя переменной контекста таким
 
-class DocsUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности
-    page_url = 'Docs_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
-    model = Document # Указываем модель
-    form_class = DocsAddForm # Указываем форму с передачей в виде контекста как 'form'
-    template_name = 'siteapp/Docs_update.html' # Указываем расположение шаблона рендеринга
-    success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
+class DocsMixin(ContextMixin): # Миксин для добавления def get_context_data и def form_valid
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['docs'] = Document.objects.all() # Добавляем все записи таблицы Document в контекст
@@ -584,21 +535,19 @@ class DocsUpdateView(PageContextMixin, UpdateView): # Для рендеринг�
             os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
         return super().form_valid(form) # Вызываем стандартный метод form_valid
 
-class DocsDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы редактирования направлений деятельности
+class DocsUpdateView(PageContextMixin, DocsMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности
+    page_url = 'Docs_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    model = Document # Указываем модель
+    form_class = DocsAddForm # Указываем форму с передачей в виде контекста как 'form'
+    template_name = 'siteapp/Docs_update.html' # Указываем расположение шаблона рендеринга
+    success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
+
+class DocsDeleteView(PageContextMixin, DocsMixin, DeleteView): # Для рендеринга страницы редактирования направлений деятельности
     page_url = 'Docs_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Document # Указываем модель
     template_name = 'siteapp/Docs_delete.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
     context_object_name = 'one_doc' # Указываем имя переменной контекста таким
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['docs'] = Document.objects.all() # Добавляем все записи таблицы Document в контекст
-        return context # Передаём обновлённый контекст в страницу
-    def form_valid(self, form): # Для переопределения работы с правильными данными
-        one_doc = self.get_object() # Получаем текущий объект
-        if one_doc.url and os.path.isfile(one_doc.url.path): # Если есть медиафайл с соответствующим url
-            os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
-        return super().form_valid(form) # Вызываем стандартный метод form_valid
 
 class MapTemplateView(PageContextMixin, TemplateView): # Для рендеринга страницы карты сайта
     page_url = 'Map' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
