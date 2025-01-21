@@ -18,6 +18,8 @@ https://docs.djangoproject.com/en/5.1/topics/http/urls/
 from django.urls import path # Импортируем функцию для определения URL-маршрутов
 from siteapp import views # Импортируем представления из приложения siteapp
 
+app_name = 'siteapp'  # Задаем имя приложения для использования в пространстве имен
+
 urlpatterns = [
     path('', views.IndexTemplateView.as_view(), name='index'), # Главная страница
     path('News_last/', views.NewsLastTemplateView.as_view(), name='News_last'), # Страница последних новостей
