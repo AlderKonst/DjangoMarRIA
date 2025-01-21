@@ -17,10 +17,6 @@ https://docs.djangoproject.com/en/5.1/topics/http/urls/
 
 from django.urls import path # Импортируем функцию для определения URL-маршрутов
 from siteapp import views # Импортируем представления из приложения siteapp
-from django.conf import settings # Импортируем настройки Django
-from django.conf.urls.static import static # Импортируем функцию для работы со статическими файлами
-
-app_name = 'siteapp' # Задаем имя приложения для использования в пространстве имен
 
 urlpatterns = [
     path('', views.IndexTemplateView.as_view(), name='index'), # Главная страница
@@ -76,6 +72,3 @@ urlpatterns = [
     path('Map/', views.MapTemplateView.as_view(), name='Map'), # Карта сайта
     path('<path:url>/', views.PageTemplateView.as_view(), name='page'), # Текущая страница
 ]
-
-if settings.DEBUG: # Чтобы изображения могли отображаться в браузере
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
