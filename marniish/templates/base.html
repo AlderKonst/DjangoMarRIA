@@ -43,7 +43,7 @@
 				><li><a href="{% url 'siteapp:Jim' %}">Жимолость</a></li>
 			</ul>
 		</li
-		><li class="about"><span><img src="{% static 'img/star.png' %}"></span><a href="{% url 'siteapp:About' %}">О нас</a>
+		><li class="about"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:About' %}">О нас</a>
 			<ul>
 				<li><a href="{% url 'siteapp:About' %}">История института</a></li
 				><li><a href="{% url 'siteapp:Trend' %}">Направления деятельности</a></li
@@ -54,7 +54,20 @@
 		><li class="contact"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Contact' %}">Контакты</a></li
 		><li class="price"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Price' %}">Прайс</a></li
 		><li class="docs"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Docs' %}">Документы</a></li
-		><li class="map"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Map' %}">Карта сайта</a></li>
+		><li class="map"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Map' %}">Карта сайта</a></li
+		><li><span></span><a href=""></a>
+			<ul>
+			{% if user.is_authenticated %}
+				<form action="{% url 'usersapp:logout' %}" method="post">
+					{% csrf_token %}
+					<li><button type="submit" class="nav-link">Выход</button></li>
+				</form>
+			{% else %}
+				<li><a href="{% url 'users:login' %}">Вход</a></li
+				><li><a href="{% url 'users:register' %}">Регистрация</a></li>
+			{% endif %}
+			</ul>
+		</li>
 	</ul>
 </nav>
 <div class="mask">

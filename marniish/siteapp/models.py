@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.safestring import mark_safe # Для избегания экранирования в News (нейросеть предложила)
+from usersapp.models import SiteUser # Импортируем модель пользователя из приложения usersapp
 
 class NameStr(models.Model): # Абстрактный класс, который является родительским для большинства моделей
     def __str__(self):
@@ -157,6 +158,7 @@ class News(models.Model): # Новости сайта
     title = models.CharField(max_length=150) # Название события
     img = models.ManyToManyField(NewsPicture, blank=True) # Картинка блока
     text = models.TextField() # Текст неограниченной длины
+    user = models.ForeignKey(SiteUser, on_delete=models.CASCADE, blank=True, null=True) # Автор события
     def __str__(self):
         return str(self.date) # Отображаем дату события
     class Meta:

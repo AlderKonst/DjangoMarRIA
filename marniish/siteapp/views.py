@@ -2,6 +2,7 @@ from django.shortcuts import (render, # Импортируем функцию д
                               get_object_or_404, # получения объекта или возврата 404 ошибки
                               HttpResponseRedirect) # и перенаправления
 from django.urls import reverse_lazy # Импортируем функцию для получения URL по имени
+from django.contrib.auth.mixins import LoginRequiredMixin # Импортируем mixin для авторизации
 from django.core.mail import EmailMessage # Импортируем функцию для отправки электронной почты
 
 from .models import (Page, TrendItem, Reference, Article, Progress, History, ProdCategory,
@@ -59,15 +60,21 @@ class NewsListView(PageContextMixin, AllYearsContextMixin, ListView): # Для �
         context['year'] = self.year # Добавляем year в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class NewsEditingView(PageContextMixin, AllYearsContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования новостей НИИ
+
+class NewsEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редактировать новости НИИ
+                      PageContextMixin, AllYearsContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования новостей НИИ
     page_url = 'News_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_editing.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
     form_class = NewsEditingForm # Указываем форму
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на эту же страницу в случае успеха
     context_object_name = 'newses' # Указываем имя контекста
+    def form_valid(self, form):  # Метод срабатывает после того, как выясняется, что форма правильная
+        form.instance.user = self.request.user # Устанавливаем текущего пользователя
+        return super().form_valid(form) # Возвращаем форму в случае успеха с сохранённым текущим пользователем
 
-class NewsUpdateView(PageContextMixin, AllYearsContextMixin, UpdateView): # Для рендеринга страницы новостей НИИ
+class NewsUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог исправлять новости НИИ
+                     PageContextMixin, AllYearsContextMixin, UpdateView): # Для рендеринга страницы новостей НИИ
     page_url = 'News_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_update.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
@@ -78,7 +85,8 @@ class NewsUpdateView(PageContextMixin, AllYearsContextMixin, UpdateView): # Дл
         context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
         return context # Передаём обновлённый контекст в страницу
 
-class NewsDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостей НИИ
+class NewsDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог удалять новости НИИ
+                     PageContextMixin, DeleteView): # Для рендеринга страницы удаления новостей НИИ
     page_url = 'News_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_delete.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
@@ -89,7 +97,8 @@ class NewsDeleteView(PageContextMixin, DeleteView): # Для рендеринг�
         context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
         return context # Передаём обновлённый контекст в страницу
 
-class NewsPictureEditingView(PageContextMixin, AllYearsContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка изображений новостей НИИ
+class NewsPictureEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редактировать список изображений новостей НИИ
+                             PageContextMixin, AllYearsContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка изображений новостей НИИ
     page_url = 'News_picture_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_picture_editing.html' # Указываем расположение шаблона рендеринга
     model = NewsPicture # Указываем модель
@@ -97,7 +106,8 @@ class NewsPictureEditingView(PageContextMixin, AllYearsContextMixin, CreateView,
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
     context_object_name = 'pictures' # Указываем имя контекста
 
-class NewsPictureUpdateView(PageContextMixin, AllYearsContextMixin, UpdateView): # Для рендеринга страницы изменения новостного изображения
+class NewsPictureUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог сменить изображение новостей НИИ
+                            PageContextMixin, AllYearsContextMixin, UpdateView): # Для рендеринга страницы изменения новостного изображения
     page_url = 'News_picture_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_picture_update.html' # Указываем расположение шаблона рендеринга
     model = NewsPicture # Указываем модель
@@ -108,7 +118,8 @@ class NewsPictureUpdateView(PageContextMixin, AllYearsContextMixin, UpdateView):
         context['pictures'] = NewsPicture.objects.all() # Передаем объект для контекста в список
         return context # Передаём обновлённый контекст в страницу
 
-class NewsPictureDeleteView(PageContextMixin, AllYearsContextMixin, DeleteView): # Для рендеринга страницы удаления новостного изображения
+class NewsPictureDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог удалить изображение новостей НИИ
+                            PageContextMixin, AllYearsContextMixin, DeleteView): # Для рендеринга страницы удаления новостного изображения
     page_url = 'News_picture_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/News_picture_delete.html' # Указываем расположение шаблона рендеринга
     model = NewsPicture # Указываем модель
@@ -151,7 +162,8 @@ class ProdTemplateView(PageContextMixin, TemplateView): # Для рендери�
     page_url = 'Prod' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Prod.html' # Указываем расположение шаблона рендеринга
 
-class TaxonEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования таксонов
+class TaxonEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редактировать таксоны
+                       PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования таксонов
     page_url = 'Taxon_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Taxon_editing.html' # Указываем расположение шаблона рендеринга
     model = Taxon # Указываем модель
@@ -159,7 +171,8 @@ class TaxonEditingView(PageContextMixin, CreateView, ListView): # Для рен�
     success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
     context_object_name = 'taxons' # Указываем имя контекста
 
-class TaxonUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения таксона
+class TaxonUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог изменить таксон
+                      PageContextMixin, UpdateView): # Для рендеринга страницы изменения таксона
     page_url = 'Taxon_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Taxon_update.html' # Указываем расположение шаблона рендеринга
     model = Taxon # Указываем модель
@@ -170,7 +183,8 @@ class TaxonUpdateView(PageContextMixin, UpdateView): # Для рендеринг
         context['taxons'] = [self.object] # Оборачиваем объект для контекста в список
         return context # Возвращаем обновленный контекст
 
-class TaxonDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления таксона
+class TaxonDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог удалять таксон
+                      PageContextMixin, DeleteView): # Для рендеринга страницы удаления таксона
     page_url = 'Taxon_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Taxon_delete.html' # Указываем расположение шаблона рендеринга
     model = Taxon # Указываем модель
@@ -181,7 +195,8 @@ class TaxonDeleteView(PageContextMixin, DeleteView): # Для рендеринг
         context['taxons'] = [self.object] # Оборачиваем объект для контекста в список
         return context # Возвращаем обновленный контекст
 
-class CultureEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования культур
+class CultureEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редактировать культуры
+                         PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования культур
     page_url = 'Culture_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Culture_editing.html' # Указываем расположение шаблона рендеринга
     model = Culture # Указываем модель
@@ -189,7 +204,8 @@ class CultureEditingView(PageContextMixin, CreateView, ListView): # Для ре�
     success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
     context_object_name = 'cultures' # Указываем имя контекста
 
-class CultureUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения культуры
+class CultureUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог изменить культуру
+                        PageContextMixin, UpdateView): # Для рендеринга страницы изменения культуры
     page_url = 'Culture_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Culture_update.html' # Указываем расположение шаблона рендеринга
     model = Culture # Указываем модель
@@ -200,7 +216,8 @@ class CultureUpdateView(PageContextMixin, UpdateView): # Для рендерин
         context['cultures'] = Culture.objects.all() # Получаем все культуры
         return context  # Возвращаем обновленный контекст
 
-class CultureDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы удаления культуры
+class CultureDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог удалить культуру
+                        PageContextMixin, DeleteView): # Для рендеринга страницы удаления культуры
     page_url = 'Culture_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Culture_delete.html' # Указываем расположение шаблона рендеринга
     model = Culture # Указываем модель
@@ -211,14 +228,16 @@ class CultureDeleteView(PageContextMixin, DeleteView): # Для рендерин
         context['cultures'] = Culture.objects.all() # Получаем все культуры
         return context # Возвращаем обновленный контекст
 
-class CultureGroupEditingView(PageContextMixin, ListView): # Для рендеринга страницы группы культур
+class CultureGroupEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редкактировать группы культур
+                              PageContextMixin, ListView): # Для рендеринга страницы группы культур
     page_url = 'Culture_group_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Culture_group_editing.html' # Указываем расположение шаблона рендеринга
     model = CultureGroup # Указываем модель
     success_url = reverse_lazy('siteapp:Taxon_editing') # Перенаправляем на страницу редактирования таксонов
     context_object_name = 'groups' # Указываем имя контекста
 
-class CultureGroupUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения группы культур
+class CultureGroupUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог изменить группу культур
+                             PageContextMixin, UpdateView): # Для рендеринга страницы изменения группы культур
     page_url = 'Culture_group_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Culture_group_update.html' # Указываем расположение шаблона рендеринга
     model = CultureGroup # Указываем модель
@@ -270,7 +289,8 @@ class AboutTemplateView(PageContextMixin, HistoriesDataMixin, TemplateView): # �
     template_name = 'siteapp/About.html' # Указываем расположение шаблона рендеринга
 
 # Для создания этих 3-х классов существенно помогла нейросеть
-class HistoryEditingView(PageContextMixin, HistoriesDataMixin, CreateView): # Для рендеринга страницы редактирования истории
+class HistoryEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                         PageContextMixin, HistoriesDataMixin, CreateView): # Для рендеринга страницы редактирования истории
     page_url = 'About_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About_editing.html' # Указываем расположение шаблона рендеринга
     form_class = HistoryEditingForm # Указываем форму для редактирования абзаца события
@@ -283,7 +303,8 @@ class HistoryEditingView(PageContextMixin, HistoriesDataMixin, CreateView): # Д
         form.instance.data = history_data # Связываем событие с созданной или найденной датой
         return super().form_valid(form) # Вызываем родительский метод для завершения обработки формы
 
-class HistoryUpdateView(PageContextMixin, HistoriesDataMixin, UpdateView): # Для рендеринга страницы изменения абзаца события
+class HistoryUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                        PageContextMixin, HistoriesDataMixin, UpdateView): # Для рендеринга страницы изменения абзаца события
     page_url = 'About_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About_update.html' # Указываем расположение шаблона рендеринга
     form_class = HistoryEditingForm  # Указываем форму для редактирования абзаца события
@@ -303,7 +324,8 @@ class HistoryUpdateView(PageContextMixin, HistoriesDataMixin, UpdateView): # Д�
         initial['day_month'] = history_instance.data.day_month # Используем день и месяц из формы как параметр
         return initial # Возвращаем инициализированные данные
 
-class HistoryDeleteView(PageContextMixin, HistoriesDataMixin, DeleteView): # Для рендеринга страницы подтверждения удаления абзаца события
+class HistoryDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                        PageContextMixin, HistoriesDataMixin, DeleteView): # Для рендеринга страницы подтверждения удаления абзаца события
     page_url = 'About_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/About_delete.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:About_editing') # После успешного сохранения возвращаемся на страницу редактирования
@@ -327,7 +349,8 @@ class TrendListView(PageContextMixin, ListView): # Для рендеринга �
     queryset = TrendItem.objects.all() # Добавляем все записи таблицы TrendItem в контекст
     context_object_name = 'lis' # Указываем имя переменной контекста таким
 
-class TrendEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования направлений деятельности
+class TrendEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                       PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования направлений деятельности
     page_url = 'Trend_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = TrendItem # Указываем модель
     form_class = TrendItemAddForm # Указываем форму с передачей в виде контекста как 'form'
@@ -335,7 +358,8 @@ class TrendEditingView(PageContextMixin, CreateView, ListView): # Для рен�
     success_url = reverse_lazy('siteapp:Trend_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'lis' # Указываем имя переменной контекста таким
 
-class TrendUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности
+class TrendUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                      PageContextMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности
     page_url = 'Trend_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = TrendItem # Указываем модель
     form_class = TrendItemAddForm # Указываем форму с передачей в виде контекста как 'form'
@@ -346,7 +370,8 @@ class TrendUpdateView(PageContextMixin, UpdateView): # Для рендеринг
         context['lis'] = TrendItem.objects.all()  # Добавляем все записи таблицы TrendItem в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class TrendDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы редактирования направлений деятельности
+class TrendDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                      PageContextMixin, DeleteView): # Для рендеринга страницы редактирования направлений деятельности
     page_url = 'Trend_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = TrendItem # Указываем модель
     template_name = 'siteapp/Trend_delete.html' # Указываем расположение шаблона рендеринга
@@ -365,7 +390,8 @@ class ProgressListView(PageContextMixin, ListView): # Для рендеринг�
     def get_queryset(self): # Возвращает отсортированный по году список статей
         return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
 
-class ProgressEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка достижений НИИ
+class ProgressEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                          PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка достижений НИИ
     page_url = 'Progress_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Progress # Указываем модель
     form_class = ProgressEditingForm # Указываем форму с передачей в виде контекста как 'form'
@@ -375,7 +401,8 @@ class ProgressEditingView(PageContextMixin, CreateView, ListView): # Для ре
     def get_queryset(self): # Возвращает отсортированный по году список статей
         return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
 
-class ProgressUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы статей
+class ProgressUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                         PageContextMixin, UpdateView): # Для рендеринга страницы статей
     page_url = 'Progress_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Progress # Указываем модель
     form_class = ProgressEditingForm  # Указываем форму с передачей в виде контекста как 'form'
@@ -388,7 +415,8 @@ class ProgressUpdateView(PageContextMixin, UpdateView): # Для рендери�
         context['progresses'] = Progress.objects.all() # Добавляем все записи таблицы Progress в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class ProgressDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления достижения
+class ProgressDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                         PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления достижения
     page_url = 'Progress_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Progress # Указываем модель
     template_name = 'siteapp/Progress_delete.html' # Указываем расположение шаблона рендеринга
@@ -409,7 +437,8 @@ class ArticleListView(PageContextMixin, ListView): # Для рендеринга
     def get_queryset(self): # Возвращает отсортированный по году список статей
         return Article.objects.all().order_by('-year') # Сортировка по убыванию года
 
-class ArticleEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка статей
+class ArticleEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                         PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка статей
     page_url = 'Article_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Article # Указываем модель
     form_class = ArticleEditingForm # Указываем форму с передачей в виде контекста как 'form'
@@ -419,7 +448,8 @@ class ArticleEditingView(PageContextMixin, CreateView, ListView): # Для ре�
     def get_queryset(self): # Возвращает отсортированный по году список статей
         return Article.objects.all().order_by('-year') # Сортировка по убыванию года
 
-class ArticleUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы изменения стати
+class ArticleUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                        PageContextMixin, UpdateView): # Для рендеринга страницы изменения стати
     page_url = 'Article_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Article # Указываем модель
     form_class = ArticleEditingForm # Указываем форму с передачей в виде контекста как 'form'
@@ -432,7 +462,8 @@ class ArticleUpdateView(PageContextMixin, UpdateView): # Для рендерин
         context['articles'] = Article.objects.all() # Добавляем все записи таблицы Article в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class ArticleDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления статьи
+class ArticleDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                        PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления статьи
     page_url = 'Article_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Article # Указываем модель
     template_name = 'siteapp/Article_delete.html' # Указываем расположение шаблона рендеринга
@@ -450,7 +481,8 @@ class PriceListView(PageContextMixin, ListView): # Для рендеринга �
     context_object_name = 'prices' # Указываем имя переменной контекста таким
     queryset = Price.objects.all() # Добавляем все записи таблицы Price в контекст
 
-class PriceEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования прайс-листа
+class PriceEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                       PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования прайс-листа
     page_url = 'Price_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Price_editing.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'prices' # Указываем имя переменной контекста таким
@@ -458,7 +490,8 @@ class PriceEditingView(PageContextMixin, CreateView, ListView): # Для рен�
     form_class = PriceEditingForm # Указываем форму с передачей в виде контекста как 'form'
     success_url = reverse_lazy('siteapp:Price_editing') # Перенаправляем на страницу редактирования даже при успешном изменении записи
 
-class PriceUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы редактирования прайс-листа
+class PriceUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                      PageContextMixin, UpdateView): # Для рендеринга страницы редактирования прайс-листа
     page_url = 'Price_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Price_update.html' # Указываем расположение шаблона рендеринга
     model = Price # Указываем модель
@@ -469,7 +502,8 @@ class PriceUpdateView(PageContextMixin, UpdateView): # Для рендеринг
         context['prices'] = Price.objects.all() # Добавляем все записи таблицы Price в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class PriceDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления записи прайс-листа
+class PriceDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                      PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления записи прайс-листа
     page_url = 'Price_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Price_delete.html' # Указываем расположение шаблона рендеринга
     model = Price # Указываем модель
@@ -480,7 +514,8 @@ class PriceDeleteView(PageContextMixin, DeleteView): # Для рендеринг
         context['prices'] = Price.objects.all() # Добавляем все записи таблицы Price в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class CategoryEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования категорий продукции
+class CategoryEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                          PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования категорий продукции
     page_url = 'Category_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Category_editing.html' # Указываем расположение шаблона рендеринга
     model = ProdCategory # Указываем модель
@@ -488,7 +523,8 @@ class CategoryEditingView(PageContextMixin, CreateView, ListView): # Для ре
     success_url = reverse_lazy('siteapp:Category_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'prod_categories' # Указываем имя переменной контекста таким
 
-class CategoryUpdateView(PageContextMixin, UpdateView): # Для рендеринга страницы редактирования категорий продукции
+class CategoryUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                         PageContextMixin, UpdateView): # Для рендеринга страницы редактирования категорий продукции
     page_url = 'Category_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = ProdCategory # Указываем модель
     form_class = CategoryEditingForm # Указываем форму с передачей в виде контекста как 'form'
@@ -499,7 +535,8 @@ class CategoryUpdateView(PageContextMixin, UpdateView): # Для рендери�
         context['prod_categories'] = ProdCategory.objects.all() # Добавляем все записи таблицы ProdCategory в контекст
         return context # Передаём обновлённый контекст в страницу
 
-class CategoryDeleteView(PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления записи категории продукции
+class CategoryDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                         PageContextMixin, DeleteView): # Для рендеринга страницы подтверждения удаления записи категории продукции
     page_url = 'Category_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = ProdCategory # Указываем модель
     template_name = 'siteapp/Category_delete.html' # Указываем расположение шаблона рендеринга
@@ -516,7 +553,8 @@ class DocsListView(PageContextMixin, ListView): # Для рендеринга с
     context_object_name = 'docs' # Указываем имя переменной контекста таким
     queryset = Document.objects.all() # Добавляем все записи таблицы Document в контекст
 
-class DocsEditingView(PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования направлений деятельности
+class DocsEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                      PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования направлений деятельности
     page_url = 'Docs_editing' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Document # Указываем модель
     form_class = DocsAddForm # Указываем форму с передачей в виде контекста как 'form'
@@ -535,14 +573,16 @@ class DocsMixin(ContextMixin): # Миксин для добавления def ge
             os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
         return super().form_valid(form) # Вызываем стандартный метод form_valid
 
-class DocsUpdateView(PageContextMixin, DocsMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности
+class DocsUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                     PageContextMixin, DocsMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности
     page_url = 'Docs_update' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Document # Указываем модель
     form_class = DocsAddForm # Указываем форму с передачей в виде контекста как 'form'
     template_name = 'siteapp/Docs_update.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
 
-class DocsDeleteView(PageContextMixin, DocsMixin, DeleteView): # Для рендеринга страницы редактирования направлений деятельности
+class DocsDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
+                     PageContextMixin, DocsMixin, DeleteView): # Для рендеринга страницы редактирования направлений деятельности
     page_url = 'Docs_delete' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     model = Document # Указываем модель
     template_name = 'siteapp/Docs_delete.html' # Указываем расположение шаблона рендеринга
