@@ -1,4 +1,4 @@
-from django.contrib.auth.views import LoginView # Импортируем базовый класс для входа
+from django.contrib.auth.views import LoginView
 from .forms import RegistrationForm # Импортируем форму регистрации
 from django.views.generic import CreateView # Импортируем базовый класс для создания
 from .models import SiteUser # Импортируем модель пользователя SiteUser
@@ -11,4 +11,4 @@ class UserCreateView(CreateView): # Для рендеринга страницы
     model = SiteUser # Указываем модель
     template_name = 'usersapp/register.html' # Указываем шаблон
     form_class = RegistrationForm # Указываем форму регистрации
-    success_url = reverse_lazy('users:login') # Указываем адрес перенаправления при успешной регистрации
+    success_url = reverse_lazy('usersapp:login') # Указываем адрес перенаправления при успешной регистрации
