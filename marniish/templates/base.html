@@ -57,13 +57,11 @@
 		><li class="map"><span><img src="{% static 'img/sprite_nav.png' %}"></span><a href="{% url 'siteapp:Map' %}">Карта сайта</a></li
 		><li><span></span><a href="#"></a>
 			<ul>
-			{% if user.is_authenticated %}
-				<li>
-					<form action="{% url 'usersapp:logout' %}" method="post">
-						{% csrf_token %}
-						<button type="submit">Выход</button>
-					</form>
-				</li>
+			{% if user.is_authenticated %} <!-- Решение с JavaScript рекомендовала нейронка, чтобы под стили одной кнопки кучу времени не тратить -->
+				<li><a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Выход</a></li>
+    			<form id="logout-form" action="{% url 'usersapp:logout' %}" method="post" style="display: none;">
+    			    {% csrf_token %}
+    			</form>
 			{% else %}
 				<li><a href="{% url 'usersapp:login' %}">Вход</a></li
 				><li><a href="{% url 'usersapp:register' %}">Регистрация</a></li>
