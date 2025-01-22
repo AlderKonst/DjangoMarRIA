@@ -2,11 +2,19 @@
 {% load static %}
 
 {% block title %}
-    Регистрация
+    {{page.title}}
 {% endblock %}
 
 {% block description %}
-	Регистрация нового пользователя на сайте института
+	{{page.description}}
+{% endblock %}
+
+{% block ways_header %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways.html" %}
 {% endblock %}
 
 {% block content %}

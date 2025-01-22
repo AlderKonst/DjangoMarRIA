@@ -2,11 +2,19 @@
 {% load static %}
 
 {% block title %}
-    Авторизация
+    {{page.title}}
 {% endblock %}
 
 {% block description %}
-	Вход на сайт института
+	{{page.description}}
+{% endblock %}
+
+{% block ways_header %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways.html" %}
 {% endblock %}
 
 {% block content %}
