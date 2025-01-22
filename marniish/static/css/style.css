@@ -1251,6 +1251,7 @@ span#red {
 	cursor: default;
 }
 .niicontact input[type=text],
+.niicontact input[type=password],
 .niicontact input[type=email],
 .niicontact textarea {
 	font-size: inherit;

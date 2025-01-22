@@ -9,18 +9,17 @@
 	{{page.description}}
 {% endblock %}
 
-{% block ways_header %}
-    {% include "ways.html" %}
-{% endblock %}
-
-{% block ways_nav %}
-    {% include "ways.html" %}
-{% endblock %}
-
 {% block content %}
-	<form method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Регистрировать</button>
-    </form>
+<h2>{{page.title}}</h2>
+<div class="pages niicontact">
+	<article >
+		<fieldset class="simple">
+	        <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Регистрировать">
+            </form>
+        </fieldset>
+    </article>
+</div>
 {% endblock %}
