@@ -280,8 +280,7 @@ class JimTemplateView(PageContextMixin, CultureTaxonMixin, TemplateView): # Дл
 class HistoriesDataMixin(ContextMixin): # Миксин для добавления в контекст всех данных истории
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['histories'] = History.objects.all()  # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all()  # Добавляем все записи таблицы HistoryData в контекст
+        context['data'] = HistoryData.objects.prefetch_related('history_set').all()  # Добавляем все записи таблицы HistoryData в контекст со связанными данными таблицы History
         return context # Передаём обновлённый контекст в страницу
 
 class AboutTemplateView(PageContextMixin, HistoriesDataMixin, TemplateView): # Для рендеринга страницы истории института
