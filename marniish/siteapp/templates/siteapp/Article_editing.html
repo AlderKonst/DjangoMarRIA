@@ -38,13 +38,7 @@
 		{% for ale in articles %}
 		<li>
 			<span class="{{ale.trend}}" title="{{ale.year}}"></span>{{ale.name}}
-			{% if ale.doi %}
-			<p>DOI: {{ale.doi}}</p>
-			{% elif ale.link %}
-			<p>URL: {{ale.link}}</p>
-			{% else %}
-			<p></p>
-			{% endif %}
+			<p>{{ale.get_doi_url}}</p>
 		</li>
 		<article>
 			<a href="{% url 'siteapp:Article_update' ale.pk %}">Изменить</a
