@@ -156,7 +156,7 @@ class NewsPicture(models.Model): # Адрес картинки
     alt = models.CharField(max_length=150, blank=True, null=True) # Описание картинки
     date = models.DateField(auto_now_add=True) # Дата добавления картинки
     def __str__(self):
-        return f'{self.date}: {self.alt} ' # Отображаем время и название картинки
+        return self.alt # Отображаем время и название картинки
     class Meta:
         ordering = ['-date'] # Упорядочивание по дате
         verbose_name = 'Картинка' # Для отображения в админке
@@ -170,6 +170,8 @@ class News(models.Model): # Новости сайта
     user = models.ForeignKey(SiteUser, on_delete=models.CASCADE, blank=True, null=True) # Автор события
     def __str__(self):
         return str(self.date) # Отображаем дату события
+    def get_image_count(self): # Для получения количества изображений в записи (правда, не будет использоваться)
+        return self.img.count() # Возвращаем количество изображений
     class Meta:
         ordering = ['-date'] # Упорядочивание новостей по дате
         verbose_name = 'Событие' # Для отображения в админке
