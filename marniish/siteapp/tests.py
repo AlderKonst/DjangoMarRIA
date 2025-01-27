@@ -1,6 +1,5 @@
 from django.test import TestCase # Импортируем тесты из модуля django.test
 from mixer.backend.django import mixer # Импортируем миксер
-from faker import Faker # Импортируем модуль faker
 from .models import *  # Загружаем моделей
 from usersapp.models import SiteUser # Загружаем ещё и модель с приложения с пользователями
 
