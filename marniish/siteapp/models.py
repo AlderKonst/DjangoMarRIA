@@ -1,13 +1,11 @@
 from django.db import models
-from django.utils.safestring import mark_safe # Для избегания экранирования в News (нейросеть предложила)
 from usersapp.models import SiteUser # Импортируем модель пользователя из приложения usersapp
 
-class NameStr(models.Model): # Абстрактный класс, который является родительским для большинства моделей
+class NameStr(models.Model): # Для классов, где нужно отобразить имя записи через поле name
     def __str__(self):
-        return self.name # Для отображения наименования записи name
+        return self.name # Для отображения имени записи
     class Meta:
         abstract = True # Делаем абстрактный класс
-
 class Trend(NameStr): # Основные направления деятельности института
     name = models.CharField(max_length=10, unique=True) # Название направления (достаточно было и 5)
     class Meta:
@@ -24,13 +22,21 @@ class Article(YearTrends, NameStr): # Статьи
     name = models.CharField(max_length=500, unique=True)  # Библиоинфа из не более 500 символов (обычно их до 300)
     doi = models.CharField(max_length=50, blank=True)  # Значение DOI не выше 50 символов (обычно их до 40)
     link = models.CharField(max_length=100, blank=True)  # Ссылка на статью
+    def get_doi_url(self): # Получение URL или DOI
+        if self.doi: # Если есть в записи DOI
+            return f"DOI: {self.doi}" # Возвращаем DOI
+        elif self.link: # Если есть в записи URL
+            return f"URL: {self.link}" # Возвращаем URL
+        return "" # Если не указан DOI или URL, возвращаем пустую строку
     class Meta:
+        ordering = ['-year']  # Сортировка по умолчанию
         verbose_name = 'Статья' # Для отображения в админке
         verbose_name_plural = 'Статьи' # Для отображения в админке
 
 class Progress(YearTrends, NameStr): # Наиболее значимые достижения по направлениям НИР
     name = models.CharField(max_length=250) # Название достижения
     class Meta:
+        ordering = ['-year']  # Сортировка по умолчанию
         verbose_name = 'Достижение' # Для отображения в админке
         verbose_name_plural = 'Достижения' # Для отображения в админке
 
@@ -74,6 +80,8 @@ class HistoryData(models.Model): # Историческая дата НИИ
     day_month = models.CharField(max_length=15, blank=True, null=True) # Месяц и день
     def __str__(self):
         return f'{self.year} год {self.day_month or ''}' # Для отображения даты в строковом виде
+    def get_histories(self): # Получение исторических событий конкретной даты
+        return self.history_set.all() # Возвращаем все исторические события конкретной даты
     class Meta:
         ordering = ['year', 'day_month'] # Для сортировки
         verbose_name = 'Историческая дата' # Для отображения в админке
@@ -92,12 +100,18 @@ class History(models.Model): # Исторические события НИИ
 
 class CultureGroup(NameUnique100, NameStr): # Группа агрокультур, выращиваемых в НИИ
     add_info = models.CharField(max_length=250, blank=True, null=True) # Допинфа по группе
+    # Использовать правда не буду этот метод, поскольку усложняет код, надо было раньше
+    def get_cultures(self): # Для получения всех культур, принадлежащих данной группе
+        return self.culture_set.all() # Получаем все культуры, принадлежащие данной группе
     class Meta:
         verbose_name = 'Группа агрокультур' # Для отображения в админке
         verbose_name_plural = 'Группы агрокультур' # Для отображения в админке
 
 class Culture(NameUnique100, NameStr): # Виды агрокультур, выращиваемых в НИИ
     group = models.ForeignKey(CultureGroup, on_delete=models.CASCADE) # Группа культуры (связь один-ко-многим)
+    # И этот метод не буду использовать, поскольку усложняет код
+    def get_taxons(self): # Для получения всех таксонов, принадлежащих данной культуре
+        return self.taxon_set.all() # Получаем все таксоны, принадлежащие данной культуре
     class Meta:
         verbose_name = 'Вид агрокультуры' # Для отображения в админке
         verbose_name_plural = 'Виды агрокультур' # Для отображения в админке
@@ -147,7 +161,7 @@ class NewsPicture(models.Model): # Адрес картинки
     alt = models.CharField(max_length=150, blank=True, null=True) # Описание картинки
     date = models.DateField(auto_now_add=True) # Дата добавления картинки
     def __str__(self):
-        return f'{self.date}: {self.alt} ' # Отображаем время и название картинки
+        return self.alt # Отображаем время и название картинки
     class Meta:
         ordering = ['-date'] # Упорядочивание по дате
         verbose_name = 'Картинка' # Для отображения в админке
@@ -161,6 +175,8 @@ class News(models.Model): # Новости сайта
     user = models.ForeignKey(SiteUser, on_delete=models.CASCADE, blank=True, null=True) # Автор события
     def __str__(self):
         return str(self.date) # Отображаем дату события
+    def get_image_count(self): # Для получения количества изображений в записи (правда, не будет использоваться)
+        return self.img.count() # Возвращаем количество изображений
     class Meta:
         ordering = ['-date'] # Упорядочивание новостей по дате
         verbose_name = 'Событие' # Для отображения в админке

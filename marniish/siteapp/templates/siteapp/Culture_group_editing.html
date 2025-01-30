@@ -24,14 +24,14 @@
 {% endblock %}
 
 <h2>{{page.title}}</h2>
-	<div class="pages" id="news_institute">
-		<article>
-			<a href="{% url 'siteapp:Culture_editing' %}">Назад на редактирование списка культур</a>
-			<a href="{% url 'siteapp:Prod' %}">Завершить редактирование</a>
-			{% for group in groups %}
-				<p><b>{{group.name}}</b></p>
-				<a href="{% url 'siteapp:Culture_group_update' group.pk %}">Изменить</a>
-			{% endfor %}
-		</article>
-	</div>
+<div class="pages" id="news_institute">
+	<article>
+		<a href="{% url 'siteapp:Culture_editing' %}">Назад на редактирование списка культур</a>
+		<a href="{% url 'siteapp:Prod' %}">Завершить редактирование</a>
+		{% for group in groups %}
+			<p><b>{{group.name}}</b></p>
+			<a href="{% url 'siteapp:Culture_group_update' group.pk %}">Изменить</a>
+		{% endfor %}
+	</article>
+</div>
 {% endblock %}

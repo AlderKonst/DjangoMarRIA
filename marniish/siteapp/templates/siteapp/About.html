@@ -41,18 +41,16 @@
 			{% endif %}
 		</h3>
 		<section>
-		{% for about in histories %}
-			{% if about.data.year == d.year and about.data.day_month == d.day_month %}
-				{% if about.img %}
-				<label>
-					<input type="checkbox" hidden>
-					<img src="{% static about.img %}" alt="{{about.alt}}">
-					<img src="{% static about.img %}" alt="{{about.alt}}" title="{{about.alt}}">
-					<div class="overlay"></div>
-				</label>
-				{% endif %}
-			<p>{{about.text}}</p>
+		{% for about in d.get_histories %}
+			{% if about.img %}
+			<label>
+				<input type="checkbox" hidden>
+				<img src="{% static about.img %}" alt="{{about.alt}}">
+				<img src="{% static about.img %}" alt="{{about.alt}}" title="{{about.alt}}">
+				<div class="overlay"></div>
+			</label>
 			{% endif %}
+			<p>{{about.text}}</p>
 		{% endfor %}
 		</section>
 	</article>

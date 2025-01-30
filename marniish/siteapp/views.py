@@ -280,8 +280,7 @@ class JimTemplateView(PageContextMixin, CultureTaxonMixin, TemplateView): # Дл
 class HistoriesDataMixin(ContextMixin): # Миксин для добавления в контекст всех данных истории
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['histories'] = History.objects.all()  # Добавляем все записи таблицы History в контекст
-        context['data'] = HistoryData.objects.all()  # Добавляем все записи таблицы HistoryData в контекст
+        context['data'] = HistoryData.objects.prefetch_related('history_set').all()  # Добавляем все записи таблицы HistoryData в контекст со связанными данными таблицы History
         return context # Передаём обновлённый контекст в страницу
 
 class AboutTemplateView(PageContextMixin, HistoriesDataMixin, TemplateView): # Для рендеринга страницы истории института
@@ -387,8 +386,6 @@ class ProgressListView(PageContextMixin, ListView): # Для рендеринг�
     template_name = 'siteapp/Progress.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'progresses' # Указываем имя переменной контекста таким
     queryset = Progress.objects.all() # Добавляем все записи таблицы TrendItem в контекст
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
 
 class ProgressEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                           PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка достижений НИИ
@@ -398,8 +395,6 @@ class ProgressEditingView(LoginRequiredMixin, # Чтобы только поль
     template_name = 'siteapp/Progress_editing.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Progress_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'progresses' # Указываем имя переменной контекста таким
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
 
 class ProgressUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                          PageContextMixin, UpdateView): # Для рендеринга страницы статей
@@ -408,8 +403,6 @@ class ProgressUpdateView(LoginRequiredMixin, # Чтобы только поль�
     form_class = ProgressEditingForm  # Указываем форму с передачей в виде контекста как 'form'
     template_name = 'siteapp/Progress_update.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Progress_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['progresses'] = Progress.objects.all() # Добавляем все записи таблицы Progress в контекст
@@ -422,8 +415,6 @@ class ProgressDeleteView(LoginRequiredMixin, # Чтобы только поль�
     template_name = 'siteapp/Progress_delete.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Progress_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
     context_object_name = 'deleted' # Указываем имя контекста удаления
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Progress.objects.all().order_by('-year') # Сортировка по убыванию года
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['progresses'] = Progress.objects.all() # Добавляем все записи таблицы Progress в контекст
@@ -434,8 +425,6 @@ class ArticleListView(PageContextMixin, ListView): # Для рендеринга
     template_name = 'siteapp/Article.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'articles' # Указываем имя переменной контекста таким
     queryset = Article.objects.all() # Добавляем все записи таблицы Article в контекст
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Article.objects.all().order_by('-year') # Сортировка по убыванию года
 
 class ArticleEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                          PageContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования списка статей
@@ -445,8 +434,6 @@ class ArticleEditingView(LoginRequiredMixin, # Чтобы только поль�
     template_name = 'siteapp/Article_editing.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Article_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'articles' # Указываем имя переменной контекста таким
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Article.objects.all().order_by('-year') # Сортировка по убыванию года
 
 class ArticleUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                         PageContextMixin, UpdateView): # Для рендеринга страницы изменения стати
@@ -455,8 +442,6 @@ class ArticleUpdateView(LoginRequiredMixin, # Чтобы только польз
     form_class = ArticleEditingForm # Указываем форму с передачей в виде контекста как 'form'
     template_name = 'siteapp/Article_update.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Article_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Article.objects.all().order_by('-year') # Сортировка по убыванию года
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['articles'] = Article.objects.all() # Добавляем все записи таблицы Article в контекст
@@ -468,8 +453,6 @@ class ArticleDeleteView(LoginRequiredMixin, # Чтобы только польз
     model = Article # Указываем модель
     template_name = 'siteapp/Article_delete.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Article_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
-    def get_queryset(self): # Возвращает отсортированный по году список статей
-        return Article.objects.all().order_by('-year') # Сортировка по убыванию года
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['articles'] = Article.objects.all() # Добавляем все записи таблицы Article в контекст
