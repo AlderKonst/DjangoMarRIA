@@ -19,8 +19,8 @@ from django.conf.urls.static import static # Импортируем функци
 
 urlpatterns = [  # Определяем список маршрутов (URL-шаблонов)
     path('admin/', admin.site.urls),  # Маршрут для доступа к административной панели Django
+    path('users/', include(('usersapp.urls', 'usersapp'), namespace='usersapp')),  # Маршрут страниц по ААА
     path('', include(('siteapp.urls', 'siteapp'), namespace='siteapp')),  # Включаем маршруты из файла siteapp.urls с пространством имен 'siteapp'
-    path('users/', include(('usersapp.urls', 'users'), namespace='users')) # Маршрут страниц по ААА
 ]
 
 if settings.DEBUG: # Чтобы изображения могли отображаться в браузере

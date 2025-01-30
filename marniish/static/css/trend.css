@@ -107,3 +107,21 @@ span[title]:before {
 		left: -3em;
 	}
 }
+
+.simple ul { /* Чтобы убрать левую рамку в register.html */
+    margin-left: 0em;
+    padding-left: 0em;
+    border-left: 0em solid #090; /*зелёный*/
+	border-right: 0px solid #090; /*зелёный*/
+}
+.simple ul li { /* Чтобы элементы списка требований к паролям не слишком выделялся в register.html */
+    margin-bottom: .25em;
+    padding: 0.25em;
+    box-shadow: inset 0 0 0 1px #0a0; /*зелёный*/
+}
+.simple ul li:before, /* Чтобы убрать лишние :before и :after в register.html */
+.simple ul li:after {
+    display: none !important;
+    content: none !important;
+    border: none !important;
+}

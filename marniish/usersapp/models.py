@@ -1,3 +1,5 @@
-from django.db import models
+from django.db import models # Импорт функционирования моделей
+from django.contrib.auth.models import AbstractUser # Абстрактный, чтобы он не создавался в БД, наследовался для создания модели интерактивного добавления нового ползователя
 
-# Create your models here.
+class SiteUser(AbstractUser): # Нужно в начале проекта всегда его создавать, чтобы была возможность изменения работы с пользователями и не пришлось проблемно пересоздавать БД после того, как сделали своего пользователя
+    email = models.EmailField(unique=True) # Иначе стандартное поле email не уникальное

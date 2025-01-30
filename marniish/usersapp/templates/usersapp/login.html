@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {{page.title}}
+{% endblock %}
+
+{% block description %}
+	{{page.description}}
+{% endblock %}
+
+{% block content %}
+<h2>{{page.title}}</h2>
+<div class="pages" id="news_institute">
+	<article >
+		<fieldset class="niicontact">
+	        <form method="POST">
+                {% csrf_token %}
+                {{form.as_p}}
+                 <input type="submit" value="Войти">
+            </form>
+        </fieldset>
+    </article>
+</div>
+{% endblock %}
