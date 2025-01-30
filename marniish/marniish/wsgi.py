@@ -1,9 +1,8 @@
 """
-WSGI config for marniish project.
+В этом коде мы настраиваем WSGI-конфигурацию для нашего проекта marniish.
+Переменная application экспортируется как модуль-уровневая переменная.
 
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
+Для получения дополнительной информации о этом файле см.:
 https://docs.djangoproject.com/en/5.1/howto/deployment/wsgi/
 """
 
