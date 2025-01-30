@@ -9,11 +9,19 @@
 	{{page.description}}
 {% endblock %}
 
+{% block ways_header %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways.html" %}
+{% endblock %}
+
 {% block content %}
 <article style="color:green;background-color:white">
 	<p>ВАЖНОЕ ОБЪЯВЛЕНИЕ!</p>
 	<p>У Марийского НИИСХ – филиала ФГБНУ ФАНЦ Северо-Востока теперь новый официальный почтовый ящик: <strong><a href="mailto:marniish@yandex.ru" style="color:green;">marniish@yandex.ru</a></strong></p>
-	<p>В связи с техническими неполадками преждний почтовый ящик via@mari-el.ru не работает </p>
+	<p>В связи с техническими неполадками прежний почтовый ящик via@mari-el.ru не работает </p>
 </article>
 <img id="expo" src="{% static 'img/Expo.jpg' %}" alt="Выставочная продукция МарНИИСХ" title="Выставочная продукция МарНИИСХ">
 <section class="areas">

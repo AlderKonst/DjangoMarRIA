@@ -30,6 +30,7 @@ h5 {
 h5 {
 	margin-bottom: .5em;
 }
+/*
 caption:after {
 	display: block;
 	position: absolute;
@@ -41,7 +42,7 @@ caption:after {
 	background: #0a0; /*зелёный*/
 	background: rgba(0,150,0,.7); /*зелёный*/
 	border-radius: .25em;
-}
+}*/
 td,
 th {
 	border-radius: .25em;

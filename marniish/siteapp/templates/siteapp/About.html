@@ -9,6 +9,14 @@
 	{{page.description}}
 {% endblock %}
 
+{% block ways_header %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways.html" %}
+{% endblock %}
+
 {% block content %}
 
 {% block nav_sub_about %}
@@ -23,6 +31,7 @@
 	</article>
 	<article>
 		<h2 id="in">Этапы становления, развития и преемственности института</h2>
+		<a href="{% url 'siteapp:About_editing' %}">Редактировать</a>
 	</article>
 	{% for d in data %}
 	<article>

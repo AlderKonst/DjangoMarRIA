@@ -823,6 +823,10 @@ h1 span span {
 #ras img {
 	left: -85%;
 }
+#fanc img {
+    top: .25em;
+	left: -656%;
+}
 #mcx img {
 	top: .375em;
 	left: -185%;
@@ -1184,57 +1188,57 @@ footer h4 {
 }
 /*Продукция: КОНЕЦ*/
 /*Контакты: НАЧАЛО*/
-#contact {
+.niicontact,  {
 	text-align: center;
 }
-#contact a {
+.niicontact a {
 	color: inherit;
 }
-#contact div {
+.niicontact div {
 	display: inline-block;
 	width: 100%;
 	text-align: left;
 	vertical-align: top;
 }
-#contact article * {
+.niicontact article * {
 	text-indent: 0;
 }
-#contact span {
+.niicontact span {
 	display: inline-block;
 	width: auto;
 	padding: .5em;
 	color: #fff;
 	background: #090; /*зелёный*/
 }
-#contact span:first-child {
+.niicontact span:first-child {
 	border-radius: .5em 0 0 .5em;
 }
-#contact span:last-child {
+.niicontact span:last-child {
 	border-radius: 0 .5em .5em 0;
 }
 span#red {
 	background: red;
 }
-#contact > * * {
+.niicontact > * * {
 	display: block;
 	width: 100%;
 	color: inherit;
 }
-#contact img {
+.niicontact img {
 	width: 100%;
 	height: 100%;
 }
-#contact fieldset {
+.niicontact fieldset {
 	margin-top: 1em;
 	padding: .5em;
 	border: 1px solid #080; /*зелёный*/
 	border-radius: 1em;
 }
-#contact legend,
-#contact form * {
+.niicontact legend,
+.niicontact form * {
 	border-radius: .375em;
 }
-#contact legend {
+.niicontact legend {
 	width: auto;
 	margin-left: 2em;
 	padding: .25em .5em;
@@ -1242,27 +1246,27 @@ span#red {
 	font-variant: small-caps;
 	background: #090; /*зелёный*/
 }
-#contact form * {
+.niicontact form * {
 	padding: .5em;
 	cursor: default;
 }
-#contact input[type=text],
-#contact input[type=email],
-#contact textarea {
+.niicontact input[type=text],
+.niicontact input[type=email],
+.niicontact textarea {
 	font-size: inherit;
 	border: 3px solid #0b0;
 }
-#contact label:hover:after {
+.niicontact label:hover:after {
 	display: none;
 }
-#contact input[type=submit] {
+.niicontact input[type=submit] {
 	margin-top: .5em;
 	font-size: inherit;
 	color: #fff;
 	background: #0a0; /*ярко-зелёный*/
 }
 @media (min-width: 38em){
-	#contact div {
+	.niicontact div {
 		width: 49%;
 	}
 }

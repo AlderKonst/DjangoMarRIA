@@ -8,13 +8,21 @@
 	{{page.description}}
 {% endblock %}
 
+{% block ways_header %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways.html" %}
+{% endblock %}
+
 {% block content %}
 
 {% block nav_sub_about %}
 	{% include "nav_sub_about.html" %}
 {% endblock %}
 
-<h2>Статьи</h2>
+<h2>{{page.title}}</h2>
 <div class="pages">
 	<ul>
 		{% for ale in articles %}
@@ -30,5 +38,8 @@
 		</li>
 		{% endfor %}
 	</ul>
+	<article id="news_institute">
+		<a href="{% url 'siteapp:Article_editing' %}">Редактировать</a>
+	</article>
 </div>
 {% endblock %}

@@ -9,16 +9,16 @@ class Command(BaseCommand):
 
     def all_run(self):  # Создаем функцию запуска всех своих команд
         commands = [
-            'article',  # Статьи
-            'culture',  # Культуры
-            'doc',      # Документы
-            'history',   # История
-            'news',     # Новости
-            'page',     # Страницы
-            'progress',  # Достижения
-            'reference',  # Полезные ссылки
-            'trenditem',  # Направления деятельности
-            'price',  # Прайс-лист
+            'article', # Статьи
+            'culture', # Культуры
+            'doc', # Документы
+            'history', # История
+            'news', # Новости
+            'page', # Страницы
+            'progress', # Достижения
+            'reference', # Полезные ссылки
+            'trenditem', # Направления деятельности
+            'price', # Прайс-лист
         ]
         for command in commands:  # Перебираем все команды
             os.system(f'python manage.py {command}')  # Запускаем каждую команду

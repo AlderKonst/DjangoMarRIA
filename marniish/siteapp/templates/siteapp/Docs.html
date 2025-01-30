@@ -9,8 +9,16 @@
 	{{page.description}}
 {% endblock %}
 
+{% block ways_header %}
+    {% include "ways.html" %}
+{% endblock %}
+
+{% block ways_nav %}
+    {% include "ways.html" %}
+{% endblock %}
+
 {% block content %}
-<h2>Документы</h2>
+<h2>{{page.title}}</h2>
 <table class="pages">
 	<tr>
 		<th>Дата</th>
@@ -25,4 +33,5 @@
 	</tr>
 	{% endfor %}
 </table>
+<div class="pages" id="news_institute"><a href="{% url 'siteapp:Docs_editing' %}">Редактировать</a></div>
 {% endblock %}

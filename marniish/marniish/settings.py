@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'siteapp',
+    'siteapp', # Основное приложение сайта
+    'usersapp' # Приложение по управлению пользователей на сайте с ААА
 ]
 
 MIDDLEWARE = [

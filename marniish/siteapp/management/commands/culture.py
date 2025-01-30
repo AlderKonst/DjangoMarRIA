@@ -12,11 +12,13 @@ class Command(BaseCommand):
         files = {'Grain': 'Зерновые культуры', 'Grass': 'Многолетние травы',
                  'Jim': 'Плодово-ягодные культуры', 'Potato': 'Клубнеплоды'} # Словарь имён html-файлов и группы культур
         for file, group in files.items(): # Итерируем по имени файла сайта и группы агрокультур из списка
-            group, _ = CultureGroup.objects.get_or_create(name=group)  # Создаем объект CultureGroup с его названием
             with open(os.path.join(site_dir, f'{file}.html'), 'r', encoding='utf-8') as f: # Открываем для чтения каждый html-файл
                 content = f.read() # Читаем содержимое файла с кодом
                 soup = BeautifulSoup(content, 'html.parser') # Парсим исходный HTML-код
                 articles = soup.find_all('article')[:-1] # Извлекаем все article-теги, кроме последнего
+                add_info = soup.find_all('article')[-1].p.decode_contents() # Извлекаем единственный абзац последнего article-тега
+                group, _ = CultureGroup.objects.get_or_create(name=group, # Создаем объект CultureGroup с его названием
+                                                              add_info=add_info) # и допинфой
                 for article in articles: # Итерируем по каждому найденному тегу <article>
                     culture = article.find('h3').find('span').get_text() # Извлекаем вид культуры из заголовка
                     culture, _ = Culture.objects.get_or_create(name=culture, # Создаем объект Culture с видом культуры
