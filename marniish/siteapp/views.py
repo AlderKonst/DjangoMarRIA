@@ -41,8 +41,8 @@ class AllYearsContextMixin(ContextMixin): # Миксин для добавлен
         return context # Передаём обновлённый контекст в страницу
 
 class NewsLastTemplateView(PageContextMixin, AllYearsContextMixin, TemplateView): # Для рендеринга страницы последних новостей
-    page_url = 'News_last' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
-    template_name = 'siteapp/News_last.html' # Указываем расположение шаблона рендеринга
+    page_url = 'Newses' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
+    template_name = 'siteapp/Newses.html' # Указываем расположение шаблона рендеринга
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['newses'] = News.objects.all()[:3]  # Получаем последние 3 записи в таблице News
