@@ -37,7 +37,7 @@
 			</form>
 		</fieldset>
 		<a href="{% url 'siteapp:News_picture_editing' %}">Редактировать список изображений</a>
-		<a href="{% url 'siteapp:News_last' %}">Завершить редактирование</a>
+		<a href="{% url 'siteapp:Newses' %}">Завершить редактирование</a>
 	{% for news in newses %}
 	<article>
 		<h3>{{news.title}}</h3>

@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import (render, # Импортируем функцию для рендеринга шаблонов,
                               get_object_or_404, # получения объекта или возврата 404 ошибки
                               HttpResponseRedirect) # и перенаправления
@@ -35,18 +36,15 @@ class IndexTemplateView(PageContextMixin, TemplateView): # Для рендери
 class AllYearsContextMixin(ContextMixin): # Миксин для добавления объектов в контекст
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        min_year = News.objects.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
-        max_year = News.objects.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
-        context['all_years'] = range(min_year, max_year + 1) if min_year and max_year else [] # Добавляем все годы в контекст
+        context['all_years'] = News.objects.get_all_years() # Добавляем все годы в контекст, используя YearNewsManager
         return context # Передаём обновлённый контекст в страницу
 
-class NewsLastTemplateView(PageContextMixin, AllYearsContextMixin, TemplateView): # Для рендеринга страницы последних новостей
+class NewsesTemplateView(PageContextMixin, AllYearsContextMixin, ListView): # Для рендеринга страницы всех новостей
     page_url = 'Newses' # Создаём наследованный из ContextMixin контекст из записи таблицы Page
     template_name = 'siteapp/Newses.html' # Указываем расположение шаблона рендеринга
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['newses'] = News.objects.all()[:3]  # Получаем последние 3 записи в таблице News
-        return context # Передаём обновлённый контекст в страницу
+    model = News # Указываем модель
+    paginate_by = 5 # Количество новостей на странице
+    context_object_name = 'newses' # Передаём объект страницы в контекст
 
 class NewsListView(PageContextMixin, AllYearsContextMixin, ListView): # Для рендеринга страницы новостей
     template_name = 'siteapp/News.html' # Указываем расположение шаблона рендеринга
