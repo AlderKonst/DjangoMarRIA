@@ -1,7 +1,8 @@
 from django.test import Client
 from django.test import TestCase
 from mixer.backend.django import mixer # Импортируем миксер
-from .models import Page, News, CultureGroup, Trend, Progress
+from .models import Page, News, CultureGroup, Trend, Progress, NewsPicture, Taxon, Culture, History, TrendItem, Article, \
+    Price, ProdCategory, Document
 from usersapp.models import SiteUser
 
 urls = [ # Все пути не требующих прав, кроме 'page' (он вспомогательный, лишь для отображения пути в HTML)
@@ -22,56 +23,38 @@ urls = [ # Все пути не требующих прав, кроме 'page' (
     'Docs/',
     'Map/'
 ]
-urls_aaa = [ # Все пути, требующие права
-    '/News/editing/',
-    *[f'/News/update/{year}/' for year in range(2015, 2030)],
-    *[f'/News/delete/{year}/' for year in range(2015, 2030)],
-    '/News/News_picture/editing/',
-    *[f'/News/News_picture/update/{year}/' for year in range(2015, 2030)],
-    *[f'/News/News_picture/delete/{year}/' for year in range(2015, 2030)],
-    '/Taxon/editing/',
-    *[f'/Taxon/update/{i}/' for i in range(1, 25)],
-    *[f'/Taxon/delete/{i}/' for i in range(1, 25)],
-    '/Culture/editing/',
-    *[f'/Culture/update/{i}/' for i in range(1, 10)],
-    *[f'/Culture/delete/{i}/' for i in range(1, 10)],
-    '/Culture_group/editing/',
-    *[f'/Culture_group/update/{i}/' for i in range(1, 5)],
-    '/About/editing',
-    *[f'/About/delete/{i}/' for i in range(1, 10)],
-    *[f'/About/update/{i}/' for i in range(1, 10)],
-    '/Trend/editing/',
-    *[f'/Trend/update/{i}/' for i in range(1, 5)],
-    *[f'/Trend/delete/{i}/' for i in range(1, 5)],
-    '/Progress/editing',
-    *[f'/Progress/update/{i}/' for i in range(1, 15)],
-    *[f'/Progress/delete/{i}/' for i in range(1, 15)],
-    '/Article/editing/',
-    *[f'/Article/update/{i}/' for i in range(1, 20)],
-    *[f'/Article/delete/{i}/' for i in range(1, 20)],
-    '/Price/editing/',
-    *[f'/Price/update/{i}/' for i in range(1, 10)],
-    *[f'/Price/delete/{i}/' for i in range(1, 10)],
-    '/Category/editing/',
-    *[f'/Category/update/{i}/' for i in range(1, 10)],
-    *[f'/Category/delete/{i}/' for i in range(1, 10)],
-    '/Docs/editing/',
-    *[f'/Docs/delete/{i}/' for i in range(1, 20)],
-    *[f'/Docs/update/{i}/' for i in range(1, 20)],
-]
 culture_groups = { # Чтобы создавать записи CultureGroup
     'Grain/': 'Зерновые культуры',
     'Potato/': 'Клубнеплоды',
     'Grass/': 'Многолетние травы',
     'Jim/': 'Плодово-ягодные культуры',
 }
+models_prefix = [ # Список кортежей из названия модели и префикса URL сайта
+    (News, 'News'),
+    (NewsPicture, 'News_picture'),
+    (Taxon, 'Taxon'),
+    (Culture, 'Culture'),
+    (CultureGroup, 'Culture_group'),
+    (History, 'About'),
+    (TrendItem, 'Trend'),
+    (Progress, 'Progress'),
+    (Article, 'Article'),
+    (Price, 'Price'),
+    (ProdCategory, 'Category'),
+    (Document, 'Docs')
+]
 
 class ViewsTest(TestCase): # Определяем класс тестов, наследующий от TestCase
+
     def setUp(self): # Для выполнения перед каждым тестом
         self.client = Client() # Создаём экземпляр клиента для выполнения запросов
+        SiteUser.objects.create_user(username='mari', email='mari@nii.ru', password='mari0nii') # Создаём пользователя тестового
+        Trend.objects.create(name='plant') # Почему только если значение 'plant' работает, а 'zoo', 'bird' и 'land' нет? Безумие!
+
     def test_statuses(self): # Метод для тестирования статуса 200 страниц
         for url, name in culture_groups.items(): # Проходим по всем элементам словаря culture_groups
             CultureGroup.objects.create(name=name) # Создаём объект CultureGroup с названием группы культур
+
         for url in urls: # Проходим по всем URL из списка urls
             url_name = url.replace('/', '') or 'index' # Убираем '/' из URL и используем 'index', если URL пустой
             Page.objects.create(url=url_name, title=url_name) # Создаём объект Page с URL и заголовком
@@ -81,60 +64,39 @@ class ViewsTest(TestCase): # Определяем класс тестов, на�
                 response = self.client.get(f'/{url}') # Выполняем GET-запрос к указанному URL
             self.assertEqual(response.status_code, 200) # Проверяем, что статус ответа равен 200 (ОК)
 
-    def test_aaa(self): # Метод для тестирования страниц с правами
-        SiteUser.objects.create_user(username='mari', email='mari@nii.ru', password='mari0nii0ru')
-        self.client.login(username='mari', password='mari0nii0ru')
+    def aaa(self, is_authenticated=False): # Общий метод для тестирования страниц с правами, без доступа по-умолчанию
+        if is_authenticated: # Если пользователь авторизован
+            self.client.login(username='mari', password='mari0nii') # Выполняем авторизацию
+            status_code = 200 # При этом статус ответа делаем 200
+        else: # Если же нет
+            status_code = 302 # То статус ответа делаем 302 (Отказано в доступе)
 
-        Page.objects.create(url='News_editing', title='News_editing')
-        response = self.client.get('/News/editing/')
-        self.assertEqual(response.status_code, 200)
+        for model, url_prefix in models_prefix: # Итерируемся по списку моделей и префиксов URL
+            base_url = url_prefix # Инициализируем базовый URL текущим префиксом (почти для всех случаев)
+            if model == NewsPicture: # Если текущая модель NewsPicture
+                base_url = 'News/News_picture' # То изменяем базовый URL на 'News/News_picture'
 
-        news_one = News.objects.create(date='2015-01-01', title='News', text='News')
-        Page.objects.create(url='News_update', title='News_update')
-        response = self.client.get(f'/News/update/{news_one.pk}/')
-        self.assertEqual(response.status_code, 200)
+            mixer.blend(Page, url=f'{url_prefix}_editing') # Создаём страницу для редактирования с URL, сформированным из префикса
+            response = self.client.get(f'/{base_url}/editing/') # Выполняем GET-запрос к странице редактирования
+            self.assertEqual(response.status_code, status_code) # Проверяем, что код ответа
 
-        Page.objects.create(url='News_picture_editing', title='News_picture_editing')
-        response = self.client.get('/News/News_picture/editing/')
-        self.assertEqual(response.status_code, 200)
+            obj = mixer.blend(model) # Создаём объект текущей модели
+            mixer.blend(Page, url=f'{url_prefix}_update') # Создаём страницу для обновления (изменения) записи
+            response = self.client.get(f'/{base_url}/update/{obj.pk}/') # Выполняем GET-запрос к странице обновления объекта
+            self.assertEqual(response.status_code, status_code) # Проверяем, что код ответа
 
-        Page.objects.create(url='Taxon_editing', title='Taxon_editing')
-        response = self.client.get('/Taxon/editing/')
-        self.assertEqual(response.status_code, 200)
+            if model != CultureGroup: # Удаляем только если текущая модель не относится к CultureGroup?
+                obj = mixer.blend(model) # Создаём еще один объект текущей модели (для удаления)
+                mixer.blend(Page, url=f'{url_prefix}_delete') # Создаём страницу для удаления объекта
+                response = self.client.get(f'/{base_url}/delete/{obj.pk}/') # Выполняем GET-запрос к странице удаления объекта
+                self.assertEqual(response.status_code, status_code) # Проверяем код
 
-        Page.objects.create(url='Culture_editing', title='Culture_editing')
-        response = self.client.get('/Culture/editing/')
-        self.assertEqual(response.status_code, 200)
+    def test_no_aaa(self): # Проверяем страницы при неавторизованном пользователе
+        self.aaa(is_authenticated=False) # На всякий случай значение с аргументом устанавливаю
 
-        Page.objects.create(url='Culture_group_editing', title='Culture_group_editing')
-        response = self.client.get('/Culture_group/editing/')
-        self.assertEqual(response.status_code, 200)
+    def test_yes_aaa(self): # Проверяем страницы при авторизованном пользователе
+        self.aaa(is_authenticated=True) # Параметр устанавливаем в True
 
-        Page.objects.create(url='About_editing', title='About_editing')
-        response = self.client.get('/About/editing/')
-        self.assertEqual(response.status_code, 200)
-
-        Page.objects.create(url='Trend_editing', title='Trend_editing')
-        response = self.client.get('/Trend/editing/')
-        self.assertEqual(response.status_code, 200)
-
-        Trend.objects.create(name='plant') # Почему только если значение 'plant' работает, а 'zoo', 'bird' и 'land' нет? Безумие!
-        Page.objects.create(url='Progress_editing', title='Progress_editing')
-        response = self.client.get('/Progress/editing/')
-        self.assertEqual(response.status_code, 200)
-
-        Page.objects.create(url='Article_editing', title='Article_editing')
-        response = self.client.get('/Article/editing/')
-        self.assertEqual(response.status_code, 200)
-
-        Page.objects.create(url='Price_editing', title='Price_editing')
-        response = self.client.get('/Price/editing/')
-        self.assertEqual(response.status_code, 200)
-
-        Page.objects.create(url='Category_editing', title='Category_editing')
-        response = self.client.get('/Category/editing/')
-        self.assertEqual(response.status_code, 200)
-
-        Page.objects.create(url='Docs_editing', title='Docs_editing')
-        response = self.client.get('/Docs/editing/')
-        self.assertEqual(response.status_code, 200)
+    def test_post(self): # Проверю на POST-запрос только самый мудрёный, остальные не стоят того, получится слишком много кода проверять поля каждого представления
+        response = self.client.post('/Contact/', {'name': 'Саша', 'email': 'mari@nii.ru', 'subject': '', 'message': 'Сообщение'})
+        self.assertEqual(response.status_code, 302) # Если отправились данные правильно, то код ответа должен быть 302 (редирект)
