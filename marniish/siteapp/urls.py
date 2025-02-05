@@ -72,5 +72,5 @@ urlpatterns = [
     path('Docs/delete/<int:pk>/', views.DocsDeleteView.as_view(), name='Docs_delete'), # Подтверждение удаления документа
     path('Docs/update/<int:pk>/', views.DocsUpdateView.as_view(), name='Docs_update'), # Изменение документа
     path('Map/', views.MapTemplateView.as_view(), name='Map'), # Карта сайта
-    path('<path:url>/', views.PageTemplateView.as_view(), name='page'), # Текущая страница
+    path('<path:url>/', views.TemplateView.as_view(template_name='siteapp/index.html'), name='page'), # Текущая страница
 ]
