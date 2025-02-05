@@ -1,6 +1,7 @@
 <!--Заполнение новостями НИИ-->
 {% extends "base.html" %}
 {% load static %}
+{% load current %} <!-- Подключаем файл с собственными фильтрами -->
 
 {% block title %}
     {{page.title}}
@@ -59,6 +60,7 @@
 		<a href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
 	</span>
 	<a href="{% url 'siteapp:News_editing' %}">Редактировать</a>
+		<p>{{''|current_datetime}}</p> <!-- Чисто для примера-->
 	</div>
 </div>
 {% endblock %}

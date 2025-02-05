@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'siteapp', # Основное приложение сайта
-    'usersapp' # Приложение по управлению пользователей на сайте с ААА
+    'usersapp', # Приложение по управлению пользователей на сайте с ААА
+    "myfilterapp" # Ещё добавляем приложение для добавления собственнонаписанных фильтров
 ]
 
 MIDDLEWARE = [
