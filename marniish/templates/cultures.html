@@ -48,8 +48,10 @@
 			<p>{{group.add_info|safe}}</p>
 		</article>
 	{% endblock %}
+	{% if user.is_authenticated %}
 	<article>
 		<a href="{% url 'siteapp:Taxon_editing' %}">Редактировать</a>
 	</article>
+	{% endif %}
 </div>
 {% endblock %}

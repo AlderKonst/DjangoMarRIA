@@ -31,7 +31,9 @@
 	</article>
 	<article>
 		<h2 id="in">Этапы становления, развития и преемственности института</h2>
+		{% if user.is_authenticated %}
 		<a href="{% url 'siteapp:About_editing' %}">Редактировать</a>
+		{% endif %}
 	</article>
 	{% for d in data %}
 	<article>

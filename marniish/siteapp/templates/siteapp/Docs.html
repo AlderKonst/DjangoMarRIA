@@ -33,5 +33,7 @@
 	</tr>
 	{% endfor %}
 </table>
+{% if user.is_authenticated %}
 <div class="pages" id="news_institute"><a href="{% url 'siteapp:Docs_editing' %}">Редактировать</a></div>
+{% endif %}
 {% endblock %}

@@ -47,7 +47,9 @@
 		</section>
 	</article>
 	{% endfor %}
+	{% if user.is_authenticated %}
 	<a href="{% url 'siteapp:News_editing' %}">Редактировать</a>
+	{% endif %}
 	</div>
 </div>
 {% endblock %}

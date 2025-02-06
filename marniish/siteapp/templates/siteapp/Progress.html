@@ -30,8 +30,10 @@
 		<li><span class="{{pr.trend}}" title="{{pr.year}}"></span>{{pr.name}}</li>
 		{% endfor %}
 	</ul>
+	{% if user.is_authenticated %}
 	<article id="news_institute">
 		<a href="{% url 'siteapp:Progress_editing' %}">Редактировать</a>
 	</article>
+	{% endif %}
 </div>
 {% endblock %}

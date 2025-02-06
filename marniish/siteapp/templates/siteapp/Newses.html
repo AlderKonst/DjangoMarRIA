@@ -59,7 +59,9 @@
         {% endif %}
 		<a href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
 	</span>
+	{% if user.is_authenticated %}
 	<a href="{% url 'siteapp:News_editing' %}">Редактировать</a>
+	{% endif %}
 		<p>{{''|current_datetime}}</p> <!-- Чисто для примера-->
 	</div>
 </div>
