@@ -1,5 +1,6 @@
 from django.db import models
 from usersapp.models import SiteUser # Импортируем модель пользователя из приложения usersapp
+from django.db.models import Min, Max # Импортируем классы получения максимальных и минимальных значений в таблице БД
 
 class NameStr(models.Model): # Для классов, где нужно отобразить имя записи через поле name
     def __str__(self):
@@ -41,7 +42,7 @@ class Progress(YearTrends, NameStr): # Наиболее значимые дос�
         verbose_name_plural = 'Достижения' # Для отображения в админке
 
 class Page(models.Model): # Страница сайта
-    url = models.CharField(max_length=30, unique=True)  # URL страницы (без .html)
+    url = models.CharField(max_length=30, unique=True) # URL страницы (без .html)
     title = models.CharField(max_length=100) # Название страницы
     description = models.CharField(max_length=150) # Метаописание страницы
     parent_url = models.CharField(max_length=30, blank=True, null=True) # URL родительской страницы (без .html)
@@ -167,7 +168,14 @@ class NewsPicture(models.Model): # Адрес картинки
         verbose_name = 'Картинка' # Для отображения в админке
         verbose_name_plural = 'Картинки' # Для отображения в админке
 
+class YearNewsManager(models.Manager):
+    def get_all_years(self):
+        min_year = self.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
+        max_year = self.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
+        return range(min_year, max_year + 1) if min_year and max_year else [] # Возвращаем все годы
+
 class News(models.Model): # Новости сайта
+    objects = YearNewsManager() # Используем созданный менеджер
     date = models.DateField(unique=True) # Дата события
     title = models.CharField(max_length=150) # Название события
     img = models.ManyToManyField(NewsPicture, blank=True) # Картинка блока

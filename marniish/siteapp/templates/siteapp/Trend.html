@@ -40,7 +40,9 @@
 				<li>{{li.name}}</li>
 			{% endfor %}
 			</ol>
+			{% if user.is_authenticated %}
 			<a href="{% url 'siteapp:Trend_editing' %}">Редактировать</a>
+			{% endif %}
 		</section>
 	</article>
 	</div>

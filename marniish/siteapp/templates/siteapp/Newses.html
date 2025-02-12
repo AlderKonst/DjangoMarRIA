@@ -1,6 +1,7 @@
 <!--Заполнение новостями НИИ-->
 {% extends "base.html" %}
 {% load static %}
+{% load current %} <!-- Подключаем файл с собственными фильтрами -->
 
 {% block title %}
     {{page.title}}
@@ -47,7 +48,21 @@
 		</section>
 	</article>
 	{% endfor %}
+	<span>
+		<a href="?page=1">1</a>
+        {% if page_obj.has_previous %}
+            <a href="?page={{page_obj.previous_page_number}}">←</a>
+        {% endif %}
+        <a href="?page={{page_obj.number}}">Страница {{page_obj.number}} из {{page_obj.paginator.num_pages}}</a>
+        {% if page_obj.has_next %}
+            <a href="?page={{page_obj.next_page_number}}">→</a>
+        {% endif %}
+		<a href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
+	</span>
+	{% if user.is_authenticated %}
 	<a href="{% url 'siteapp:News_editing' %}">Редактировать</a>
+	{% endif %}
+		<p>{{''|current_datetime}}</p> <!-- Чисто для примера-->
 	</div>
 </div>
 {% endblock %}

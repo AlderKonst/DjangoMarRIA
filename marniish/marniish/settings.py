@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'siteapp', # Основное приложение сайта
-    'usersapp' # Приложение по управлению пользователей на сайте с ААА
+    'usersapp', # Приложение по управлению пользователей на сайте с ААА
+    'myfilterapp' # Ещё добавляем приложение для добавления собственнонаписанных фильтров
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'siteapp.context_processors.page_info', # Добавляем свой контекстный процессор
             ],
         },
     },

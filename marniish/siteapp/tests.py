@@ -124,4 +124,9 @@ class NewsTestCase(TestCase): # Проверка для модели News
         news = mixer.blend(News, user=user) # Создаём новость с этим пользователем
         self.assertEqual(news.user, user) # Проверяем, что пользователь созданный в mixer является записью класса SiteUser
 
-
+    def test_get_all_years(self): # Проверка работы метода get_all_years менеджера YearNewsManager
+        mixer.blend(News, date='2022-01-01') # Создаём новость с первым годом
+        mixer.blend(News, date='2023-01-01') # вторым
+        mixer.blend(News, date='2024-01-01') # и третьим
+        years = News.objects.get_all_years() # Получаем эти созданные записи, согласно методу созданного менеджера
+        self.assertEqual(list(years), [2022, 2023, 2024]) # Метод get_all_years возвращает этот же диапазон годов?

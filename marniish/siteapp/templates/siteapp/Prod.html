@@ -36,8 +36,10 @@
 			<img src="{% static 'img/sprite_prod.jpg' %}" alt="Жимолость голубая">
 			<strong>Жимолость голубая</strong>
 		</a>
+		{% if user.is_authenticated %}
 		<article id="news_institute">
 			<a href="{% url 'siteapp:Taxon_editing' %}">Редактировать</a>
 		</article>
+		{% endif %}
 	</div>
 {% endblock %}

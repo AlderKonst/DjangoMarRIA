@@ -7,7 +7,7 @@ from usersapp.models import SiteUser
 
 urls = [ # Все пути не требующих прав, кроме 'page' (он вспомогательный, лишь для отображения пути в HTML)
     '',
-    'News_last/',
+    'Newses/',
     *[f'{year}/' for year in range(2015, 2030)],
     'Prod/',
     'Grain/',

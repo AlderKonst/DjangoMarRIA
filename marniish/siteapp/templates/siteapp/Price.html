@@ -44,7 +44,9 @@
 	<td font align="left">Для получения информации обращаться к Максимову Владимиру Алексеевичу по тел.</td>
 	<td><a  href="tel:+79600977287"><font color="#013220">8-960-097-72-87</font></a></td>
 </table>
+{% if user.is_authenticated %}
 <article class="pages" id="news_institute">
 	<a href="{% url 'siteapp:Price_editing' %}">Редактировать</a>
 </article>
+{% endif %}
 {% endblock %}
