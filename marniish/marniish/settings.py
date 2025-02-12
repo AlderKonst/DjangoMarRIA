@@ -54,9 +54,7 @@ MIDDLEWARE = [
 ]
 
 INTERNAL_IPS = [ # Интернет-адреса, которые будут доступны в режиме отладки
-    # ...
     "127.0.0.1",
-    # ...
 ]
 
 ROOT_URLCONF = 'marniish.urls'
