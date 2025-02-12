@@ -19,7 +19,7 @@ class IndexTemplateView(TemplateView): # Для рендеринга главн�
     template_name = 'siteapp/index.html' # Указываем расположение шаблона рендеринга
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['trends'] = TrendItem.objects.all() # Добавляем все записи таблицы TrendItem в контекст
+        context['trends'] = TrendItem.objects.select_related('trend').all() # Добавляем все записи таблицы TrendItem в контекст
         context['references'] = Reference.objects.all() # Добавляем все записи таблицы Reference в контекст
         return context # Передаём обновлённый контекст в страницу
 
@@ -33,14 +33,16 @@ class NewsesTemplateView(AllYearsContextMixin, ListView): # Для рендер�
     template_name = 'siteapp/Newses.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
     paginate_by = 5 # Количество новостей на странице
-    context_object_name = 'newses' # Передаём объект страницы в контекст
+    context_object_name = 'newses'  # Указываем имя контекста
+    def get_queryset(self, **kwargs): # Для передачи данных в контекст
+        return News.objects.prefetch_related('img').all() # Добавляем все записи таблицы News в контекст со связанными картинками
 
 class NewsListView(AllYearsContextMixin, ListView): # Для рендеринга страницы новостей
     template_name = 'siteapp/News.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'newses' # Указываем имя контекста
     def get_queryset(self): # Для получения записей в таблице News
         self.year = self.kwargs['year'] # Получаем значение поля year (благодаря self. ненужно передавать в контексте с помощью def get_context_data)
-        return News.objects.filter(date__year=self.year) # Получаем записи этого (year) года в таблице News
+        return News.objects.prefetch_related('img').filter(date__year=self.year) # Получаем записи этого (year) года в таблице News со связанными картинками
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['year'] = self.year # Добавляем year в контекст
@@ -48,15 +50,18 @@ class NewsListView(AllYearsContextMixin, ListView): # Для рендеринг�
 
 
 class NewsEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редактировать новости НИИ
-                      AllYearsContextMixin, CreateView, ListView): # Для рендеринга страницы редактирования новостей НИИ
+                      AllYearsContextMixin, CreateView): # Для рендеринга страницы редактирования новостей НИИ
     template_name = 'siteapp/News_editing.html' # Указываем расположение шаблона рендеринга
     model = News # Указываем модель
     form_class = NewsEditingForm # Указываем форму
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на эту же страницу в случае успеха
-    context_object_name = 'newses' # Указываем имя контекста
     def form_valid(self, form):  # Метод срабатывает после того, как выясняется, что форма правильная
         form.instance.user = self.request.user # Устанавливаем текущего пользователя
         return super().form_valid(form) # Возвращаем форму в случае успеха с сохранённым текущим пользователем
+    def get_context_data(self, **kwargs): # Для передачи данных в контекст
+        context = super().get_context_data(**kwargs) # Получаем базовый контекст
+        context['newses'] = News.objects.prefetch_related('img').all() # Добавляем все записи таблицы News в контекст со связанными картинками
+        return context # Передаём обновлённый контекст в страницу
 
 class NewsUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог исправлять новости НИИ
                      AllYearsContextMixin, UpdateView): # Для рендеринга страницы новостей НИИ
@@ -66,7 +71,7 @@ class NewsUpdateView(LoginRequiredMixin, # Чтобы только пользо�
     success_url = reverse_lazy('siteapp:News_editing') # Перенаправляем на страницу редактирования новостей НИИ
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
+        context['newses'] = News.objects.prefetch_related('img').all() # Добавляем все записи таблицы News в контекст со связанными картинками
         return context # Передаём обновлённый контекст в страницу
 
 class NewsDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог удалять новости НИИ
@@ -77,7 +82,7 @@ class NewsDeleteView(LoginRequiredMixin, # Чтобы только пользо�
     context_object_name = 'deleted' # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['newses'] = News.objects.all() # Оборачиваем объект для контекста в список
+        context['newses'] = News.objects.prefetch_related('img').all() # Добавляем все записи таблицы News в контекст со связанными картинками
         return context # Передаём обновлённый контекст в страницу
 
 class NewsPictureEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редактировать список изображений новостей НИИ
@@ -224,7 +229,7 @@ class CultureTaxonMixin(ContextMixin): # Миксин для добавлени�
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['group'] = CultureGroup.objects.get(name=self.group_name) # Добавляем запись таблицы CultureGroup с нужным именем в контекст
         context['cultures'] = Culture.objects.filter(group=context['group'])  # Добавляем запись таблицы Culture в контекст с культурами этой группы
-        context['taxons'] = Taxon.objects.filter(culture__in=context['cultures'])  # Добавляем запись таблицы Taxon в контекст с таксонами этих культур
+        context['taxons'] = Taxon.objects.select_related('culture').filter(culture__in=context['cultures'])  # Добавляем запись таблицы Taxon в контекст с таксонами этих культур со связью с культурой
         return context # Передаём обновлённый контекст в страницу
 
 class GrainTemplateView(CultureTaxonMixin, TemplateView): # Для рендеринга страницы зерновых
