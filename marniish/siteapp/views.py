@@ -354,7 +354,7 @@ class TrendDeleteView(LoginRequiredMixin, # Чтобы только пользо
 class ProgressListView(ListView): # Для рендеринга страницы направлений деятельности
     template_name = 'siteapp/Progress.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'progresses' # Указываем имя переменной контекста таким
-    queryset = Progress.objects.all() # Добавляем все записи таблицы TrendItem в контекст
+    queryset = Progress.objects.select_related('trend').all() # Для получения всех записей Progress со связанным полем в TrendItem
 
 class ProgressEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                           CreateView, ListView): # Для рендеринга страницы редактирования списка достижений НИИ
@@ -363,6 +363,8 @@ class ProgressEditingView(LoginRequiredMixin, # Чтобы только поль
     template_name = 'siteapp/Progress_editing.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Progress_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'progresses' # Указываем имя переменной контекста таким
+    def get_queryset(self): # Переопределяем метод
+        return Progress.objects.select_related('trend').all() # Для получения всех записей Progress со связанным полем в TrendItem
 
 class ProgressUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                          UpdateView): # Для рендеринга страницы статей
@@ -372,7 +374,7 @@ class ProgressUpdateView(LoginRequiredMixin, # Чтобы только поль�
     success_url = reverse_lazy('siteapp:Progress_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['progresses'] = Progress.objects.all() # Добавляем все записи таблицы Progress в контекст
+        context['progresses'] = Progress.objects.select_related('trend').all() # Для получения всех записей Progress со связанным полем в TrendItem
         return context # Передаём обновлённый контекст в страницу
 
 class ProgressDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
@@ -383,13 +385,13 @@ class ProgressDeleteView(LoginRequiredMixin, # Чтобы только поль�
     context_object_name = 'deleted' # Указываем имя контекста удаления
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['progresses'] = Progress.objects.all() # Добавляем все записи таблицы Progress в контекст
+        context['progresses'] = Progress.objects.select_related('trend').all() # Для получения всех записей Progress со связанным полем в TrendItem
         return context # Передаём обновлённый контекст в страницу
 
 class ArticleListView(ListView): # Для рендеринга страницы статей
     template_name = 'siteapp/Article.html' # Указываем расположение шаблона рендеринга
     context_object_name = 'articles' # Указываем имя переменной контекста таким
-    queryset = Article.objects.all() # Добавляем все записи таблицы Article в контекст
+    queryset = Article.objects.select_related('trend').all() # Для получения всех записей Article со связанным полем в TrendItem
 
 class ArticleEditingView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                          CreateView, ListView): # Для рендеринга страницы редактирования списка статей
@@ -398,6 +400,7 @@ class ArticleEditingView(LoginRequiredMixin, # Чтобы только поль�
     template_name = 'siteapp/Article_editing.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Article_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'articles' # Указываем имя переменной контекста таким
+    queryset = Article.objects.select_related('trend').all() # Для получения всех записей Article со связанным полем в TrendItem
 
 class ArticleUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                         UpdateView): # Для рендеринга страницы изменения стати
@@ -407,7 +410,7 @@ class ArticleUpdateView(LoginRequiredMixin, # Чтобы только польз
     success_url = reverse_lazy('siteapp:Article_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['articles'] = Article.objects.all() # Добавляем все записи таблицы Article в контекст
+        context['articles'] = Article.objects.select_related('trend').all() # Для получения всех записей Article со связанным полем в TrendItem
         return context # Передаём обновлённый контекст в страницу
 
 class ArticleDeleteView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
@@ -417,7 +420,7 @@ class ArticleDeleteView(LoginRequiredMixin, # Чтобы только польз
     success_url = reverse_lazy('siteapp:Article_editing') # Перенаправляем на страницу редактирования при успешном отправлении сообщения
     def get_context_data(self, **kwargs): # Для передачи данных в контекст
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['articles'] = Article.objects.all() # Добавляем все записи таблицы Article в контекст
+        context['articles'] = Article.objects.select_related('trend').all() # Для получения всех записей Article со связанным полем в TrendItem
         return context # Передаём обновлённый контекст в страницу
 
 class PriceListView(ListView): # Для рендеринга страницы прайс-листа
