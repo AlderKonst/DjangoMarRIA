@@ -53,6 +53,8 @@
 				</label>
 				{% endif %}
 				<p>{{about.text}}</p>
+				<a href="{% url 'siteapp:About_update' about.pk %}">Изменить</a
+				><a href="{% url 'siteapp:About_delete' about.pk %}">Удалить</a>
 			{% endfor %}
 			</section>
 		</article>
