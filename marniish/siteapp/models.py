@@ -169,10 +169,13 @@ class NewsPicture(models.Model): # Адрес картинки
         verbose_name_plural = 'Картинки' # Для отображения в админке
 
 class YearNewsManager(models.Manager):
-    def get_all_years(self):
+    @cached_property # Делаем кэшированное свойство
+    def all_years(self): # Для получения всех годов
         min_year = self.aggregate(Min('date__year'))['date__year__min'] # Получаем минимальный год
         max_year = self.aggregate(Max('date__year'))['date__year__max'] # Получаем максимальный год
         return range(min_year, max_year + 1) if min_year and max_year else [] # Возвращаем все годы
+    def get_all_years(self): # Для получения всех годов c кэшированием
+        return self.all_years # Возвращаем все годы
 
 class News(models.Model): # Новости сайта
     objects = YearNewsManager() # Используем созданный менеджер
