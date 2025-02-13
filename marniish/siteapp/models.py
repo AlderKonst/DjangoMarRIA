@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.functional import cached_property
+
 from usersapp.models import SiteUser # Импортируем модель пользователя из приложения usersapp
 from django.db.models import Min, Max # Импортируем классы получения максимальных и минимальных значений в таблице БД
 
@@ -124,7 +126,7 @@ class Taxon(models.Model): # Низшие таксоны агрокультур,
     img = models.ImageField(upload_to='Taxons', blank=True, null=True) # URL картинки, с загрузкой в /media/Taxons
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
     def __str__(self):
-        return f'{self.culture.name} {self.name}' # Для отображения наименования записи name и культуры
+        return self.name # Для отображения наименования таксона
     class Meta:
         verbose_name = 'Таксон' # Для отображения в админке
         verbose_name_plural = 'Таксоны' # Для отображения в админке
@@ -151,8 +153,6 @@ class Price(models.Model): # Цены продукции
     category = models.ForeignKey(ProdCategory, on_delete=models.CASCADE) # Категория качества (связь один-ко-многим)
     mass = models.FloatField() # Масса, т
     price = models.CharField(max_length=10, blank=True, null=True) # Цена
-    def __str__(self):
-        return self.taxon.name # Для отображения названия таксона
     class Meta:
         verbose_name = 'Прайс' # Для отображения в админке
         verbose_name_plural = 'Прайс-лист' # Для отображения в админке
