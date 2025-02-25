@@ -82,7 +82,7 @@ class HistoryData(models.Model): # Историческая дата НИИ
     year = models.IntegerField() # Год
     day_month = models.CharField(max_length=15, blank=True, null=True) # Месяц и день
     def __str__(self):
-        return f'{self.year} год {self.day_month or ''}' # Для отображения даты в строковом виде
+        return f'{self.year} год {self.day_month or ""}' # Для отображения даты в строковом виде
     def get_histories(self): # Получение исторических событий конкретной даты
         return self.history_set.all() # Возвращаем все исторические события конкретной даты
     class Meta:
