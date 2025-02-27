@@ -22,7 +22,7 @@ class YearTrends(models.Model): # Абстрактный класс: год и �
         abstract = True # Делаем абстрактный класс
 
 class Article(YearTrends, NameStr): # Статьи
-    name = models.CharField(max_length=500, unique=True)  # Библиоинфа из не более 500 символов (обычно их до 300)
+    name = models.TextField(unique=True)  # Библиоинфа (обычно их до 300)
     doi = models.CharField(max_length=50, blank=True)  # Значение DOI не выше 50 символов (обычно их до 40)
     link = models.CharField(max_length=100, blank=True)  # Ссылка на статью
     def get_doi_url(self): # Получение URL или DOI
@@ -37,7 +37,7 @@ class Article(YearTrends, NameStr): # Статьи
         verbose_name_plural = 'Статьи' # Для отображения в админке
 
 class Progress(YearTrends, NameStr): # Наиболее значимые достижения по направлениям НИР
-    name = models.CharField(max_length=250) # Название достижения
+    name = models.TextField() # Название достижения
     class Meta:
         ordering = ['-year']  # Сортировка по умолчанию
         verbose_name = 'Достижение' # Для отображения в админке
@@ -46,7 +46,7 @@ class Progress(YearTrends, NameStr): # Наиболее значимые дос�
 class Page(models.Model): # Страница сайта
     url = models.CharField(max_length=30, unique=True) # URL страницы (без .html)
     title = models.CharField(max_length=100) # Название страницы
-    description = models.CharField(max_length=150) # Метаописание страницы
+    description = models.TextField() # Метаописание страницы
     parent_url = models.CharField(max_length=30, blank=True, null=True) # URL родительской страницы (без .html)
     parent_title = models.CharField(max_length=100, blank=True, null=True) # Название родительской страницы
     pre_parent_url = models.CharField(max_length=30, blank=True, null=True) # URL прародительской страницы (без .html)
@@ -58,7 +58,7 @@ class Page(models.Model): # Страница сайта
         verbose_name_plural = 'Страницы сайта' # Для отображения в админке
 
 class TrendItem(NameStr): # Пункты направления
-    name = models.CharField(max_length=250, unique=True) # Название пункта направления
+    name = models.TextField(unique=True) # Название пункта направления
     trend = models.ForeignKey(Trend, on_delete=models.CASCADE) # К какому основному направлению относится
     class Meta:
         verbose_name = 'Пункт направления' # Для отображения в админке
@@ -70,7 +70,7 @@ class NameUnique100(models.Model): # Абстрактный класс: имя �
         abstract = True # Делаем абстрактный класс
 
 class Reference(NameUnique100, NameStr): # Полезные ссылки
-    id_name = models.CharField(max_length=10, unique=True)  # ID ссылки
+    id_name = models.CharField(max_length=25, unique=True)  # ID ссылки
     url = models.URLField(max_length=100, unique=True) # URL ссылки
     top = models.CharField(max_length=10, blank=True, null=True) # Расстояние до верхнего уровня в CSS
     left = models.CharField(max_length=10, blank=True, null=True) # Расстояние до левого края в CSS
@@ -91,7 +91,7 @@ class HistoryData(models.Model): # Историческая дата НИИ
         verbose_name_plural = 'Исторические даты' # Для отображения в админке
 
 class History(models.Model): # Исторические события НИИ
-    text = models.CharField(max_length=1500) # Текст абзаца
+    text = models.TextField() # Текст абзаца
     data = models.ForeignKey(HistoryData, on_delete=models.CASCADE) # Дата события (один-ко-многим)
     img = models.CharField(max_length=150, blank=True, null=True) # URL картинки
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
@@ -102,7 +102,7 @@ class History(models.Model): # Исторические события НИИ
         verbose_name_plural = 'Исторические события' # Для отображения в админке
 
 class CultureGroup(NameUnique100, NameStr): # Группа агрокультур, выращиваемых в НИИ
-    add_info = models.CharField(max_length=250, blank=True, null=True) # Допинфа по группе
+    add_info = models.TextField(blank=True, null=True) # Допинфа по группе
     # Использовать правда не буду этот метод, поскольку усложняет код, надо было раньше
     def get_cultures(self): # Для получения всех культур, принадлежащих данной группе
         return self.culture_set.all() # Получаем все культуры, принадлежащие данной группе
@@ -122,7 +122,7 @@ class Culture(NameUnique100, NameStr): # Виды агрокультур, выр
 class Taxon(models.Model): # Низшие таксоны агрокультур, выращиваемых в НИИ
     name = models.CharField(max_length=100) # Таксон с/х культуры (в редких случаях сорта и гибриды у различных культур могут совпадать)
     culture = models.ForeignKey(Culture, on_delete=models.CASCADE) # Культура (связь один-ко-многим)
-    text = models.CharField(max_length=1500) # Текст описания
+    text = models.TextField() # Текст описания
     img = models.ImageField(upload_to='Taxons', blank=True, null=True) # URL картинки, с загрузкой в /media/Taxons
     alt = models.CharField(max_length=100, blank=True, null=True) # Описание картинки
     def __str__(self):
@@ -133,7 +133,7 @@ class Taxon(models.Model): # Низшие таксоны агрокультур,
 
 class Document(models.Model): # Документы НИИ
     date = models.DateField() # Дата публикации ксивы (решил многие-ко-многим не делать, тут не особо надо)
-    name = models.CharField(max_length=250)  # Название документа
+    name = models.TextField()  # Название документа
     url = models.FileField(upload_to='Docs', unique=True) # URL документа, с загрузкой в /media/
     def __str__(self):
         return self.date.strftime('%d.%m.%Y') # Для отображения даты
@@ -152,7 +152,7 @@ class Price(models.Model): # Цены продукции
     taxon = models.ForeignKey(Taxon, on_delete=models.CASCADE) # Таксон (связь один-ко-многим)
     category = models.ForeignKey(ProdCategory, on_delete=models.CASCADE) # Категория качества (связь один-ко-многим)
     mass = models.FloatField() # Масса, т
-    price = models.CharField(max_length=10, blank=True, null=True) # Цена
+    price = models.CharField(max_length=25, blank=True, null=True) # Цена
     class Meta:
         verbose_name = 'Прайс' # Для отображения в админке
         verbose_name_plural = 'Прайс-лист' # Для отображения в админке
@@ -180,7 +180,7 @@ class YearNewsManager(models.Manager):
 class News(models.Model): # Новости сайта
     objects = YearNewsManager() # Используем созданный менеджер
     date = models.DateField(unique=True) # Дата события
-    title = models.CharField(max_length=150) # Название события
+    title = models.TextField() # Название события
     img = models.ManyToManyField(NewsPicture, blank=True) # Картинка блока
     text = models.TextField() # Текст неограниченной длины
     user = models.ForeignKey(SiteUser, on_delete=models.CASCADE, blank=True, null=True) # Автор события
