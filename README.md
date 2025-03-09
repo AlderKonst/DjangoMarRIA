@@ -78,3 +78,4 @@ NewsPicture | Картинки для новостей | News | События �
 <tr><td colspan="1" valign="top">'trend': Trend <br>'article': Article <br>'progress': Progress <br>'page': Page <br>'trenditem': TrendItem <br>'reference': Reference <br>'historydata': HistoryData <br>'history': History </td><td colspan="1" valign="top">'culturegroup': CultureGroup <br>'culture': Culture <br>'taxon': Taxon <br>'document': Document <br>'prodcategory': ProdCategory <br>'price': Price <br>'newspicture': NewsPicture <br>'news': News <br>'newsblock': NewsBlock</td></tr>
 </table>
 Доступны тесты для проверки моделей и представлений через команду python manage.py test
+Добавлен доступ к данным всех моделей через API по пути '/api/v0/'
