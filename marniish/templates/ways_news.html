@@ -1,8 +1,8 @@
 <!--Отображение пути страницы в левом углу окна-->
 {% block ways %}
-<li><a href="{% url 'siteapp:Newses' %}">{{page.title}}</a>
+<li>Новости
     <ul>
-        <li><a href="{% url 'siteapp:News' year %}">{{year}}</a></li>
+        <li>{{year}}</li>
     </ul>
 </li>
 {% endblock %}

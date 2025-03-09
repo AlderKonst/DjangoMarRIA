@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/5.1/topics/http/urls/
 """
 from django.contrib import admin  # Импортируем модуль администрирования Django
 from django.urls import path, include  # Импортируем функции для работы с URL-адресами
+from debug_toolbar.toolbar import debug_toolbar_urls # Импортируем urls модуль из debug_toolbar
 from django.conf import settings # Импортируем настройки Django
 from django.conf.urls.static import static # Импортируем функцию для работы со статическими файлами
 
@@ -21,7 +22,7 @@ urlpatterns = [  # Определяем список маршрутов (URL-ш�
     path('admin/', admin.site.urls),  # Маршрут для доступа к административной панели Django
     path('users/', include(('usersapp.urls', 'usersapp'), namespace='usersapp')),  # Маршрут страниц по ААА
     path('', include(('siteapp.urls', 'siteapp'), namespace='siteapp')),  # Включаем маршруты из файла siteapp.urls с пространством имен 'siteapp'
-]
+] + debug_toolbar_urls() # В отличие от старых версий Django, проще и добавляем не в блок "if settings.DEBUG"
 
 if settings.DEBUG: # Чтобы изображения могли отображаться в браузере
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
