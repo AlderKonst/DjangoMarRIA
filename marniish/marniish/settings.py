@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'usersapp', # Приложение по управлению пользователей на сайте с ААА
     'myfilterapp', # Ещё добавляем приложение для добавления собственнонаписанных фильтров
     'debug_toolbar', # Добавляем набор панелей, появляющиеся на странице в режиме отладки, хотя обычно его в начале добавляют
-    'django_cleanup.apps.CleanupConfig' # Всегда ставим последним! Для очистки файлов /media/ при удалении записи
+    'rest_framework', # Для работы с API
+    'django_cleanup.apps.CleanupConfig' # Всегда ставить последним! Для очистки файлов /media/ при удалении записи
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,11 @@ AUTH_USER_MODEL = 'usersapp.SiteUser' # Название приложения у
 LOGIN_REDIRECT_URL = '/' # Куда идти после ввода логина и пароля при входе (редирект)
 LOGOUT_REDIRECT_URL = '/' # Куда идти после выхода (редирект)
 LOGIN_URL = '/users/login/' # Куда идти после ввода логина и пароля при входе, ЕСЛИ НЕТ ПРАВ (редирект)
+
+REST_FRAMEWORK = {
+    # Используйте стандартные разрешения Django `django.contrib.auth`,
+    # или разрешите доступ только для чтения для пользователей без авторизации.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
