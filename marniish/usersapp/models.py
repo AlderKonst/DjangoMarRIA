@@ -1,5 +1,6 @@
 from django.db import models # Импорт функционирования моделей
 from django.contrib.auth.models import AbstractUser # Абстрактный, чтобы он не создавался в БД, наследовался для создания модели интерактивного добавления нового ползователя
+from rest_framework import serializers # Загружаем метод работы с сериализаторами
 
 # Для проекта необходимости не вижу, но пусть будет в учебных целях до публикации на сервере
 class SiteUser(AbstractUser): # Нужно в начале проекта всегда его создавать, чтобы была возможность изменения работы с пользователями и не пришлось проблемно пересоздавать БД после того, как сделали своего пользователя
@@ -21,3 +22,9 @@ def create_profile(sender, instance, **kwargs): # Функция, которая
     if not Profile.objects.filter(user=instance).exists(): # Если профиль не существует
         Profile.objects.create(user=instance) # То создаем профиль
 '''
+
+class SiteUserSerializer(serializers.HyperlinkedModelSerializer): # Создаём сериализатор для модели в файле моделей, поскольку очень мало тут, не запутаюсь, надеюсь
+    class Meta:
+        model = SiteUser # Указываем модель
+        fields = ['id', 'username', 'email', 'first_name', 'last_name',
+                  'is_superuser', 'last_login', 'is_staff', 'is_active', 'date_joined']  # Оставляем только нужные поля (иначе ошибка)
