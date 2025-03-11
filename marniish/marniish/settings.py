@@ -146,9 +146,9 @@ LOGIN_URL = '/users/login/' # Куда идти после ввода логин
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [ # Кто вы? При запросе к API, DRF проверяет аутентификацию, используя классы по-умолчанию
-    'rest_framework.authentication.BasicAuthentication', # Рекомендуется только для тестирования (логин и пароль незашифрованы)
-    'rest_framework.authentication.SessionAuthentication', # С сессиями, для веб-приложений, где фронтенд и бэкенд работают вместе
-    #'rest_framework.authentication.TokenAuthentication', # Вход по токену. Когда фронтенд и бэкенд разделены
+        #'rest_framework.authentication.BasicAuthentication', # Рекомендуется только для тестирования (логин и пароль незашифрованы)
+        'rest_framework.authentication.SessionAuthentication', # С сессиями, для веб-приложений, где фронтенд и бэкенд работают вместе
+        #'rest_framework.authentication.TokenAuthentication', # Вход по токену. Когда фронтенд и бэкенд разделены
     ],
     'DEFAULT_PERMISSION_CLASSES': [ # Что вам разрешено делать? Разрешения по-умолчанию
         # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly' # Доступ к API только для чтения для невошеших, а у вошедших — разное от их уровня прав (сложно)
