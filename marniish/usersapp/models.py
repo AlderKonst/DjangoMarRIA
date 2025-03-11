@@ -7,6 +7,8 @@ class SiteUser(AbstractUser): # Нужно в начале проекта все
     email = models.EmailField(unique=True) # Иначе стандартное поле email не уникальное
 
     def save(self, *args, **kwargs):  # Переопределяем метод сохранения нового пользователя
+        if not self.pk: # Проверяем, что пользователь новый (еще не сохранен в базе)
+            self.is_active = False # Чтобы новые пользователи были неактивными
         super().save(*args, **kwargs)  # Сохраняем пользователя
         if not Profile.objects.filter(user=self).exists():  # Если профиль не существует
             Profile.objects.create(user=self)  # То создаем профиль
