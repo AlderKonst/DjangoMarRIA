@@ -63,5 +63,5 @@ class NewsPictureViewSet(viewsets.ModelViewSet):
     serializer_class = NewsPictureSerializer
 
 class NewsViewSet(viewsets.ModelViewSet):
-    queryset = News.objects.all()
+    queryset = News.objects.prefetch_related('img') # Для оптимизации количества запросов при связи многие-ко-многим (было 47, стало 3)
     serializer_class = NewsSerializer
