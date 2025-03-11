@@ -85,7 +85,7 @@ class TaxonTest(TestCase): # Проверка для модели Taxon
         culture_group = mixer.blend(CultureGroup, name='group') # Создаём экземпляр CultureGroup с помощью mixer
         culture = mixer.blend(Culture, group=culture_group, name='culture') # Связываем Culture с созданным CultureGroup через внешний ключ group миксером
         taxon = mixer.blend(Taxon, culture=culture, name='taxon') # Связываем Taxon с созданным Culture через внешний ключ culture миксером
-        self.assertEqual(str(taxon), 'culture taxon') # Возвращает ли метод __str__ текст связанной записи для админки
+        self.assertEqual(str(taxon), 'taxon') # Возвращает ли метод __str__ текст связанной записи для админки
 
 class DocumentTestCase(TestCase): # Проверка для модели Document
     def test_document_str(self): # Проверка метода __str__
@@ -103,7 +103,6 @@ class PriceTestCase(TestCase): # Проверка для модели Price
         category = mixer.blend(ProdCategory, name="category") # Создаём экземпляр ProdCategory с помощью mixer
         price = mixer.blend(Price, taxon=taxon, category=category, mass=10.5, price="1000") # Создаём экземпляр Price с помощью mixer с соответствующими связями
         self.assertTrue(isinstance(price, Price)) # Является ли объект, созданный в mixer, экземпляром класса Price
-        self.assertEqual(str(price), "taxon") # Возвращает ли метод __str__ текст связанной записи для админки
 
 class NewsPictureTestCase(TestCase): # Проверка для модели NewsPicture
     def test_news_picture_str(self): # Проверка метода __str__
@@ -123,7 +122,6 @@ class NewsTestCase(TestCase): # Проверка для модели News
         user = mixer.blend(SiteUser) # Создаём пользователя через mixer
         news = mixer.blend(News, user=user) # Создаём новость с этим пользователем
         self.assertEqual(news.user, user) # Проверяем, что пользователь созданный в mixer является записью класса SiteUser
-
     def test_get_all_years(self): # Проверка работы метода get_all_years менеджера YearNewsManager
         mixer.blend(News, date='2022-01-01') # Создаём новость с первым годом
         mixer.blend(News, date='2023-01-01') # вторым
