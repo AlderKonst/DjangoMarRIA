@@ -33,8 +33,9 @@
 					<input type="submit" id="submit" value="Добавить">
 				</form>
 			</fieldset>
-			<a href="{% url 'siteapp:Culture_editing' %}">Редактировать список культур</a
-			><a href="{% url 'siteapp:Culture_group_editing' %}">Редактировать список групп культур</a>
+			{% if user.is_authenticated and user.is_superuser %}
+			<a href="{% url 'siteapp:Culture_group_editing' %}">Редактировать список групп культур</a>
+			{% endif %}
 			<a href="{% url 'siteapp:Prod' %}">Завершить редактирование</a>
 			{% for taxon in taxons %}
 				<p>{{taxon.culture.group.name}}: {{taxon.culture.name}} <b>{{taxon.name}}</b></p>

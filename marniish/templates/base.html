@@ -62,6 +62,7 @@
     			<form id="logout-form" action="{% url 'usersapp:logout' %}" method="post" style="display: none;">
     			    {% csrf_token %}
     			</form>
+				<li><a href="{% url 'usersapp:user_token' pk=user.pk %}">Токен API</a></li>
 			{% else %}
 				<li><a href="{% url 'usersapp:login' %}">Вход</a></li
 				><li><a href="{% url 'usersapp:register' %}">Регистрация</a></li>

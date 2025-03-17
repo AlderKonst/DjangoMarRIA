@@ -25,4 +25,7 @@ urlpatterns = [
     path('login/', views.UserLoginView.as_view(), name='login'), # Страница авторизации (входа)
     path('logout/', LogoutView.as_view(), name='logout'), # Выход
     path('register/', views.UserCreateView.as_view(), name='register'), # Страница регистрации нового пользователя
+    path('user_token/<int:pk>', views.UserDetailView.as_view(), name='user_token'), # Страница с профилем пользователя для генерации токена
+    path('update_token/', views.update_token, name='update_token'), # Для создания токена по кнопке без JavaScript
+    #path('update_token_ajax/', views.update_token_ajax), # Для создания токена по кнопке JavaScript-ом (на будущее рассмотрение)
 ]

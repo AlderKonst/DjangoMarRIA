@@ -3,6 +3,13 @@ from django.shortcuts import (render, # Импортируем функцию д
                               HttpResponseRedirect) # и перенаправления
 from django.urls import reverse_lazy # Импортируем функцию для получения URL по имени
 from django.contrib.auth.mixins import LoginRequiredMixin # Импортируем mixin для авторизации
+from .mixins import (# Импортируем миксины требуемые
+    AdminRequiredMixin, # Чтобы доступ к странице был только у админов (суперпользователей)
+    AllYearsContextMixin, # Для добавления всех годов в контекст, используя YearNewsManager (контекст-менеджер в models.py)
+    CultureTaxonMixin, # Для добавления в контекст культуры и таксонов
+    HistoriesDataMixin, # Для добавления в контекст всех данных исторических дат
+    DocsMixin # Миксин для добавления def get_context_data и def form_valid в представлениях с документами
+)
 from django.core.mail import EmailMessage # Импортируем функцию для отправки электронной почты
 
 from .models import (Page, TrendItem, Reference, Article, Progress, History, ProdCategory,
@@ -10,9 +17,6 @@ from .models import (Page, TrendItem, Reference, Article, Progress, History, Pro
                      NewsPicture)  # Импортируем модели соответствующих таблиц
 from .forms import (ContactForm, TrendItemAddForm, DocsAddForm, HistoryEditingForm, ArticleEditingForm, ProgressEditingForm, NewsEditingForm, NewsPictureEditingForm,
                     TaxonEditingForm, CultureEditingForm, CultureGroupEditingForm, PriceEditingForm, CategoryEditingForm) # Импортируем формы
-import os # Здесь для удаления файла из /media/
-
-from django.views.generic.base import ContextMixin # Для создания общего класса
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView  # Базовые классы
 
 class IndexTemplateView(TemplateView): # Для рендеринга главной страницы
@@ -21,12 +25,6 @@ class IndexTemplateView(TemplateView): # Для рендеринга главн�
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['trends'] = TrendItem.objects.select_related('trend').all() # Добавляем все записи таблицы TrendItem в контекст
         context['references'] = Reference.objects.all() # Добавляем все записи таблицы Reference в контекст
-        return context # Передаём обновлённый контекст в страницу
-
-class AllYearsContextMixin(ContextMixin): # Миксин для добавления объектов в контекст
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['all_years'] = News.objects.get_all_years() # Добавляем все годы в контекст, используя YearNewsManager
         return context # Передаём обновлённый контекст в страницу
 
 class NewsesTemplateView(AllYearsContextMixin, ListView): # Для рендеринга страницы всех новостей
@@ -47,7 +45,6 @@ class NewsListView(AllYearsContextMixin, ListView): # Для рендеринг�
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['year'] = self.year # Добавляем year в контекст
         return context # Передаём обновлённый контекст в страницу
-
 
 class NewsEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редактировать новости НИИ
                       AllYearsContextMixin, CreateView): # Для рендеринга страницы редактирования новостей НИИ
@@ -214,6 +211,7 @@ class CultureDeleteView(LoginRequiredMixin, # Чтобы только польз
         return context # Возвращаем обновленный контекст
 
 class CultureGroupEditingView(LoginRequiredMixin, # Чтобы только пользователь мог редкактировать группы культур
+                              AdminRequiredMixin, # Чтобы только админ (суперпользователь) мог редкактировать группы культур
                               ListView): # Для рендеринга страницы группы культур
     template_name = 'siteapp/Culture_group_editing.html' # Указываем расположение шаблона рендеринга
     model = CultureGroup # Указываем модель
@@ -221,6 +219,7 @@ class CultureGroupEditingView(LoginRequiredMixin, # Чтобы только по
     context_object_name = 'groups' # Указываем имя контекста
 
 class CultureGroupUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог изменить группу культур
+                             AdminRequiredMixin, # Чтобы только админ (суперпользователь) мог изменять группы культур
                              UpdateView): # Для рендеринга страницы изменения группы культур
     template_name = 'siteapp/Culture_group_update.html' # Указываем расположение шаблона рендеринга
     model = CultureGroup # Указываем модель
@@ -230,15 +229,6 @@ class CultureGroupUpdateView(LoginRequiredMixin, # Чтобы только по�
         context = super().get_context_data(**kwargs) # Получаем базовый контекст
         context['groups'] = CultureGroup.objects.all() # Получаем все группы культур
         return context  # Возвращаем обновленный контекст
-
-class CultureTaxonMixin(ContextMixin): # Миксин для добавления в контекст культуры и таксонов
-    group_name = None # Определяем атрибут для имени группы
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['group'] = CultureGroup.objects.get(name=self.group_name) # Добавляем запись таблицы CultureGroup с нужным именем в контекст
-        context['cultures'] = Culture.objects.filter(group=context['group'])  # Добавляем запись таблицы Culture в контекст с культурами этой группы
-        context['taxons'] = Taxon.objects.select_related('culture').filter(culture__in=context['cultures'])  # Добавляем запись таблицы Taxon в контекст с таксонами этих культур со связью с культурой
-        return context # Передаём обновлённый контекст в страницу
 
 class GrainTemplateView(CultureTaxonMixin, TemplateView): # Для рендеринга страницы зерновых
     template_name = 'siteapp/Grain.html' # Указываем расположение шаблона рендеринга
@@ -255,12 +245,6 @@ class GrassTemplateView(CultureTaxonMixin, TemplateView): # Для рендер�
 class JimTemplateView(CultureTaxonMixin, TemplateView): # Для рендеринга страницы жимолости
     template_name = 'siteapp/Jim.html' # Указываем расположение шаблона рендеринга
     group_name = 'Плодово-ягодные культуры' # Указываем имя группы для передачи в контекст через миксин CultureTaxonMixin
-
-class HistoriesDataMixin(ContextMixin): # Миксин для добавления в контекст всех данных истории
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['data'] = HistoryData.objects.prefetch_related('history_set').all()  # Добавляем все записи таблицы HistoryData в контекст со связанными данными таблицы History
-        return context # Передаём обновлённый контекст в страницу
 
 class AboutTemplateView(HistoriesDataMixin, TemplateView): # Для рендеринга страницы истории института
     template_name = 'siteapp/About.html' # Указываем расположение шаблона рендеринга
@@ -502,17 +486,6 @@ class DocsEditingView(LoginRequiredMixin, # Чтобы только пользо
     template_name = 'siteapp/Docs_editing.html' # Указываем расположение шаблона рендеринга
     success_url = reverse_lazy('siteapp:Docs_editing') # Перенаправляем на страницу редактирования даже при успешном отправлении сообщения
     context_object_name = 'docs' # Указываем имя переменной контекста таким
-
-class DocsMixin(ContextMixin): # Миксин для добавления def get_context_data и def form_valid
-    def get_context_data(self, **kwargs): # Для передачи данных в контекст
-        context = super().get_context_data(**kwargs) # Получаем базовый контекст
-        context['docs'] = Document.objects.all() # Добавляем все записи таблицы Document в контекст
-        return context # Передаём обновлённый контекст в страницу
-    def form_valid(self, form): # Для переопределения работы с правильными данными
-        one_doc = self.get_object() # Получаем текущий объект
-        if one_doc.url and os.path.isfile(one_doc.url.path): # Если есть медиафайл с соответствующим url
-            os.remove(one_doc.url.path) # то удаляем старый файл перед сохранением нового
-        return super().form_valid(form) # Вызываем стандартный метод form_valid
 
 class DocsUpdateView(LoginRequiredMixin, # Чтобы только пользователь мог ходить по этой странице
                      DocsMixin, UpdateView): # Для рендеринга страницы редактирования направлений деятельности

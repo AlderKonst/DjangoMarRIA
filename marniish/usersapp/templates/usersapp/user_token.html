@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {{page.title}}
+{% endblock %}
+
+{% block description %}
+	{{page.description}}
+{% endblock %}
+
+{% block content %}
+<h2>{{page.title}}</h2>
+<div class="pages niicontact">
+	<article>
+		<h2>Токен для пользователя {{object.username}}</h2>
+        <p id="token">Токен: {% if object.auth_token %}{{object.auth_token}}{% else %}не создан{% endif %}</p>
+        <form action="{% url 'usersapp:update_token' %}">
+            {% csrf_token %}
+            <input type="submit" value="Пересоздать токен">
+        </form>
+        <!-- Не хочу, чтобы был jquery, но оставлю в качестве примера на будущее
+        <input type="submit" id="ajax" value="Пересоздать токен с помощью AJAX">
+        -->
+    </article>
+</div>
+<!-- Не хочу, чтобы был jquery, но оставлю в качестве примера
+<script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'js/token_create.js' %}"></script>
+-->
+{% endblock %}
